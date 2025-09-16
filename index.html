@@ -71,16 +71,43 @@
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 1px;
+            position: relative; /* For underline effect */
             transition: color 0.3s ease;
+        }
+
+        header nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: #A08C6E;
+            left: 50%;
+            bottom: -5px;
+            transform: translateX(-50%);
+            transition: width 0.3s ease-out;
         }
 
         header nav a:hover {
             color: #A08C6E;
         }
+        
+        header nav a:hover::after {
+            width: 100%;
+        }
+
 
         section {
             padding: 80px 0;
             text-align: center;
+            opacity: 0; /* Hidden by default for scroll animation */
+            transform: translateY(20px); /* Initial position for scroll animation */
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out; /* Animation properties */
+        }
+
+        /* Class added by JavaScript when section is in view */
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         h2 {
@@ -123,8 +150,8 @@
         }
 
         .project-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+            transform: translateY(-8px) scale(1.02); /* More pronounced lift and slight scale */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5); /* Enhanced shadow */
         }
 
         .project-card h3 {
@@ -156,11 +183,12 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             font-weight: bold;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
         .back-button:hover {
             background: #D4B89D;
+            transform: scale(1.05);
         }
 
         form {
@@ -184,12 +212,13 @@
             background: #2C211A;
             color: #F5F5DC;
             border-radius: 5px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         form input:focus, form textarea:focus {
             outline: none;
             border-color: #D4B89D;
-            box-shadow: 0 0 5px rgba(212, 184, 157, 0.5);
+            box-shadow: 0 0 8px rgba(212, 184, 157, 0.7);
         }
 
         form button {
@@ -201,11 +230,12 @@
             border-radius: 5px;
             font-weight: bold;
             text-transform: uppercase;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
         form button:hover {
             background: #D4B89D;
+            transform: scale(1.02);
         }
         
         #form-status {
@@ -232,6 +262,12 @@
             }
             form {
                 width: 90%;
+            }
+            header h1 {
+                font-size: 2rem;
+            }
+            header nav ul li {
+                margin: 0 8px;
             }
         }
     </style>
@@ -330,7 +366,7 @@
 
     <footer>
         <div class="container">
-            <p>&copy; 2025 Your Name. All Rights Reserved.</p>
+            <p>&copy; 2025 Anderson Moss. All Rights Reserved.</p>
         </div>
     </footer>
 
@@ -345,6 +381,34 @@
 
             const mainNav = document.getElementById('mainNav');
             const detailNav = document.getElementById('detailNav');
+
+            // --- Scroll-in Animation Logic ---
+            const sections = document.querySelectorAll('section');
+
+            const observerOptions = {
+                root: null, // relative to the viewport
+                rootMargin: '0px',
+                threshold: 0.2 // 20% of the section must be visible
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        // Optionally, stop observing once it's visible if you only want it to animate once
+                        // observer.unobserve(entry.target); 
+                    } else {
+                        // Optionally remove 'visible' class if you want animation to re-trigger on scroll back
+                        // entry.target.classList.remove('visible'); 
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+            // --- End Scroll-in Animation Logic ---
+
 
             projectDetailSections.forEach(section => {
                 section.style.display = 'none';
@@ -361,6 +425,9 @@
                     const targetProjectSection = document.getElementById(`${projectId}-detail`);
                     if (targetProjectSection) {
                         targetProjectSection.style.display = 'block';
+                        // Re-trigger scroll animation for the newly displayed section
+                        targetProjectSection.classList.remove('visible');
+                        setTimeout(() => targetProjectSection.classList.add('visible'), 50); // Small delay
                     }
 
                     mainNav.style.display = 'none';
@@ -375,7 +442,12 @@
                     event.preventDefault();
 
                     projectDetailSections.forEach(section => section.style.display = 'none');
-                    mainSections.forEach(section => section.style.display = 'block');
+                    mainSections.forEach(section => {
+                        section.style.display = 'block';
+                        // Re-trigger scroll animation for main sections when returning
+                        section.classList.remove('visible');
+                        setTimeout(() => observer.observe(section), 50); // Re-observe to trigger
+                    });
 
                     projectsSection.style.display = 'block'; 
 

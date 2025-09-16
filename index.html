@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +7,14 @@
     <title>Your Name | Portfolio</title>
     
     <style>
+        /* New Color Palette:
+           - Dark Brown: #4A3A2F
+           - Warm Beige/Light Brown: #D4B89D
+           - Muted Gold: #A08C6E
+           - Soft White: #F5F5DC (for text)
+           - Deep Brown (for accents): #2C211A
+        */
+
         /* Basic Reset */
         * {
             margin: 0;
@@ -14,130 +23,213 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Georgia', serif;
             line-height: 1.6;
-            color: #333;
-            background-color: #f4f4f4;
+            color: #F5F5DC;
+            background-color: #2C211A;
+            transition: background-color 0.5s ease;
         }
 
         .container {
-            width: 80%;
+            width: 90%;
+            max-width: 1100px;
             margin: auto;
-            overflow: hidden;
             padding: 20px 0;
         }
 
         header {
-            background: #333;
-            color: #fff;
-            padding: 1rem 0;
+            background: #4A3A2F;
+            color: #F5F5DC;
+            padding: 1.5rem 0;
             text-align: center;
+            border-bottom: 2px solid #A08C6E;
         }
 
         header h1 {
+            font-size: 2.5rem;
             margin-bottom: 0.5rem;
+            letter-spacing: 2px;
+        }
+
+        header p {
+            font-style: italic;
+            color: #D4B89D;
         }
 
         header nav ul {
             list-style: none;
+            margin-top: 1rem;
         }
 
         header nav ul li {
             display: inline;
-            margin: 0 10px;
+            margin: 0 15px;
         }
 
         header nav a {
-            color: #fff;
+            color: #F5F5DC;
             text-decoration: none;
             font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+        }
+
+        header nav a:hover {
+            color: #A08C6E;
         }
 
         section {
-            padding: 50px 0;
+            padding: 80px 0;
             text-align: center;
         }
 
-        #about, #contact, .project-detail-section { /* Added .project-detail-section */
-            background: #fff;
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: #D4B89D;
+            position: relative;
+            display: inline-block;
         }
 
-        /* Hide project detail sections by default */
+        h2::after {
+            content: '';
+            display: block;
+            width: 60%;
+            height: 2px;
+            background: #A08C6E;
+            margin: 10px auto 0;
+        }
+
+        #about, #contact, .project-detail-section {
+            background: #4A3A2F;
+            border-bottom: 1px solid rgba(212, 184, 157, 0.2);
+        }
+
         .project-detail-section {
-            display: none; 
+            display: none;
         }
 
         .project-card {
-            background: #fff;
-            padding: 20px;
+            background: #2C211A;
+            padding: 30px;
             margin: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             display: inline-block;
             width: 45%;
             vertical-align: top;
-            text-align: left; /* Aligned text left for project cards */
+            text-align: left;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
+
+        .project-card h3 {
+            color: #D4B89D;
+            margin-bottom: 10px;
         }
 
         .project-card a, .project-detail-section a {
-            color: #337ab7;
+            color: #A08C6E;
             text-decoration: none;
             font-weight: bold;
-            margin-top: 10px;
-            display: inline-block; /* Make links behave like blocks for margin */
+            margin-top: 15px;
+            display: inline-block;
+            transition: color 0.3s ease;
         }
         
-        /* Specific styling for the "Back to Projects" button */
+        .project-card a:hover, .project-detail-section a:hover {
+            color: #D4B89D;
+        }
+        
         .back-button {
-            background: #555;
-            color: #fff;
-            padding: 10px 15px;
+            background: #A08C6E;
+            color: #2C211A;
+            padding: 12px 25px;
             border: none;
             cursor: pointer;
             border-radius: 5px;
-            margin-top: 20px;
+            margin-top: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #D4B89D;
         }
 
         form {
             display: flex;
             flex-direction: column;
-            width: 50%;
+            width: 60%;
             margin: auto;
+            max-width: 600px;
         }
 
         form label {
             text-align: left;
-            margin-top: 10px;
+            margin-top: 15px;
+            color: #D4B89D;
         }
 
         form input, form textarea {
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #A08C6E;
+            background: #2C211A;
+            color: #F5F5DC;
             border-radius: 5px;
         }
 
+        form input:focus, form textarea:focus {
+            outline: none;
+            border-color: #D4B89D;
+            box-shadow: 0 0 5px rgba(212, 184, 157, 0.5);
+        }
+
         form button {
-            background: #333;
-            color: #fff;
-            padding: 10px;
+            background: #A08C6E;
+            color: #2C211A;
+            padding: 15px;
             border: none;
             cursor: pointer;
             border-radius: 5px;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: background-color 0.3s ease;
+        }
+
+        form button:hover {
+            background: #D4B89D;
+        }
+        
+        #form-status {
+            margin-top: 20px;
+            font-weight: bold;
         }
 
         footer {
             text-align: center;
-            padding: 20px 0;
-            background: #333;
-            color: #fff;
+            padding: 30px 0;
+            background: #4A3A2F;
+            color: #F5F5DC;
+            border-top: 2px solid #A08C6E;
         }
 
         /* Responsive Design */
         @media (max-width: 768px) {
+            .container {
+                width: 95%;
+            }
             .project-card {
                 width: 100%;
-                margin: 10px 0;
+                margin: 15px 0;
             }
             form {
                 width: 90%;
@@ -157,7 +249,8 @@
                     <li><a href="#contact">Contact</a></li>
                 </ul>
             </nav>
-            <nav id="detailNav" style="display:none;"> <ul>
+            <nav id="detailNav" style="display:none;">
+                <ul>
                     <li><a href="#" class="back-to-projects">Back to Projects</a></li>
                 </ul>
             </nav>
@@ -247,70 +340,53 @@
             const contactForm = document.getElementById('contactForm');
             const formStatus = document.getElementById('form-status');
 
-            // Get references to main sections and project detail sections
             const mainSections = document.querySelectorAll('main > section:not(.project-detail-section)');
             const projectDetailSections = document.querySelectorAll('.project-detail-section');
             const projectsSection = document.getElementById('projects');
 
-            // Get navigation elements
             const mainNav = document.getElementById('mainNav');
             const detailNav = document.getElementById('detailNav');
 
-            // Hide all project detail sections initially
             projectDetailSections.forEach(section => {
                 section.style.display = 'none';
             });
 
-            // Handle "View Details" button clicks
             document.querySelectorAll('.view-project-btn').forEach(button => {
                 button.addEventListener('click', (event) => {
                     event.preventDefault();
-                    const projectId = event.target.dataset.projectId; // Get the project ID from data attribute
+                    const projectId = event.target.dataset.projectId;
 
-                    // Hide all main sections
                     mainSections.forEach(section => section.style.display = 'none');
-                    // Hide all project detail sections
                     projectDetailSections.forEach(section => section.style.display = 'none');
 
-                    // Show the specific project detail section
                     const targetProjectSection = document.getElementById(`${projectId}-detail`);
                     if (targetProjectSection) {
                         targetProjectSection.style.display = 'block';
                     }
 
-                    // Update navigation visibility
                     mainNav.style.display = 'none';
                     detailNav.style.display = 'block';
 
-                    // Scroll to top of the page
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 });
             });
 
-            // Handle "Back to Projects" button clicks
             document.querySelectorAll('.back-to-projects').forEach(button => {
                 button.addEventListener('click', (event) => {
                     event.preventDefault();
 
-                    // Hide all project detail sections
                     projectDetailSections.forEach(section => section.style.display = 'none');
-                    // Show all main sections (or specifically the projects section)
                     mainSections.forEach(section => section.style.display = 'block');
 
-                    // Re-hide the specific project detail section you were on if needed (already done above)
-                    // Ensure the main "Projects" section is visible
                     projectsSection.style.display = 'block'; 
 
-                    // Update navigation visibility
                     mainNav.style.display = 'block';
                     detailNav.style.display = 'none';
 
-                    // Scroll to the projects section
                     document.getElementById('projects').scrollIntoView({ behavior: 'smooth' });
                 });
             });
 
-            // Contact Form Submission (unchanged from previous version, still client-side only)
             if (contactForm) {
                 contactForm.addEventListener('submit', (event) => {
                     event.preventDefault(); 
@@ -335,3 +411,4 @@
     </script>
 </body>
 </html>
+```

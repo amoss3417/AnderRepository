@@ -1,1 +1,337 @@
-Hello World
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Name | Portfolio</title>
+    
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px 0;
+        }
+
+        header {
+            background: #333;
+            color: #fff;
+            padding: 1rem 0;
+            text-align: center;
+        }
+
+        header h1 {
+            margin-bottom: 0.5rem;
+        }
+
+        header nav ul {
+            list-style: none;
+        }
+
+        header nav ul li {
+            display: inline;
+            margin: 0 10px;
+        }
+
+        header nav a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        section {
+            padding: 50px 0;
+            text-align: center;
+        }
+
+        #about, #contact, .project-detail-section { /* Added .project-detail-section */
+            background: #fff;
+        }
+
+        /* Hide project detail sections by default */
+        .project-detail-section {
+            display: none; 
+        }
+
+        .project-card {
+            background: #fff;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: inline-block;
+            width: 45%;
+            vertical-align: top;
+            text-align: left; /* Aligned text left for project cards */
+        }
+
+        .project-card a, .project-detail-section a {
+            color: #337ab7;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 10px;
+            display: inline-block; /* Make links behave like blocks for margin */
+        }
+        
+        /* Specific styling for the "Back to Projects" button */
+        .back-button {
+            background: #555;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            width: 50%;
+            margin: auto;
+        }
+
+        form label {
+            text-align: left;
+            margin-top: 10px;
+        }
+
+        form input, form textarea {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        form button {
+            background: #333;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            background: #333;
+            color: #fff;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .project-card {
+                width: 100%;
+                margin: 10px 0;
+            }
+            form {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Your Name</h1>
+            <p>Web Developer | Designer</p>
+            <nav id="mainNav">
+                <ul>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+            <nav id="detailNav" style="display:none;"> <ul>
+                    <li><a href="#" class="back-to-projects">Back to Projects</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="about">
+            <div class="container">
+                <h2>About Me</h2>
+                <p>Hello! I'm a passionate developer with a knack for creating clean, functional, and user-friendly websites. I enjoy bringing ideas to life on the web and continuously learning new technologies. My skills include HTML, CSS, JavaScript, and more.</p>
+            </div>
+        </section>
+
+        <section id="projects">
+            <div class="container">
+                <h2>My Projects</h2>
+                <div class="project-card">
+                    <h3>Project One</h3>
+                    <p>A description of your first project. Talk about the technologies used and the purpose of the project.</p>
+                    <a href="#" class="view-project-btn" data-project-id="project-one">View Details</a>
+                </div>
+                <div class="project-card">
+                    <h3>Project Two</h3>
+                    <p>A description of your second project. Highlight the key features and your role in its development.</p>
+                    <a href="#" class="view-project-btn" data-project-id="project-two">View Details</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="project-one-detail" class="project-detail-section">
+            <div class="container">
+                <h2>Project One Details</h2>
+                <p>This is a more in-depth description of Project One. Here you can include more text, images, screenshots, or even embedded videos demonstrating your work.</p>
+                <p><strong>Technologies Used:</strong> HTML, CSS, JavaScript</p>
+                <img src="https://via.placeholder.com/600x300?text=Project+One+Image" alt="Project One Screenshot" style="max-width:100%; height:auto; margin-top:20px;">
+                <p style="margin-top:20px;">You can also add links to the live demo or GitHub repository.</p>
+                <a href="https://github.com/yourusername/project-one" target="_blank">GitHub Repo</a> | 
+                <a href="#" target="_blank">Live Demo</a>
+                <br>
+                <button class="back-button back-to-projects">Back to Projects</button>
+            </div>
+        </section>
+
+        <section id="project-two-detail" class="project-detail-section">
+            <div class="container">
+                <h2>Project Two Details</h2>
+                <p>Here's a detailed breakdown of Project Two. Explain your process, challenges faced, and solutions implemented.</p>
+                <p><strong>Technologies Used:</strong> HTML, CSS, JavaScript, React (example)</p>
+                <img src="https://via.placeholder.com/600x300?text=Project+Two+Image" alt="Project Two Screenshot" style="max-width:100%; height:auto; margin-top:20px;">
+                <p style="margin-top:20px;">Feel free to expand with more content, case studies, or user testimonials.</p>
+                <a href="https://github.com/yourusername/project-two" target="_blank">GitHub Repo</a> | 
+                <a href="#" target="_blank">Live Demo</a>
+                <br>
+                <button class="back-button back-to-projects">Back to Projects</button>
+            </div>
+        </section>
+
+        <section id="contact">
+            <div class="container">
+                <h2>Contact Me</h2>
+                <form id="contactForm">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" required>
+                    
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+                    
+                    <label for="message">Message:</label>
+                    <textarea id="message" name="message" required></textarea>
+                    
+                    <button type="submit">Send Message</button>
+                </form>
+                <div id="form-status"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Your Name. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const contactForm = document.getElementById('contactForm');
+            const formStatus = document.getElementById('form-status');
+
+            // Get references to main sections and project detail sections
+            const mainSections = document.querySelectorAll('main > section:not(.project-detail-section)');
+            const projectDetailSections = document.querySelectorAll('.project-detail-section');
+            const projectsSection = document.getElementById('projects');
+
+            // Get navigation elements
+            const mainNav = document.getElementById('mainNav');
+            const detailNav = document.getElementById('detailNav');
+
+            // Hide all project detail sections initially
+            projectDetailSections.forEach(section => {
+                section.style.display = 'none';
+            });
+
+            // Handle "View Details" button clicks
+            document.querySelectorAll('.view-project-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    const projectId = event.target.dataset.projectId; // Get the project ID from data attribute
+
+                    // Hide all main sections
+                    mainSections.forEach(section => section.style.display = 'none');
+                    // Hide all project detail sections
+                    projectDetailSections.forEach(section => section.style.display = 'none');
+
+                    // Show the specific project detail section
+                    const targetProjectSection = document.getElementById(`${projectId}-detail`);
+                    if (targetProjectSection) {
+                        targetProjectSection.style.display = 'block';
+                    }
+
+                    // Update navigation visibility
+                    mainNav.style.display = 'none';
+                    detailNav.style.display = 'block';
+
+                    // Scroll to top of the page
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            });
+
+            // Handle "Back to Projects" button clicks
+            document.querySelectorAll('.back-to-projects').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    event.preventDefault();
+
+                    // Hide all project detail sections
+                    projectDetailSections.forEach(section => section.style.display = 'none');
+                    // Show all main sections (or specifically the projects section)
+                    mainSections.forEach(section => section.style.display = 'block');
+
+                    // Re-hide the specific project detail section you were on if needed (already done above)
+                    // Ensure the main "Projects" section is visible
+                    projectsSection.style.display = 'block'; 
+
+                    // Update navigation visibility
+                    mainNav.style.display = 'block';
+                    detailNav.style.display = 'none';
+
+                    // Scroll to the projects section
+                    document.getElementById('projects').scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+
+            // Contact Form Submission (unchanged from previous version, still client-side only)
+            if (contactForm) {
+                contactForm.addEventListener('submit', (event) => {
+                    event.preventDefault(); 
+
+                    const name = document.getElementById('name').value;
+                    const email = document.getElementById('email').value;
+                    const message = document.getElementById('message').value;
+
+                    if (name && email && message) {
+                        setTimeout(() => {
+                            formStatus.textContent = 'Thank you for your message! I will get back to you shortly.';
+                            formStatus.style.color = 'green';
+                            contactForm.reset(); 
+                        }, 1000); 
+                    } else {
+                        formStatus.textContent = 'Please fill out all fields.';
+                        formStatus.style.color = 'red';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

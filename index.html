@@ -123,7 +123,6 @@
             width: 100%;
         }
 
-
         section {
             padding: 80px 0;
             text-align: center;
@@ -154,13 +153,9 @@
             margin: 10px auto 0;
         }
 
-        #about, #skills, #testimonials, #contact, .project-detail-section {
+        #about, #contact, .project-detail-section {
             background: #4A3A2F;
             border-bottom: 1px solid rgba(212, 184, 157, 0.2);
-        }
-
-        #skills {
-            background-color: #2C211A;
         }
 
         .project-detail-section {
@@ -273,102 +268,6 @@
             margin-top: 20px;
             font-weight: bold;
         }
-        
-        /* Skills Section Styles */
-        .skills-list {
-            list-style: none;
-            text-align: left;
-            margin-top: 30px;
-        }
-        
-        .skill-item {
-            margin-bottom: 25px;
-        }
-        
-        .skill-name {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #D4B89D;
-        }
-        
-        .skill-bar {
-            background-color: #4A3A2F;
-            height: 10px;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-        
-        .skill-level {
-            height: 100%;
-            background-color: #A08C6E;
-            width: 0; /* Starts at 0 for animation */
-            transition: width 1s ease-in-out;
-        }
-
-        /* Testimonials Section Styles */
-        .testimonial-slider {
-            position: relative;
-            overflow: hidden;
-            max-width: 800px;
-            margin: auto;
-        }
-
-        .testimonial-container {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-        }
-
-        .testimonial-card {
-            min-width: 100%;
-            box-sizing: border-box;
-            padding: 40px;
-            background-color: #2C211A;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            text-align: center;
-            font-style: italic;
-        }
-
-        .testimonial-card img {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            margin-bottom: 15px;
-            border: 2px solid #A08C6E;
-        }
-
-        .testimonial-card p {
-            font-size: 1.1em;
-            margin-bottom: 10px;
-        }
-
-        .testimonial-author {
-            font-weight: bold;
-            color: #D4B89D;
-        }
-
-        .slider-dots {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .dot {
-            height: 10px;
-            width: 10px;
-            margin: 0 5px;
-            background-color: #4A3A2F;
-            border-radius: 50%;
-            display: inline-block;
-            transition: background-color 0.3s ease;
-            cursor: pointer;
-        }
-
-        .dot.active {
-            background-color: #A08C6E;
-        }
 
         footer {
             text-align: center;
@@ -408,9 +307,7 @@
             <nav id="mainNav">
                 <ul>
                     <li><a href="#about">About</a></li>
-                    <li><a href="#skills">Skills</a></li>
                     <li><a href="#projects">Projects</a></li>
-                    <li><a href="#testimonials">Testimonials</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
             </nav>
@@ -427,50 +324,6 @@
             <div class="container">
                 <h2>About Me</h2>
                 <p>Hello! I'm a passionate developer with a knack for creating clean, functional, and user-friendly websites. I enjoy bringing ideas to life on the web and continuously learning new technologies. My skills include HTML, CSS, JavaScript, and more.</p>
-            </div>
-        </section>
-
-        <section id="skills">
-            <div class="container">
-                <h2>My Skills</h2>
-                <ul class="skills-list">
-                    <li class="skill-item">
-                        <div class="skill-name">
-                            <span>Python</span>
-                            <span>95%</span>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-level" data-skill-level="95"></div>
-                        </div>
-                    </li>
-                    <li class="skill-item">
-                        <div class="skill-name">
-                            <span>Data Structures & Algorithms</span>
-                            <span>90%</span>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-level" data-skill-level="90"></div>
-                        </div>
-                    </li>
-                    <li class="skill-item">
-                        <div class="skill-name">
-                            <span>Machine Learning</span>
-                            <span>85%</span>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-level" data-skill-level="85"></div>
-                        </div>
-                    </li>
-                    <li class="skill-item">
-                        <div class="skill-name">
-                            <span>HTML & CSS</span>
-                            <span>80%</span>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-level" data-skill-level="80"></div>
-                        </div>
-                    </li>
-                </ul>
             </div>
         </section>
 
@@ -515,36 +368,6 @@
                 <a href="#" target="_blank">Live Demo</a>
                 <br>
                 <button class="back-button back-to-projects">Back to Projects</button>
-            </div>
-        </section>
-
-        <section id="testimonials">
-            <div class="container">
-                <h2>Testimonials</h2>
-                <div class="testimonial-slider">
-                    <div class="testimonial-container">
-                        <div class="testimonial-card">
-                            <img src="https://via.placeholder.com/80?text=JD" alt="Client 1">
-                            <p>"Anderson is an exceptional problem-solver with a deep understanding of complex algorithms. The project was completed ahead of schedule and with outstanding results."</p>
-                            <span class="testimonial-author">- Jane Doe, Senior Engineer</span>
-                        </div>
-                        <div class="testimonial-card">
-                            <img src="https://via.placeholder.com/80?text=SM" alt="Client 2">
-                            <p>"Their work on our machine learning model was transformative. The improvements in performance and accuracy were beyond our expectations. A truly talented professional."</p>
-                            <span class="testimonial-author">- Samuel Miller, Project Lead</span>
-                        </div>
-                        <div class="testimonial-card">
-                            <img src="https://via.placeholder.com/80?text=LK" alt="Client 3">
-                            <p>"A brilliant mind for computer science. They approached a difficult task with remarkable clarity and delivered a solution that was both elegant and efficient. Highly recommend."</p>
-                            <span class="testimonial-author">- Laura Kim, Data Scientist</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="slider-dots">
-                    <span class="dot active"></span>
-                    <span class="dot"></span>
-                    <span class="dot"></span>
-                </div>
             </div>
         </section>
 
@@ -598,15 +421,6 @@
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('visible');
-                        // Animate skill bars when the skills section becomes visible
-                        if (entry.target.id === 'skills') {
-                            document.querySelectorAll('.skill-level').forEach(bar => {
-                                const level = bar.dataset.skillLevel;
-                                bar.style.width = level + '%';
-                            });
-                        }
-                    } else {
-                        // Keep section visible once it has appeared
                     }
                 });
             }, observerOptions);
@@ -681,33 +495,6 @@
                     }
                 });
             }
-
-            // --- Testimonial Slider Logic ---
-            const testimonialContainer = document.querySelector('.testimonial-container');
-            const dots = document.querySelectorAll('.dot');
-            let currentIndex = 0;
-
-            function updateSlider() {
-                const offset = -currentIndex * 100;
-                testimonialContainer.style.transform = `translateX(${offset}%)`;
-                dots.forEach((dot, index) => {
-                    dot.classList.toggle('active', index === currentIndex);
-                });
-            }
-
-            dots.forEach((dot, index) => {
-                dot.addEventListener('click', () => {
-                    currentIndex = index;
-                    updateSlider();
-                });
-            });
-
-            function autoPlay() {
-                currentIndex = (currentIndex + 1) % dots.length;
-                updateSlider();
-            }
-
-            setInterval(autoPlay, 5000); // Change testimonial every 5 seconds
         });
     </script>
 </body>

@@ -21,13 +21,18 @@
             box-sizing: border-box;
         }
 
+        /* --- New CSS to disable text highlighting --- */
         body {
+            -webkit-user-select: none;  /* Safari */
+            -ms-user-select: none;      /* IE 10+ */
+            user-select: none;          /* Standard syntax */
             font-family: 'Georgia', serif;
             line-height: 1.6;
             color: #F5F5DC;
             background-color: #2C211A;
             transition: background-color 0.5s ease;
         }
+        /* --- End new CSS --- */
 
         .container {
             width: 90%;
@@ -71,7 +76,7 @@
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 1px;
-            position: relative; /* For underline effect */
+            position: relative;
             transition: color 0.3s ease;
         }
 
@@ -99,12 +104,11 @@
         section {
             padding: 80px 0;
             text-align: center;
-            opacity: 0; /* Hidden by default for scroll animation */
-            transform: translateY(20px); /* Initial position for scroll animation */
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out; /* Animation properties */
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
         }
 
-        /* Class added by JavaScript when section is in view */
         section.visible {
             opacity: 1;
             transform: translateY(0);
@@ -150,8 +154,8 @@
         }
 
         .project-card:hover {
-            transform: translateY(-8px) scale(1.02); /* More pronounced lift and slight scale */
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5); /* Enhanced shadow */
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
 
         .project-card h3 {
@@ -382,24 +386,20 @@
             const mainNav = document.getElementById('mainNav');
             const detailNav = document.getElementById('detailNav');
 
-            // --- Scroll-in Animation Logic ---
             const sections = document.querySelectorAll('section');
 
             const observerOptions = {
-                root: null, // relative to the viewport
+                root: null,
                 rootMargin: '0px',
-                threshold: 0.2 // 20% of the section must be visible
+                threshold: 0.2
             };
 
             const observer = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('visible');
-                        // Optionally, stop observing once it's visible if you only want it to animate once
-                        // observer.unobserve(entry.target); 
                     } else {
-                        // Optionally remove 'visible' class if you want animation to re-trigger on scroll back
-                        // entry.target.classList.remove('visible'); 
+                        // Keep section visible once it has appeared
                     }
                 });
             }, observerOptions);
@@ -407,8 +407,6 @@
             sections.forEach(section => {
                 observer.observe(section);
             });
-            // --- End Scroll-in Animation Logic ---
-
 
             projectDetailSections.forEach(section => {
                 section.style.display = 'none';
@@ -425,9 +423,8 @@
                     const targetProjectSection = document.getElementById(`${projectId}-detail`);
                     if (targetProjectSection) {
                         targetProjectSection.style.display = 'block';
-                        // Re-trigger scroll animation for the newly displayed section
                         targetProjectSection.classList.remove('visible');
-                        setTimeout(() => targetProjectSection.classList.add('visible'), 50); // Small delay
+                        setTimeout(() => targetProjectSection.classList.add('visible'), 50);
                     }
 
                     mainNav.style.display = 'none';
@@ -444,9 +441,8 @@
                     projectDetailSections.forEach(section => section.style.display = 'none');
                     mainSections.forEach(section => {
                         section.style.display = 'block';
-                        // Re-trigger scroll animation for main sections when returning
                         section.classList.remove('visible');
-                        setTimeout(() => observer.observe(section), 50); // Re-observe to trigger
+                        setTimeout(() => observer.observe(section), 50);
                     });
 
                     projectsSection.style.display = 'block'; 

@@ -559,6 +559,116 @@
             box-shadow: 0 8px 30px rgba(0,0,0,0.15);
         }
         /* --- End Flappy Bird Mini-Clone Game CSS --- */
+        
+        /* --- Stacker 3D Game CSS for Project Five --- */
+        #project-five-detail .game-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #project-five-detail body {
+            overflow: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: background 0.5s ease;
+        }
+        #project-five-detail #gameCanvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
+        #project-five-detail #ui {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        #project-five-detail #score {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 48px;
+            font-weight: 300;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        #project-five-detail #gameOver {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            display: none;
+            pointer-events: auto;
+        }
+        #project-five-detail #gameOver h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+        #project-five-detail #finalScore, #project-five-detail #bestScore {
+            font-size: 24px;
+            margin: 10px 0;
+            font-weight: 300;
+        }
+        #project-five-detail #restartBtn {
+            margin-top: 30px;
+            padding: 15px 40px;
+            font-size: 18px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            color: white;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 300;
+        }
+        #project-five-detail #restartBtn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+        #project-five-detail #instructions {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.8);
+            font-size: 16px;
+            font-weight: 300;
+        }
+        /* --- End Stacker 3D Game CSS --- */
+        
+        /* --- Tetris Game CSS for Project Six --- */
+        #project-six-detail #tetris-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 20px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+        #project-six-detail canvas {
+            border: 2px solid #eee;
+            background: #000;
+        }
+        #project-six-detail #hud {
+            font-family: monospace;
+            color: #eee;
+        }
+        #project-six-detail #hud h2 {
+            margin: 0 0 10px 0;
+            font-size: 18px;
+        }
+        #project-six-detail #hud div {
+            margin: 5px 0;
+        }
+        /* --- End Tetris Game CSS --- */
 
         footer {
             text-align: center;
@@ -614,7 +724,7 @@
         <section id="about">
             <div class="container">
                 <h2>About Me</h2>
-                <p>Hello! I'm a passionate developer with a knack for creating clean, functional, and user-friendly websites. I enjoy bringing ideas to life on the web and continuously learning new technologies. My skills include HTML, CSS, JavaScript, and more.</p>
+                <p></p>
             </div>
         </section>
 
@@ -640,6 +750,16 @@
                     <h3>Project Four: Flappy Mini</h3>
                     <p>A modern mini-clone of the classic mobile game "Flappy Bird". Click to play!</p>
                     <a href="#" class="view-project-btn" data-project-id="project-four">View Details & Play</a>
+                </div>
+                <div class="project-card">
+                    <h3>Project Five: Stacker 3D</h3>
+                    <p>A 3D block stacking game built with Three.js. Click to play!</p>
+                    <a href="#" class="view-project-btn" data-project-id="project-five">View Details & Play</a>
+                </div>
+                <div class="project-card">
+                    <h3>Project Six: Tetris</h3>
+                    <p>A classic Tetris game built with HTML, CSS, and JavaScript. Click to play!</p>
+                    <a href="#" class="view-project-btn" data-project-id="project-six">View Details & Play</a>
                 </div>
                 </div>
         </section>
@@ -737,6 +857,50 @@
                 <button class="back-button back-to-projects">Back to Projects</button>
             </div>
         </section>
+        
+        <section id="project-five-detail" class="project-detail-section">
+            <div class="container">
+                <h2>Project Five Details: Stacker 3D</h2>
+                
+                <div class="game-container">
+                    <canvas id="gameCanvas"></canvas>
+                    <div id="ui">
+                        <div id="score">0</div>
+                        <div id="gameOver">
+                            <h2>Game Over!</h2>
+                            <div id="finalScore">Score: 0</div>
+                            <div id="bestScore">Best: 0</div>
+                            <button id="restartBtn">Play Again</button>
+                        </div>
+                        <div id="instructions">Click or Press Space to Drop Block</div>
+                    </div>
+                </div>
+                
+                <p style="margin-top:20px;">This project demonstrates the power of the **Three.js** library to create a dynamic 3D web experience. It showcases real-time rendering, physics simulation, and procedural geometry to build a fully interactive game.</p>
+                <button class="back-button back-to-projects">Back to Projects</button>
+            </div>
+        </section>
+        
+        <section id="project-six-detail" class="project-detail-section">
+            <div class="container">
+                <h2>Project Six Details: Tetris</h2>
+                
+                <div id="tetris-container">
+                    <canvas id="tetris" width="240" height="400"></canvas>
+                    <div id="hud">
+                        <h2>Stats</h2>
+                        <div>Score: <span id="score">0</span></div>
+                        <div>Level: <span id="level">0</span></div>
+                        <div>Lines: <span id="lines">0</span></div>
+                        <h2>Next</h2>
+                        <canvas id="next" width="80" height="80"></canvas>
+                    </div>
+                </div>
+
+                <p style="margin-top:20px;">This project is a classic arcade game built using the **HTML Canvas API**. It demonstrates fundamental game development concepts, including managing a game loop, handling user input, performing collision detection, and manipulating a 2D matrix data structure.</p>
+                <button class="back-button back-to-projects">Back to Projects</button>
+            </div>
+        </section>
 
         <section id="contact">
             <div class="container">
@@ -758,12 +922,7 @@
         </section>
     </main>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 Anderson Moss. All Rights Reserved.</p>
-        </div>
-    </footer>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const contactForm = document.getElementById('contactForm');
@@ -821,10 +980,18 @@
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                     
                     // Call a specific function for the game being loaded
-                    if (projectId === 'project-three') {
+                    if (projectId === 'project-one') {
+                         initHexGame();
+                    } else if (projectId === 'project-two') {
+                        initDizzyGame();
+                    } else if (projectId === 'project-three') {
                         initStackerGame();
                     } else if (projectId === 'project-four') {
                         initFlappyGame();
+                    } else if (projectId === 'project-five') {
+                        initStacker3DGame();
+                    } else if (projectId === 'project-six') {
+                        initTetrisGame();
                     }
                 });
             });
@@ -871,8 +1038,9 @@
             }
 
             // --- Game JavaScript for "WHAT THE HEX?" ---
-            const gameContainer = document.getElementById('game-container');
-            if (gameContainer) {
+            function initHexGame() {
+                const gameContainer = document.getElementById('game-container');
+                if (!gameContainer) return;
                 const hexCodeElement = gameContainer.querySelector('#hex-code');
                 const colorGrid = gameContainer.querySelector('#color-grid');
                 const messageElement = gameContainer.querySelector('#message');
@@ -982,8 +1150,9 @@
             }
 
             // --- Game JavaScript for "Dizzy Wheel" ---
-            const dizzyWheelContainer = document.querySelector('#project-two-detail .game-container');
-            if (dizzyWheelContainer) {
+            function initDizzyGame() {
+                const dizzyWheelContainer = document.querySelector('#project-two-detail .game-container');
+                if (!dizzyWheelContainer) return;
                 const canvas = dizzyWheelContainer.querySelector('#gameCanvas');
                 const ctx = canvas.getContext('2d');
                 const gameScreen = dizzyWheelContainer.querySelector('#gameScreen');
@@ -1515,15 +1684,624 @@
                 canvas.addEventListener('mousedown', handleCanvasClick);
                 canvas.addEventListener('touchstart', handleCanvasTouch, {passive:false});
 
-                // Start the game
-                restart();
-                requestAnimationFrame(loop);
-
-                // Pause on visibility change
-                document.addEventListener('visibilitychange', ()=>{ running = !document.hidden; if(running && !gameOver) lastTime = null; });
-
                 // Optional: persist high score in localStorage
                 try{ const saved = localStorage.getItem('flappy_mini_high'); if(saved) highScore = parseInt(saved,10) || 0; window.addEventListener('beforeunload', ()=> localStorage.setItem('flappy_mini_high', String(highScore))); }catch(e){}
+            }
+
+            // --- Game JavaScript for "Stacker 3D" ---
+            function initStacker3DGame() {
+                // Game configuration
+                const config = {
+                    boxSize: 3,
+                    boxHeight: 1,
+                    speed: 0.08,
+                    dropSpeed: 0.5,
+                    perfectMargin: 0.25,
+                    cameraHeight: 10,
+                    cameraDistance: 20,
+                    minBoxSize: 0.3,
+                    spawnHeight: 15 // Height where new blocks spawn
+                };
+
+                // Game state
+                let score = 0;
+                let bestScore = localStorage.getItem('stackBestScore') || 0;
+                let gameStarted = false;
+                let gameOver = false;
+                let stack = [];
+                let overhangs = [];
+                let currentBox = null;
+                let isDropping = false;
+                let direction = 'x';
+                let moveDirection = 1;
+                let colorOffset = 0;
+                let currentWidth = config.boxSize;
+                let currentDepth = config.boxSize;
+                
+                // Three.js setup
+                const scene = new THREE.Scene();
+                scene.fog = new THREE.Fog(0xf7d9aa, 20, 100);
+                const camera = new THREE.OrthographicCamera(
+                    window.innerWidth / -60,
+                    window.innerWidth / 60,
+                    window.innerHeight / 60,
+                    window.innerHeight / -60,
+                    0.1,
+                    1000
+                );
+                const renderer = new THREE.WebGLRenderer({
+                    canvas: document.getElementById('gameCanvas'),
+                    antialias: true,
+                    alpha: true
+                });
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                renderer.shadowMap.enabled = true;
+                renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+                // Lighting
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+                scene.add(ambientLight);
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6);
+                directionalLight.position.set(10, 20, 0);
+                directionalLight.castShadow = true;
+                directionalLight.shadow.camera.left = -20;
+                directionalLight.shadow.camera.right = 20;
+                directionalLight.shadow.camera.top = 20;
+                directionalLight.shadow.camera.bottom = -20;
+                scene.add(directionalLight);
+
+                // Camera position
+                camera.position.set(config.cameraDistance, config.cameraHeight, config.cameraDistance);
+                camera.lookAt(0, 0, 0);
+
+                // Create a box with color based on height
+                function createBox(x, y, z, width, depth, height, falls) {
+                    const geometry = new THREE.BoxGeometry(width, height, depth);
+                    const hue = (180 + colorOffset * 5) % 360;
+                    const color = new THREE.Color(`hsl(${hue}, 70%, 60%)`);
+                    const material = new THREE.MeshLambertMaterial({ color });
+                    const mesh = new THREE.Mesh(geometry, material);
+                    mesh.position.set(x, y, z);
+                    mesh.castShadow = true;
+                    mesh.receiveShadow = true;
+                    scene.add(mesh);
+
+                    if (!falls) {
+                        if (!currentBox || mesh !== currentBox) {
+                            stack.push({
+                                mesh: mesh,
+                                width: width,
+                                depth: depth,
+                                x: x,
+                                z: z,
+                                y: y
+                            });
+                        }
+                    } else {
+                        overhangs.push(mesh);
+                    }
+
+                    return mesh;
+                }
+
+                // Get the target Y position for dropping block
+                function getTargetY() {
+                    if (stack.length === 0) return config.boxHeight / 2;
+                    return stack[stack.length - 1].y + config.boxHeight;
+                }
+
+                // Initialize game
+                function init() {
+                    stack.forEach(box => scene.remove(box.mesh));
+                    overhangs.forEach(mesh => scene.remove(mesh));
+                    if (currentBox) scene.remove(currentBox);
+                    stack = [];
+                    overhangs = [];
+                    score = 0;
+                    colorOffset = 0;
+                    gameOver = false;
+                    gameStarted = false;
+                    direction = 'x';
+                    isDropping = false;
+                    currentWidth = config.boxSize;
+                    currentDepth = config.boxSize;
+                    currentBox = null;
+
+                    document.getElementById('score').textContent = '0';
+                    document.getElementById('gameOver').style.display = 'none';
+                    document.getElementById('instructions').style.display = 'block';
+
+                    camera.position.set(config.cameraDistance, config.cameraHeight, config.cameraDistance);
+                    camera.lookAt(0, 0, 0);
+
+                    createBox(0, -config.boxHeight/2, 0, config.boxSize, config.boxSize, config.boxHeight, false);
+                    spawnNewBox();
+                    updateBackground();
+                }
+
+                // Spawn a new box at the top
+                function spawnNewBox() {
+                    if (gameOver) return;
+                    colorOffset++;
+                    const spawnY = getTargetY() + config.spawnHeight;
+                    currentBox = createBox(
+                        direction === 'x' ? (moveDirection > 0 ? -10 : 10) : 0,
+                        spawnY,
+                        direction === 'z' ? (moveDirection > 0 ? -10 : 10) : 0,
+                        currentWidth,
+                        currentDepth,
+                        config.boxHeight,
+                        false
+                    );
+                    isDropping = false;
+                }
+
+                // Update background gradient based on score
+                function updateBackground() {
+                    const hue1 = (200 + score * 3) % 360;
+                    const hue2 = (250 + score * 3) % 360;
+                    document.body.style.background = `linear-gradient(135deg, hsl(${hue1}, 70%, 60%) 0%, hsl(${hue2}, 70%, 50%) 100%)`;
+                }
+
+                // Drop the current box
+                function dropBox() {
+                    if (gameOver || !currentBox || isDropping) return;
+                    if (!gameStarted) {
+                        gameStarted = true;
+                        document.getElementById('instructions').style.display = 'none';
+                    }
+                    isDropping = true;
+                }
+
+                // Check landing and handle stacking logic
+                function checkLanding() {
+                    const targetY = getTargetY();
+                    if (currentBox.position.y <= targetY) {
+                        currentBox.position.y = targetY;
+                        let overlap = 0;
+                        let overhangSize = 0;
+                        let overhangX = 0;
+                        let overhangZ = 0;
+                        let newWidth = currentWidth;
+                        let newDepth = currentDepth;
+
+                        if (stack.length > 1) {
+                            const prev = stack[stack.length - 1];
+                            if (direction === 'x') {
+                                overhangSize = currentBox.position.x - prev.x;
+                                overlap = prev.width - Math.abs(overhangSize);
+                                if (overlap > 0) {
+                                    newWidth = overlap;
+                                    if (Math.abs(overhangSize) < config.perfectMargin) {
+                                        currentBox.position.x = prev.x;
+                                        newWidth = prev.width;
+                                    } else {
+                                        const newGeometry = new THREE.BoxGeometry(newWidth, config.boxHeight, newDepth);
+                                        currentBox.geometry.dispose();
+                                        currentBox.geometry = newGeometry;
+                                        currentBox.position.x = prev.x + overhangSize / 2;
+                                        overhangX = currentBox.position.x + (newWidth / 2 * Math.sign(overhangSize)) + (Math.abs(overhangSize) - newWidth) / 2 * Math.sign(overhangSize);
+                                        overhangZ = currentBox.position.z;
+                                        const overhangBox = createBox(
+                                            overhangX,
+                                            currentBox.position.y,
+                                            overhangZ,
+                                            Math.abs(overhangSize),
+                                            newDepth,
+                                            config.boxHeight,
+                                            true
+                                        );
+                                        animateFalling(overhangBox);
+                                    }
+                                } else {
+                                    animateFalling(currentBox);
+                                    endGame();
+                                    return;
+                                }
+                            } else { // direction === 'z'
+                                overhangSize = currentBox.position.z - prev.z;
+                                overlap = prev.depth - Math.abs(overhangSize);
+                                if (overlap > 0) {
+                                    newDepth = overlap;
+                                    if (Math.abs(overhangSize) < config.perfectMargin) {
+                                        currentBox.position.z = prev.z;
+                                        newDepth = prev.depth;
+                                    } else {
+                                        const newGeometry = new THREE.BoxGeometry(newWidth, config.boxHeight, newDepth);
+                                        currentBox.geometry.dispose();
+                                        currentBox.geometry = newGeometry;
+                                        currentBox.position.z = prev.z + overhangSize / 2;
+                                        overhangX = currentBox.position.x;
+                                        overhangZ = currentBox.position.z + (newDepth / 2 * Math.sign(overhangSize)) + (Math.abs(overhangSize) - newDepth) / 2 * Math.sign(overhangSize);
+                                        const overhangBox = createBox(
+                                            overhangX,
+                                            currentBox.position.y,
+                                            overhangZ,
+                                            newWidth,
+                                            Math.abs(overhangSize),
+                                            config.boxHeight,
+                                            true
+                                        );
+                                        animateFalling(overhangBox);
+                                    }
+                                } else {
+                                    animateFalling(currentBox);
+                                    endGame();
+                                    return;
+                                }
+                            }
+                            if (newWidth < config.minBoxSize || newDepth < config.minBoxSize) {
+                                animateFalling(currentBox);
+                                endGame();
+                                return;
+                            }
+                        }
+
+                        stack.push({
+                            mesh: currentBox,
+                            width: newWidth,
+                            depth: newDepth,
+                            x: currentBox.position.x,
+                            z: currentBox.position.z,
+                            y: targetY
+                        });
+
+                        currentWidth = newWidth;
+                        currentDepth = newDepth;
+
+                        score++;
+                        document.getElementById('score').textContent = score;
+                        updateBackground();
+
+                        if (score > 5) {
+                            const targetCameraY = config.cameraHeight + (score - 5) * config.boxHeight;
+                            animateCamera(targetCameraY);
+                        }
+
+                        direction = direction === 'x' ? 'z' : 'x';
+                        moveDirection *= -1;
+
+                        setTimeout(() => {
+                            spawnNewBox();
+                        }, 200);
+                    }
+                }
+
+                // Animate falling overhang
+                function animateFalling(mesh) {
+                    const startRotation = {
+                        x: (Math.random() - 0.5) * 0.1,
+                        z: (Math.random() - 0.5) * 0.1
+                    };
+                    function fall() {
+                        mesh.position.y -= 0.5;
+                        mesh.rotation.x += startRotation.x;
+                        mesh.rotation.z += startRotation.z;
+                        if (mesh.position.y > -20) {
+                            requestAnimationFrame(fall);
+                        } else {
+                            scene.remove(mesh);
+                        }
+                    }
+                    fall();
+                }
+
+                // Animate camera movement
+                function animateCamera(targetY) {
+                    const startY = camera.position.y;
+                    const duration = 300;
+                    const startTime = Date.now();
+                    function move() {
+                        const elapsed = Date.now() - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+                        const easeProgress = 1 - Math.pow(1 - progress, 3);
+                        camera.position.y = startY + (targetY - startY) * easeProgress;
+                        camera.lookAt(0, camera.position.y - config.cameraHeight, 0);
+                        if (progress < 1) {
+                            requestAnimationFrame(move);
+                        }
+                    }
+                    move();
+                }
+
+                // End game
+                function endGame() {
+                    gameOver = true;
+                    if (score > bestScore) {
+                        bestScore = score;
+                        localStorage.setItem('stackBestScore', bestScore);
+                    }
+                    document.getElementById('finalScore').textContent = `Score: ${score}`;
+                    document.getElementById('bestScore').textContent = `Best: ${bestScore}`;
+                    document.getElementById('gameOver').style.display = 'block';
+                }
+
+                // Animation loop
+                function animate() {
+                    if (!gameOver && currentBox) {
+                        if (isDropping) {
+                            currentBox.position.y -= config.dropSpeed;
+                            if (currentBox.position.y <= getTargetY()) {
+                                checkLanding();
+                            }
+                        } else if (gameStarted) {
+                            if (direction === 'x') {
+                                currentBox.position.x += config.speed * moveDirection;
+                                if (Math.abs(currentBox.position.x) > 10) {
+                                    moveDirection *= -1;
+                                }
+                            } else {
+                                currentBox.position.z += config.speed * moveDirection;
+                                if (Math.abs(currentBox.position.z) > 10) {
+                                    moveDirection *= -1;
+                                }
+                            }
+                        }
+                    }
+                    overhangs = overhangs.filter(mesh => {
+                        if (mesh.position.y < -20) {
+                            scene.remove(mesh);
+                            return false;
+                        }
+                        return true;
+                    });
+                    renderer.render(scene, camera);
+                    requestAnimationFrame(animate);
+                }
+
+                // Event listeners
+                document.addEventListener('click', (e) => {
+                    if (e.target.id !== 'restartBtn' && !gameOver) {
+                        dropBox();
+                    }
+                });
+                document.addEventListener('keydown', (e) => {
+                    if (e.code === 'Space' && !gameOver) {
+                        e.preventDefault();
+                        dropBox();
+                    }
+                });
+                document.getElementById('restartBtn').addEventListener('click', init);
+                window.addEventListener('resize', () => {
+                    camera.left = window.innerWidth / -60;
+                    camera.right = window.innerWidth / 60;
+                    camera.top = window.innerHeight / 60;
+                    camera.bottom = window.innerHeight / -60;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(window.innerWidth, window.innerHeight);
+                });
+
+                init();
+                animate();
+            }
+            
+            // --- New Game JavaScript for "Tetris" ---
+            function initTetrisGame() {
+                const canvas = document.getElementById('tetris');
+                if (!canvas) return;
+                const ctx = canvas.getContext('2d');
+                ctx.scale(20, 20);
+
+                const nextCanvas = document.getElementById('next');
+                const nextCtx = nextCanvas.getContext('2d');
+                nextCtx.scale(20, 20);
+
+                const scoreElem = document.getElementById('score');
+                const levelElem = document.getElementById('level');
+                const linesElem = document.getElementById('lines');
+
+                const colors = [
+                    null,
+                    '#FF0D72', '#0DC2FF', '#0DFF72',
+                    '#F538FF', '#FF8E0D', '#FFE138', '#3877FF'
+                ];
+
+                function createMatrix(w, h) {
+                    const matrix = [];
+                    while (h--) matrix.push(new Array(w).fill(0));
+                    return matrix;
+                }
+
+                function createPiece(type) {
+                    if (type === 'T') return [[0, 0, 0], [1, 1, 1], [0, 1, 0]];
+                    if (type === 'O') return [[2, 2], [2, 2]];
+                    if (type === 'L') return [[0, 3, 0], [0, 3, 0], [0, 3, 3]];
+                    if (type === 'J') return [[0, 4, 0], [0, 4, 0], [4, 4, 0]];
+                    if (type === 'I') return [[0, 5, 0, 0], [0, 5, 0, 0], [0, 5, 0, 0], [0, 5, 0, 0]];
+                    if (type === 'S') return [[0, 6, 6], [6, 6, 0], [0, 0, 0]];
+                    if (type === 'Z') return [[7, 7, 0], [0, 7, 7], [0, 0, 0]];
+                }
+
+                function drawMatrix(matrix, ctx, offset, ghost = false) {
+                    matrix.forEach((row, y) => {
+                        row.forEach((val, x) => {
+                            if (val !== 0) {
+                                ctx.fillStyle = ghost ? colors[val] + '66' : colors[val];
+                                ctx.fillRect(x + offset.x, y + offset.y, 1, 1);
+                            }
+                        });
+                    });
+                }
+
+                function draw() {
+                    ctx.fillStyle = '#000';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    drawGhost();
+                    drawMatrix(arena, ctx, { x: 0, y: 0 });
+                    drawMatrix(player.matrix, ctx, player.pos);
+                    drawNext();
+                }
+
+                function drawNext() {
+                    nextCtx.fillStyle = '#000';
+                    nextCtx.fillRect(0, 0, nextCanvas.width, nextCanvas.height);
+                    drawMatrix(nextPiece, nextCtx, { x: 0, y: 0 });
+                }
+
+                function drawGhost() {
+                    const ghostPos = { x: player.pos.x, y: player.pos.y };
+                    while (!collide(arena, { matrix: player.matrix, pos: ghostPos })) {
+                        ghostPos.y++;
+                    }
+                    ghostPos.y--;
+                    drawMatrix(player.matrix, ctx, ghostPos, true);
+                }
+
+                function collide(arena, player) {
+                    const m = player.matrix;
+                    const o = player.pos;
+                    for (let y = 0; y < m.length; y++) {
+                        for (let x = 0; x < m[y].length; x++) {
+                            if (m[y][x] !== 0 && (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) {
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+                }
+
+                function merge(arena, player) {
+                    player.matrix.forEach((row, y) => {
+                        row.forEach((val, x) => {
+                            if (val !== 0) arena[y + player.pos.y][x + player.pos.x] = val;
+                        });
+                    });
+                }
+
+                function rotate(matrix, dir) {
+                    for (let y = 0; y < matrix.length; y++) {
+                        for (let x = 0; x < y; x++) {
+                            [matrix[x][y], matrix[y][x]] = [matrix[y][x], matrix[x][y]];
+                        }
+                    }
+                    if (dir > 0) matrix.forEach(row => row.reverse());
+                    else matrix.reverse();
+                }
+
+                function playerReset() {
+                    player.matrix = nextPiece;
+                    nextPiece = createPiece('TJLOSZI'[Math.floor(Math.random() * 7)]);
+                    player.pos.y = 1;
+                    player.pos.x = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
+                    if (collide(arena, player)) {
+                        arena.forEach(row => row.fill(0));
+                        score = 0; linesCleared = 0; level = 0; dropInterval = 1000;
+                        updateHUD();
+                    }
+                }
+
+                function playerDrop() {
+                    player.pos.y++;
+                    if (collide(arena, player)) {
+                        player.pos.y--;
+                        merge(arena, player);
+                        arenaSweep();
+                        playerReset();
+                    }
+                    dropCounter = 0;
+                }
+
+                function hardDrop() {
+                    while (!collide(arena, player)) {
+                        player.pos.y++;
+                    }
+                    player.pos.y--;
+                    merge(arena, player);
+                    arenaSweep();
+                    playerReset();
+                    dropCounter = 0;
+                }
+
+                function playerMove(dir) {
+                    player.pos.x += dir;
+                    if (collide(arena, player)) player.pos.x -= dir;
+                }
+
+                function playerRotate(dir) {
+                    const pos = player.pos.x;
+                    let offset = 1;
+                    rotate(player.matrix, dir);
+                    while (collide(arena, player)) {
+                        player.pos.x += offset;
+                        offset = -(offset + (offset > 0 ? 1 : -1));
+                        if (offset > player.matrix[0].length) {
+                            rotate(player.matrix, -dir);
+                            player.pos.x = pos;
+                            return;
+                        }
+                    }
+                }
+
+                let dropCounter = 0;
+                let dropInterval = 1000;
+                let lastTime = 0;
+                let softDrop = false;
+                let score = 0;
+                let linesCleared = 0;
+                let level = 0;
+
+                let nextPiece = createPiece('TJLOSZI'[Math.floor(Math.random() * 7)]);
+
+                function arenaSweep() {
+                    let rowCount = 0;
+                    outer: for (let y = arena.length - 1; y >= 0; y--) {
+                        for (let x = 0; x < arena[y].length; x++) {
+                            if (arena[y][x] === 0) continue outer;
+                        }
+                        const row = arena.splice(y, 1)[0].fill(0);
+                        arena.unshift(row);
+                        rowCount++;
+                        y++;
+                    }
+                    if (rowCount > 0) {
+                        linesCleared += rowCount;
+                        score += [0, 100, 300, 500, 800][rowCount] * (level + 1);
+                        if (linesCleared >= (level + 1) * 10) {
+                            level++;
+                            dropInterval = Math.max(200, 1000 - level * 100);
+                        }
+                        updateHUD();
+                    }
+                }
+
+                function updateHUD() {
+                    scoreElem.textContent = score;
+                    linesElem.textContent = linesCleared;
+                    levelElem.textContent = level;
+                }
+
+                function update(time = 0) {
+                    const delta = time - lastTime;
+                    lastTime = time;
+                    dropCounter += delta;
+                    const interval = softDrop ? dropInterval / 10 : dropInterval;
+                    if (dropCounter > interval) playerDrop();
+                    draw();
+                    requestAnimationFrame(update);
+                }
+
+                document.addEventListener('keydown', e => {
+                    switch (e.key) {
+                        case 'ArrowLeft': playerMove(-1); break;
+                        case 'ArrowRight': playerMove(1); break;
+                        case 'ArrowDown': softDrop = true; break;
+                        case ' ': hardDrop(); break;
+                        case 'ArrowUp':
+                        case 'w': playerRotate(1); break;
+                        case 'q': playerRotate(-1); break;
+                    }
+                });
+
+                document.addEventListener('keyup', e => {
+                    if (e.key === 'ArrowDown') softDrop = false;
+                });
+
+                const arena = createMatrix(12, 20);
+                const player = { pos: { x: 0, y: 0 }, matrix: null };
+
+                playerReset();
+                update();
+                updateHUD();
             }
         });
     </script>

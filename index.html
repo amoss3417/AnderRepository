@@ -269,6 +269,119 @@
             font-weight: bold;
         }
 
+        /* --- Game-specific CSS for "WHAT THE HEX?" --- */
+        #game-container {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            flex-direction: column;
+            margin: 0 auto;
+            background-color: #FFFFFF;
+            color: #333333;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 800px;
+        }
+        #game-container .header-text {
+            font-size: 0.8em;
+            color: #888888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: static; /* Override absolute positioning */
+        }
+        #game-container #hex-code {
+            font-size: 3em;
+            font-weight: 700;
+            margin-top: 20px;
+            margin-bottom: 50px;
+            letter-spacing: 2px;
+            transition: color 0.5s ease-in-out;
+        }
+        #game-container .color-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            max-width: 800px;
+            margin-bottom: 30px;
+        }
+        #game-container .color-option {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out, opacity 0.3s ease-in-out;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        #game-container .color-option:hover:not(.guessed-incorrectly) {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        #game-container .color-option:active:not(.guessed-incorrectly) {
+            transform: scale(0.95);
+        }
+        #game-container .color-option.guessed-incorrectly {
+            opacity: 0;
+            pointer-events: none;
+            transform: none;
+            box-shadow: none;
+        }
+        #game-container .color-option.winner-state {
+            pointer-events: none;
+            cursor: default;
+            transform: none;
+            box-shadow: none;
+        }
+        #game-container #message {
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-top: 20px;
+            min-height: 1.5em;
+        }
+        #game-container .new-game-button {
+            display: none;
+            margin-top: 20px;
+            padding: 10px 25px;
+            font-size: 1em;
+            font-weight: 400;
+            letter-spacing: 1px;
+            border: 1px solid #333;
+            background-color: transparent;
+            color: #333;
+            cursor: pointer;
+            text-transform: uppercase;
+            border-radius: 0;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        #game-container .new-game-button:hover {
+            background-color: #333;
+            color: #fff;
+        }
+        #game-container .difficulty-section {
+            margin-top: 40px;
+            font-size: 0.9em;
+            color: #666666;
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+        }
+        #game-container .difficulty-section span {
+            margin: 0;
+            cursor: pointer;
+        }
+        #game-container .difficulty-section span.active,
+        #game-container .difficulty-section span:hover {
+            font-weight: bold;
+            color: #333333;
+        }
+        #game-container .difficulty-section span.active {
+            text-decoration: underline;
+        }
+        /* --- End Game CSS --- */
+
         footer {
             text-align: center;
             padding: 30px 0;
@@ -331,9 +444,9 @@
             <div class="container">
                 <h2>My Projects</h2>
                 <div class="project-card">
-                    <h3>Project One</h3>
-                    <p>A description of your first project. Talk about the technologies used and the purpose of the project.</p>
-                    <a href="#" class="view-project-btn" data-project-id="project-one">View Details</a>
+                    <h3>Project One: What the Hex?</h3>
+                    <p>A fun color guessing game built to test your knowledge of hexadecimal color codes. Click to play!</p>
+                    <a href="#" class="view-project-btn" data-project-id="project-one">View Details & Play</a>
                 </div>
                 <div class="project-card">
                     <h3>Project Two</h3>
@@ -345,18 +458,34 @@
 
         <section id="project-one-detail" class="project-detail-section">
             <div class="container">
-                <h2>Project One Details</h2>
-                <p>This is a more in-depth description of Project One. Here you can include more text, images, screenshots, or even embedded videos demonstrating your work.</p>
-                <p><strong>Technologies Used:</strong> HTML, CSS, JavaScript</p>
-                <img src="https://via.placeholder.com/600x300?text=Project+One+Image" alt="Project One Screenshot" style="max-width:100%; height:auto; margin-top:20px;">
-                <p style="margin-top:20px;">You can also add links to the live demo or GitHub repository.</p>
-                <a href="https://github.com/yourusername/project-one" target="_blank">GitHub Repo</a> | 
-                <a href="#" target="_blank">Live Demo</a>
-                <br>
+                <h2>Project One Details: What the Hex?</h2>
+                
+                <div id="game-container">
+                    <div class="header-text">WHAT THE HEX?</div>
+                    <div id="hex-code">#B08992</div>
+                    <div class="color-grid" id="color-grid"></div>
+                    <div id="message">GUESS THE COLOR</div>
+                    <button id="new-game-button" class="new-game-button">NEW GAME</button>
+                    <div class="difficulty-section">
+                        DIFFICULTY: 
+                        <span data-difficulty="2">2</span> 
+                        <span data-difficulty="3">3</span> 
+                        <span data-difficulty="4">4</span> 
+                        <span data-difficulty="5">5</span> 
+                        <span data-difficulty="6">6</span> 
+                        <span data-difficulty="7">7</span> 
+                        <span data-difficulty="8">8</span> 
+                        <span data-difficulty="9">9</span> 
+                        <span data-difficulty="10">10</span> 
+                        <span data-difficulty="48">48</span> 
+                        <span data-difficulty="100">100</span> 
+                    </div>
+                </div>
+
+                <p style="margin-top:20px;">This project demonstrates the use of JavaScript to create a playable web-based game. It involves generating random values, dynamically creating and manipulating HTML elements, and handling user input to provide an interactive experience.</p>
                 <button class="back-button back-to-projects">Back to Projects</button>
             </div>
         </section>
-
         <section id="project-two-detail" class="project-detail-section">
             <div class="container">
                 <h2>Project Two Details</h2>
@@ -494,6 +623,117 @@
                         formStatus.style.color = 'red';
                     }
                 });
+            }
+
+            // --- Game JavaScript for "WHAT THE HEX?" ---
+            const gameContainer = document.getElementById('game-container');
+            if (gameContainer) {
+                const hexCodeElement = gameContainer.querySelector('#hex-code');
+                const colorGrid = gameContainer.querySelector('#color-grid');
+                const messageElement = gameContainer.querySelector('#message');
+                const newGameButton = gameContainer.querySelector('#new-game-button');
+                const difficultySpans = gameContainer.querySelectorAll('.difficulty-section span');
+
+                let correctAnswerHex;
+                let numberOfOptions = 5;
+
+                function generateRandomHex() {
+                    const hexCharacters = '0123456789ABCDEF';
+                    let hex = '#';
+                    for (let i = 0; i < 6; i++) {
+                        hex += hexCharacters[Math.floor(Math.random() * 16)];
+                    }
+                    return hex;
+                }
+
+                function rgbToHex(rgb) {
+                    const rgbValues = rgb.match(/\d+/g);
+                    if (!rgbValues || rgbValues.length < 3) return "";
+
+                    let hex = "#";
+                    for (let i = 0; i < 3; i++) {
+                        let hexComponent = parseInt(rgbValues[i]).toString(16);
+                        hex += (hexComponent.length === 1) ? "0" + hexComponent : hexComponent;
+                    }
+                    return hex.toUpperCase();
+                }
+
+                function newRound() {
+                    correctAnswerHex = generateRandomHex();
+                    hexCodeElement.textContent = correctAnswerHex;
+                    hexCodeElement.style.color = '#333333';
+                    messageElement.textContent = 'GUESS THE COLOR';
+                    messageElement.style.color = '#333333';
+                    newGameButton.style.display = 'none';
+
+                    const optionsSet = new Set();
+                    optionsSet.add(correctAnswerHex);
+                    while (optionsSet.size < numberOfOptions) {
+                        optionsSet.add(generateRandomHex());
+                    }
+
+                    const allOptions = Array.from(optionsSet);
+                    allOptions.sort(() => Math.random() - 0.5);
+
+                    colorGrid.innerHTML = ''; 
+                    allOptions.forEach(color => {
+                        const button = document.createElement('button');
+                        button.classList.add('color-option');
+                        button.style.backgroundColor = color;
+                        button.addEventListener('click', handleGuess);
+                        colorGrid.appendChild(button);
+                    });
+                }
+
+                function handleGuess(event) {
+                    const userGuessButton = event.target;
+                    const userGuessRgb = userGuessButton.style.backgroundColor;
+                    const userGuessHex = rgbToHex(userGuessRgb);
+
+                    if (userGuessHex === correctAnswerHex) {
+                        messageElement.textContent = 'CORRECT!';
+                        messageElement.style.color = '#333333';
+                        hexCodeElement.style.color = correctAnswerHex;
+                        
+                        colorGrid.querySelectorAll('.color-option').forEach(button => {
+                            if (button === userGuessButton) {
+                                button.classList.add('winner-state');
+                            } else {
+                                button.classList.add('guessed-incorrectly');
+                            }
+                        });
+                        
+                        newGameButton.style.display = 'block';
+                        
+                    } else {
+                        messageElement.innerHTML = `Wrong, that color was: <span style="color: ${userGuessHex};">${userGuessHex}</span>`;
+                        messageElement.style.color = '#333333';
+                        userGuessButton.classList.add('guessed-incorrectly');
+                    }
+                }
+                
+                newGameButton.addEventListener('click', newRound);
+
+                difficultySpans.forEach(span => {
+                    span.addEventListener('click', () => {
+                        difficultySpans.forEach(s => s.classList.remove('active'));
+                        span.classList.add('active');
+                        
+                        numberOfOptions = parseInt(span.dataset.difficulty);
+                        
+                        newRound();
+                    });
+                });
+
+                // Set the initial active state and start the game
+                difficultySpans.forEach(span => {
+                    if (span.dataset.difficulty === '5') {
+                        span.classList.add('active');
+                    } else {
+                        span.classList.remove('active');
+                    }
+                });
+                newRound();
             }
         });
     </script>

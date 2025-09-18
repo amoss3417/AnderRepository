@@ -268,9 +268,9 @@
             margin-top: 20px;
             font-weight: bold;
         }
-
+        
         /* --- Game-specific CSS for "WHAT THE HEX?" --- */
-        #game-container {
+        #project-one-detail #game-container {
             font-family: 'Roboto', sans-serif;
             display: flex;
             justify-content: flex-start;
@@ -284,14 +284,14 @@
             border-radius: 10px;
             max-width: 800px;
         }
-        #game-container .header-text {
+        #project-one-detail #game-container .header-text {
             font-size: 0.8em;
             color: #888888;
             text-transform: uppercase;
             letter-spacing: 1px;
-            position: static; /* Override absolute positioning */
+            position: static;
         }
-        #game-container #hex-code {
+        #project-one-detail #game-container #hex-code {
             font-size: 3em;
             font-weight: 700;
             margin-top: 20px;
@@ -299,7 +299,7 @@
             letter-spacing: 2px;
             transition: color 0.5s ease-in-out;
         }
-        #game-container .color-grid {
+        #project-one-detail #game-container .color-grid {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
@@ -307,7 +307,7 @@
             max-width: 800px;
             margin-bottom: 30px;
         }
-        #game-container .color-option {
+        #project-one-detail #game-container .color-option {
             width: 50px;
             height: 50px;
             border-radius: 50%;
@@ -316,32 +316,32 @@
             transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out, opacity 0.3s ease-in-out;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        #game-container .color-option:hover:not(.guessed-incorrectly) {
+        #project-one-detail #game-container .color-option:hover:not(.guessed-incorrectly) {
             transform: scale(1.05);
             box-shadow: 0 4px 8px rgba(0,0,0,0.15);
         }
-        #game-container .color-option:active:not(.guessed-incorrectly) {
+        #project-one-detail #game-container .color-option:active:not(.guessed-incorrectly) {
             transform: scale(0.95);
         }
-        #game-container .color-option.guessed-incorrectly {
+        #project-one-detail #game-container .color-option.guessed-incorrectly {
             opacity: 0;
             pointer-events: none;
             transform: none;
             box-shadow: none;
         }
-        #game-container .color-option.winner-state {
+        #project-one-detail #game-container .color-option.winner-state {
             pointer-events: none;
             cursor: default;
             transform: none;
             box-shadow: none;
         }
-        #game-container #message {
+        #project-one-detail #game-container #message {
             font-size: 1.5em;
             font-weight: 700;
             margin-top: 20px;
             min-height: 1.5em;
         }
-        #game-container .new-game-button {
+        #project-one-detail #game-container .new-game-button {
             display: none;
             margin-top: 20px;
             padding: 10px 25px;
@@ -356,11 +356,11 @@
             border-radius: 0;
             transition: background-color 0.2s, color 0.2s;
         }
-        #game-container .new-game-button:hover {
+        #project-one-detail #game-container .new-game-button:hover {
             background-color: #333;
             color: #fff;
         }
-        #game-container .difficulty-section {
+        #project-one-detail #game-container .difficulty-section {
             margin-top: 40px;
             font-size: 0.9em;
             color: #666666;
@@ -368,19 +368,81 @@
             justify-content: center;
             gap: 5px;
         }
-        #game-container .difficulty-section span {
+        #project-one-detail #game-container .difficulty-section span {
             margin: 0;
             cursor: pointer;
         }
-        #game-container .difficulty-section span.active,
-        #game-container .difficulty-section span:hover {
+        #project-one-detail #game-container .difficulty-section span.active,
+        #project-one-detail #game-container .difficulty-section span:hover {
             font-weight: bold;
             color: #333333;
         }
-        #game-container .difficulty-section span.active {
+        #project-one-detail #game-container .difficulty-section span.active {
             text-decoration: underline;
         }
         /* --- End Game CSS --- */
+        
+        /* --- "Dizzy Wheel" Game CSS --- */
+        #project-two-detail .game-container {
+            font-family: 'Inter', sans-serif;
+            background-color: #2d3748;
+            color: #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+            padding: 2rem;
+            width: 90%;
+            max-width: 400px;
+            margin: 0 auto; /* Center the game */
+        }
+
+        #project-two-detail canvas {
+            border-radius: 9999px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+        }
+
+        #project-two-detail .game-over-screen {
+            text-align: center;
+            transition: opacity 0.5s ease;
+        }
+
+        #project-two-detail .button {
+            background-image: linear-gradient(to right, #4c51bf, #6b46c1);
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 9999px;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        #project-two-detail .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        #project-two-detail .button:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        /* Tailwind-like classes for the game */
+        #project-two-detail .text-3xl { font-size: 1.875rem; }
+        #project-two-detail .text-2xl { font-size: 1.5rem; }
+        #project-two-detail .text-xl { font-size: 1.25rem; }
+        #project-two-detail .text-4xl { font-size: 2.25rem; }
+        #project-two-detail .font-bold { font-weight: 700; }
+        #project-two-detail .font-semibold { font-weight: 600; }
+        #project-two-detail .mb-4 { margin-bottom: 1rem; }
+        #project-two-detail .mb-6 { margin-bottom: 1.5rem; }
+        #project-two-detail .hidden { display: none; }
+        #project-two-detail .text-gray-400 { color: #a0aec0; }
+        #project-two-detail .text-yellow-300 { color: #f6e05e; }
+        #project-two-detail .text-center { text-align: center; }
+        /* --- End "Dizzy Wheel" Game CSS --- */
 
         footer {
             text-align: center;
@@ -449,9 +511,9 @@
                     <a href="#" class="view-project-btn" data-project-id="project-one">View Details & Play</a>
                 </div>
                 <div class="project-card">
-                    <h3>Project Two</h3>
-                    <p>A description of your second project. Highlight the key features and your role in its development.</p>
-                    <a href="#" class="view-project-btn" data-project-id="project-two">View Details</a>
+                    <h3>Project Two: Dizzy Wheel</h3>
+                    <p>A fast-paced color matching game. Click to play!</p>
+                    <a href="#" class="view-project-btn" data-project-id="project-two">View Details & Play</a>
                 </div>
             </div>
         </section>
@@ -486,16 +548,30 @@
                 <button class="back-button back-to-projects">Back to Projects</button>
             </div>
         </section>
+
         <section id="project-two-detail" class="project-detail-section">
             <div class="container">
-                <h2>Project Two Details</h2>
-                <p>Here's a detailed breakdown of Project Two. Explain your process, challenges faced, and solutions implemented.</p>
-                <p><strong>Technologies Used:</strong> HTML, CSS, JavaScript, React (example)</p>
-                <img src="https://via.placeholder.com/600x300?text=Project+Two+Image" alt="Project Two Screenshot" style="max-width:100%; height:auto; margin-top:20px;">
-                <p style="margin-top:20px;">Feel free to expand with more content, case studies, or user testimonials.</p>
-                <a href="https://github.com/yourusername/project-two" target="_blank">GitHub Repo</a> | 
-                <a href="#" target="_blank">Live Demo</a>
-                <br>
+                <h2>Project Two Details: Dizzy Wheel</h2>
+
+                <div class="game-container">
+                    <h1 class="text-3xl font-bold mb-4">Dizzy Wheel</h1>
+                    <p class="text-gray-400 mb-6" id="instructions">Press space to start</p>
+            
+                    <div id="gameScreen">
+                        <div class="text-center mb-4">
+                            Score: <span id="scoreDisplay" class="font-bold text-4xl">0</span>
+                        </div>
+                        <canvas id="gameCanvas" width="300" height="300"></canvas>
+                    </div>
+            
+                    <div id="gameOverScreen" class="game-over-screen hidden">
+                        <h2 class="text-2xl font-semibold mb-4">Game Over!</h2>
+                        <p class="mb-6">Your final score is <span id="finalScoreDisplay" class="font-bold text-xl text-yellow-300">0</span>.</p>
+                        <button id="restartButton" class="button">Play Again</button>
+                    </div>
+                </div>
+
+                <p style="margin-top:20px;">This project showcases a more advanced JavaScript game involving real-time canvas rendering, physics-based motion, and a responsive game loop. It highlights dynamic visual updates and state management within a web application.</p>
                 <button class="back-button back-to-projects">Back to Projects</button>
             </div>
         </section>
@@ -734,6 +810,170 @@
                     }
                 });
                 newRound();
+            }
+
+            // --- Game JavaScript for "Dizzy Wheel" ---
+            const dizzyWheelContainer = document.querySelector('#project-two-detail .game-container');
+            if (dizzyWheelContainer) {
+                const canvas = dizzyWheelContainer.querySelector('#gameCanvas');
+                const ctx = canvas.getContext('2d');
+                const gameScreen = dizzyWheelContainer.querySelector('#gameScreen');
+                const gameOverScreen = dizzyWheelContainer.querySelector('#gameOverScreen');
+                const scoreDisplay = dizzyWheelContainer.querySelector('#scoreDisplay');
+                const finalScoreDisplay = dizzyWheelContainer.querySelector('#finalScoreDisplay');
+                const restartButton = dizzyWheelContainer.querySelector('#restartButton');
+                const instructions = dizzyWheelContainer.querySelector('#instructions');
+
+                let wheelSpeed = 0.03;
+                let wheelAngle = 0;
+                let score = 0;
+                let isGameActive = false;
+                const colors = ['#3B82F6', '#EF4444', '#FACC15', '#22C55E'];
+                let targetColorIndex = 0;
+                let previousSectionIndex = -1;
+                const sectionAngle = (2 * Math.PI) / colors.length;
+                const handOffsetAngle = Math.PI / 2;
+
+                function init() {
+                    score = 0;
+                    wheelSpeed = 0.03;
+                    wheelAngle = 0;
+                    targetColorIndex = Math.floor(Math.random() * colors.length);
+                    previousSectionIndex = -1;
+                    scoreDisplay.textContent = score;
+                    instructions.textContent = "Press space or tap the wheel to start";
+                    gameScreen.classList.remove('hidden');
+                    gameOverScreen.classList.add('hidden');
+                    drawInitialState();
+                }
+
+                function startGame() {
+                    isGameActive = true;
+                    instructions.textContent = "Tap or press space to match the color!";
+                    requestAnimationFrame(update);
+                }
+
+                function endGame() {
+                    isGameActive = false;
+                    finalScoreDisplay.textContent = score;
+                    gameScreen.classList.add('hidden');
+                    gameOverScreen.classList.remove('hidden');
+                }
+
+                function drawInitialState() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    drawWheel();
+                    drawHand();
+                }
+
+                function drawWheel() {
+                    const centerX = canvas.width / 2;
+                    const centerY = canvas.height / 2;
+                    const outerRadius = 120;
+                    const innerRadius = 80;
+
+                    for (let i = 0; i < colors.length; i++) {
+                        ctx.beginPath();
+                        ctx.moveTo(centerX, centerY);
+                        ctx.arc(centerX, centerY, outerRadius, i * sectionAngle, (i + 1) * sectionAngle);
+                        ctx.fillStyle = colors[i];
+                        ctx.fill();
+                        ctx.closePath();
+                    }
+                    
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, innerRadius, 0, 2 * Math.PI);
+                    ctx.fillStyle = '#2d3748';
+                    ctx.fill();
+                    ctx.closePath();
+                }
+
+                function drawHand() {
+                    const centerX = canvas.width / 2;
+                    const centerY = canvas.height / 2;
+                    const radius = 120;
+                    
+                    const handAngle = wheelAngle - handOffsetAngle;
+
+                    const endX = centerX + radius * Math.cos(handAngle);
+                    const endY = centerY + radius * Math.sin(handAngle);
+
+                    ctx.beginPath();
+                    ctx.moveTo(centerX, centerY);
+                    ctx.lineTo(endX, endY);
+                    ctx.strokeStyle = colors[targetColorIndex];
+                    ctx.lineWidth = 10;
+                    ctx.lineCap = 'round';
+                    ctx.stroke();
+                    ctx.closePath();
+                }
+
+                function update() {
+                    if (!isGameActive) return;
+
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    wheelAngle += wheelSpeed;
+
+                    const normalizedAngle = (wheelAngle - handOffsetAngle + 2 * Math.PI) % (2 * Math.PI);
+                    const currentSectionIndex = Math.floor(normalizedAngle / sectionAngle);
+                    
+                    if (previousSectionIndex !== -1 && currentSectionIndex !== targetColorIndex && previousSectionIndex === targetColorIndex) {
+                        endGame();
+                        return;
+                    }
+
+                    previousSectionIndex = currentSectionIndex;
+
+                    drawWheel();
+                    drawHand();
+
+                    requestAnimationFrame(update);
+                }
+
+                function handleTap() {
+                    if (!isGameActive) return;
+
+                    const normalizedAngle = (wheelAngle - handOffsetAngle + 2 * Math.PI) % (2 * Math.PI);
+                    const currentSectionIndex = Math.floor(normalizedAngle / sectionAngle);
+                    
+                    if (currentSectionIndex === targetColorIndex) {
+                        score++;
+                        scoreDisplay.textContent = score;
+                        wheelSpeed *= -1.05;
+                        
+                        let newTargetIndex;
+                        do {
+                            newTargetIndex = Math.floor(Math.random() * colors.length);
+                        } while (newTargetIndex === targetColorIndex);
+                        targetColorIndex = newTargetIndex;
+                        
+                    } else {
+                        endGame();
+                    }
+                }
+
+                // Event listeners
+                restartButton.addEventListener('click', init);
+                canvas.addEventListener('click', () => {
+                    if (!isGameActive) {
+                        startGame();
+                    } else {
+                        handleTap();
+                    }
+                });
+
+                document.addEventListener('keydown', (event) => {
+                    if (event.code === 'Space') {
+                        event.preventDefault();
+                        if (!isGameActive) {
+                            startGame();
+                        } else {
+                            handleTap();
+                        }
+                    }
+                });
+
+                init();
             }
         });
     </script>

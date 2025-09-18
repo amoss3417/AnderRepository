@@ -833,6 +833,7 @@
                 let previousSectionIndex = -1;
                 const sectionAngle = (2 * Math.PI) / colors.length;
                 const handOffsetAngle = Math.PI / 2;
+                const angleEpsilon = 0.001; // Small value to prevent floating point errors
 
                 function init() {
                     score = 0;
@@ -915,7 +916,7 @@
                     wheelAngle += wheelSpeed;
 
                     const normalizedAngle = (wheelAngle - handOffsetAngle + 2 * Math.PI) % (2 * Math.PI);
-                    const currentSectionIndex = Math.floor(normalizedAngle / sectionAngle);
+                    const currentSectionIndex = Math.floor((normalizedAngle + angleEpsilon) / sectionAngle);
                     
                     if (previousSectionIndex !== -1 && currentSectionIndex !== targetColorIndex && previousSectionIndex === targetColorIndex) {
                         endGame();
@@ -934,7 +935,7 @@
                     if (!isGameActive) return;
 
                     const normalizedAngle = (wheelAngle - handOffsetAngle + 2 * Math.PI) % (2 * Math.PI);
-                    const currentSectionIndex = Math.floor(normalizedAngle / sectionAngle);
+                    const currentSectionIndex = Math.floor((normalizedAngle + angleEpsilon) / sectionAngle);
                     
                     if (currentSectionIndex === targetColorIndex) {
                         score++;

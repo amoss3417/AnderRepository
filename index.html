@@ -444,6 +444,95 @@
         #project-two-detail .text-center { text-align: center; }
         /* --- End "Dizzy Wheel" Game CSS --- */
 
+        /* --- New "Stacker" Game CSS for Project Three --- */
+        #project-three-detail #game-area-container {
+            position: relative;
+            width: 90vw;
+            height: 80vh;
+            max-width: 400px;
+            max-height: 700px;
+            background-color: #222;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        #project-three-detail #game-title {
+            text-align: center;
+            font-size: 2em;
+            font-weight: bold;
+            letter-spacing: 5px;
+            color: #00bfff;
+            text-shadow: 0 0 10px #00bfff, 0 0 20px #00bfff;
+            margin-bottom: 10px;
+        }
+
+        #project-three-detail #game-grid {
+            display: grid;
+            width: 100%;
+            height: 100%;
+            grid-template-rows: repeat(20, 1fr);
+            grid-template-columns: repeat(15, 1fr);
+            border: 2px solid #555;
+            background-color: #111;
+        }
+
+        #project-three-detail .grid-cell {
+            border: 1px solid #333;
+        }
+
+        #project-three-detail .block-cell {
+            background-color: #00bfff;
+            box-shadow: 0 0 10px #00bfff, inset 0 0 5px #00bfff;
+        }
+
+        #project-three-detail #score-display {
+            padding: 10px;
+            font-size: 2em;
+            font-weight: bold;
+            color: #8ac6d1;
+            text-align: center;
+        }
+
+        #project-three-detail #game-over-screen {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 10;
+        }
+
+        #project-three-detail #game-over-screen h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        #project-three-detail .button {
+            padding: 12px 30px;
+            font-size: 1.5em;
+            cursor: pointer;
+            border: none;
+            border-radius: 50px;
+            background-color: #ff6f61;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s;
+        }
+
+        #project-three-detail .button:active {
+            transform: scale(0.95);
+        }
+        /* --- End New Game CSS --- */
+
         footer {
             text-align: center;
             padding: 30px 0;
@@ -515,7 +604,12 @@
                     <p>A fast-paced color matching game. Click to play!</p>
                     <a href="#" class="view-project-btn" data-project-id="project-two">View Details & Play</a>
                 </div>
-            </div>
+                <div class="project-card">
+                    <h3>Project Three: Stacker</h3>
+                    <p>Test your reflexes in this block stacking game. Click to play!</p>
+                    <a href="#" class="view-project-btn" data-project-id="project-three">View Details & Play</a>
+                </div>
+                </div>
         </section>
 
         <section id="project-one-detail" class="project-detail-section">
@@ -572,6 +666,26 @@
                 </div>
 
                 <p style="margin-top:20px;">This project showcases a more advanced JavaScript game involving real-time canvas rendering, physics-based motion, and a responsive game loop. It highlights dynamic visual updates and state management within a web application.</p>
+                <button class="back-button back-to-projects">Back to Projects</button>
+            </div>
+        </section>
+        
+        <section id="project-three-detail" class="project-detail-section">
+            <div class="container">
+                <h2>Project Three Details: Stacker</h2>
+                
+                <div id="game-area-container">
+                    <div id="game-title">STACKER</div>
+                    <div id="game-grid"></div>
+                    <div id="score-display">0</div>
+                    
+                    <div id="game-over-screen">
+                        <h1 id="end-message"></h1>
+                        <p style="font-size: 1.5em;">Score: <span id="final-score"></span></p>
+                        <button class="button" onclick="startGame()">Play Again</button>
+                    </div>
+                </div>
+                <p style="margin-top:20px;">This project is a classic arcade game built with pure HTML, CSS, and JavaScript, demonstrating the use of grid layouts, real-time animation, and collision detection for a fun, interactive experience.</p>
                 <button class="back-button back-to-projects">Back to Projects</button>
             </div>
         </section>
@@ -657,6 +771,11 @@
                     detailNav.style.display = 'block';
 
                     window.scrollTo({ top: 0, behavior: 'smooth' });
+                    
+                    // Call a specific function for the game being loaded
+                    if (projectId === 'project-three') {
+                        initStackerGame();
+                    }
                 });
             });
 
@@ -975,6 +1094,184 @@
                 });
 
                 init();
+            }
+
+            // --- New Game JavaScript for "Stacker" ---
+            function initStackerGame() {
+                const gameGrid = document.querySelector('#project-three-detail #game-grid');
+                if (!gameGrid) return; // Exit if the game area is not in the DOM
+                
+                const scoreDisplay = document.querySelector('#project-three-detail #score-display');
+                const gameOverScreen = document.querySelector('#project-three-detail #game-over-screen');
+                const finalScoreDisplay = document.querySelector('#project-three-detail #final-score');
+                const gameAreaContainer = document.querySelector('#project-three-detail #game-area-container');
+                const endMessage = document.querySelector('#project-three-detail #end-message');
+
+                let gridCells = [];
+                let currentBlock = null;
+                let stack = [];
+                let score = 0;
+                let gameActive = false;
+                let direction = 1;
+                let animationInterval;
+                let intervalTime = 150;
+                
+                const GRID_WIDTH = 15;
+                const GRID_HEIGHT = 20;
+                const BLOCK_WIDTH = 5;
+
+                // Initialize grid cells
+                gameGrid.innerHTML = '';
+                for (let i = 0; i < GRID_WIDTH * GRID_HEIGHT; i++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('grid-cell');
+                    gameGrid.appendChild(cell);
+                    gridCells.push(cell);
+                }
+
+                function getCellIndex(x, y) {
+                    return (GRID_HEIGHT - 1 - y) * GRID_WIDTH + x;
+                }
+
+                function drawGame() {
+                    gridCells.forEach(cell => {
+                        cell.classList.remove('block-cell', 'perfect');
+                    });
+                    
+                    // Draw stacked blocks
+                    stack.forEach(block => {
+                        for (let i = 0; i < block.width; i++) {
+                            const index = getCellIndex(block.x + i, block.y);
+                            if (index >= 0 && index < gridCells.length) {
+                                gridCells[index].classList.add('block-cell');
+                                if (block.perfect) {
+                                    gridCells[index].classList.add('perfect');
+                                }
+                            }
+                        }
+                    });
+
+                    // Draw current moving block
+                    if (currentBlock) {
+                        for (let i = 0; i < currentBlock.width; i++) {
+                            const index = getCellIndex(currentBlock.x + i, currentBlock.y);
+                            if (index >= 0 && index < gridCells.length) {
+                                gridCells[index].classList.add('block-cell');
+                            }
+                        }
+                    }
+                }
+
+                function startGame() {
+                    gameActive = true;
+                    score = 0;
+                    stack = [];
+                    direction = 1;
+                    intervalTime = 150;
+                    scoreDisplay.textContent = score;
+                    gameOverScreen.style.display = 'none';
+                    createBlock();
+                    startAnimation();
+                    
+                    // Add click and keydown listeners
+                    gameAreaContainer.addEventListener('click', placeBlock);
+                    document.addEventListener('keydown', handleKeyDown);
+                }
+
+                function createBlock() {
+                    let initialWidth = stack.length > 0 ? stack[stack.length - 1].width : BLOCK_WIDTH;
+                    let initialX = Math.floor((GRID_WIDTH - initialWidth) / 2);
+                    let initialY = stack.length;
+                    
+                    currentBlock = {
+                        x: initialX,
+                        y: initialY,
+                        width: initialWidth,
+                        perfect: false
+                    };
+                }
+                
+                function startAnimation() {
+                    animationInterval = setInterval(() => {
+                        const nextX = currentBlock.x + direction;
+                        const nextWidth = currentBlock.width;
+
+                        if (nextX + nextWidth > GRID_WIDTH || nextX < 0) {
+                            direction *= -1;
+                        } else {
+                            currentBlock.x = nextX;
+                        }
+                        drawGame();
+                    }, intervalTime);
+                }
+
+                function placeBlock() {
+                    if (!gameActive) {
+                        return;
+                    }
+                    clearInterval(animationInterval);
+                    
+                    let lastBlock = stack.length > 0 ? stack[stack.length - 1] : null;
+
+                    if (lastBlock) {
+                        const overlapStart = Math.max(currentBlock.x, lastBlock.x);
+                        const overlapEnd = Math.min(currentBlock.x + currentBlock.width, lastBlock.x + lastBlock.width);
+                        const overlap = overlapEnd - overlapStart;
+
+                        if (overlap <= 0) {
+                            endGame(false);
+                            return;
+                        }
+
+                        currentBlock.x = overlapStart;
+                        currentBlock.width = overlap;
+                        
+                        score += 1;
+                    } else {
+                        currentBlock.y = 0;
+                        score += 1;
+                    }
+
+                    scoreDisplay.textContent = score;
+                    stack.push(currentBlock);
+                    
+                    if (stack.length >= GRID_HEIGHT) {
+                        endGame(true);
+                    } else {
+                        intervalTime *= 0.90;
+                        createBlock();
+                        startAnimation();
+                    }
+                }
+
+                function handleKeyDown(event) {
+                    if (event.code === 'Space') {
+                        event.preventDefault();
+                        if (gameActive) {
+                            placeBlock();
+                        }
+                    }
+                }
+
+                function endGame(won = false) {
+                    gameActive = false;
+                    clearInterval(animationInterval);
+                    finalScoreDisplay.textContent = score;
+
+                    if (won) {
+                        endMessage.textContent = "You Win!";
+                    } else {
+                        endMessage.textContent = "Game Over";
+                    }
+
+                    gameOverScreen.style.display = 'flex';
+                    
+                    // Remove listeners when the game ends
+                    gameAreaContainer.removeEventListener('click', placeBlock);
+                    document.removeEventListener('keydown', handleKeyDown);
+                }
+
+                startGame();
             }
         });
     </script>

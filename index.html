@@ -444,7 +444,7 @@
         #project-two-detail .text-center { text-align: center; }
         /* --- End "Dizzy Wheel" Game CSS --- */
 
-        /* --- New "Stacker" Game CSS for Project Three --- */
+        /* --- "Stacker" Game CSS for Project Three --- */
         #project-three-detail #game-area-container {
             position: relative;
             width: 90vw;
@@ -531,7 +531,34 @@
         #project-three-detail .button:active {
             transform: scale(0.95);
         }
-        /* --- End New Game CSS --- */
+        /* --- End "Stacker" Game CSS --- */
+        
+        /* --- Flappy Bird Mini-Clone Game CSS for Project Four --- */
+        #project-four-detail .game-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            width: 100%;
+        }
+        #project-four-detail .ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #fff;
+            text-shadow: 0 1px 0 rgba(0,0,0,0.25);
+            font-family: system-ui, Segoe UI, Roboto, Arial;
+        }
+        #project-four-detail .ui .hint {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        #project-four-detail canvas {
+            background: linear-gradient(#70c5ce,#9be3ef);
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+        /* --- End Flappy Bird Mini-Clone Game CSS --- */
 
         footer {
             text-align: center;
@@ -608,6 +635,11 @@
                     <h3>Project Three: Stacker</h3>
                     <p>Test your reflexes in this block stacking game. Click to play!</p>
                     <a href="#" class="view-project-btn" data-project-id="project-three">View Details & Play</a>
+                </div>
+                <div class="project-card">
+                    <h3>Project Four: Flappy Mini</h3>
+                    <p>A modern mini-clone of the classic mobile game "Flappy Bird". Click to play!</p>
+                    <a href="#" class="view-project-btn" data-project-id="project-four">View Details & Play</a>
                 </div>
                 </div>
         </section>
@@ -686,6 +718,22 @@
                     </div>
                 </div>
                 <p style="margin-top:20px;">This project is a classic arcade game built with pure HTML, CSS, and JavaScript, demonstrating the use of grid layouts, real-time animation, and collision detection for a fun, interactive experience.</p>
+                <button class="back-button back-to-projects">Back to Projects</button>
+            </div>
+        </section>
+        
+        <section id="project-four-detail" class="project-detail-section">
+            <div class="container">
+                <h2>Project Four Details: Flappy Mini</h2>
+                
+                <div class="game-container">
+                    <div class="ui">
+                        <div style="font-weight:700;font-size:18px">Flappy Mini</div>
+                        <div class="hint">Space / click / tap to flap • Press R to restart</div>
+                    </div>
+                    <canvas id="flappy-game" width="480" height="640"></canvas>
+                </div>
+                <p style="margin-top:20px;">This project is a modern mini-clone of the classic mobile game "Flappy Bird". It utilizes the HTML Canvas API to render graphics and a simple physics engine to create a fun, challenging game loop.</p>
                 <button class="back-button back-to-projects">Back to Projects</button>
             </div>
         </section>
@@ -775,6 +823,8 @@
                     // Call a specific function for the game being loaded
                     if (projectId === 'project-three') {
                         initStackerGame();
+                    } else if (projectId === 'project-four') {
+                        initFlappyGame();
                     }
                 });
             });
@@ -1096,7 +1146,7 @@
                 init();
             }
 
-            // --- New Game JavaScript for "Stacker" ---
+            // --- Game JavaScript for "Stacker" ---
             function initStackerGame() {
                 const gameGrid = document.querySelector('#project-three-detail #game-grid');
                 if (!gameGrid) return; // Exit if the game area is not in the DOM
@@ -1272,6 +1322,208 @@
                 }
 
                 startGame();
+            }
+
+            // --- New Game JavaScript for "Flappy Bird" ---
+            function initFlappyGame() {
+                const canvas = document.getElementById('flappy-game');
+                if (!canvas) return; // Exit if the game area is not in the DOM
+                const ctx = canvas.getContext('2d');
+                const W = canvas.width, H = canvas.height;
+
+                // --- Game state ---
+                let bird = { x: 100, y: H/2, r: 14, vel: 0 };
+                const gravity = 0.6;
+                const flapStrength = -10;
+                const pipeWidth = 70;
+                const pipeGap = 150;
+                const pipeSpawnInterval = 1500; // ms
+                let pipes = []; // each pipe: { x, topHeight }
+                let lastSpawn = 0;
+                let score = 0;
+                let highScore = 0;
+                let running = true;
+                let gameOver = false;
+                let lastTime = null;
+
+                // Input
+                function flap(){ if(!gameOver){ bird.vel = flapStrength; } else { restart(); }}
+                
+                // Add and remove event listeners based on game state
+                const handleKeyDown = e => { if(e.code === 'Space') { e.preventDefault(); flap(); } if(e.key === 'r' || e.key === 'R'){ restart(); } };
+                const handleCanvasClick = flap;
+                const handleCanvasTouch = e => { e.preventDefault(); flap(); };
+
+                // Spawn pipes
+                function spawnPipe(){
+                    const minTop = 60;
+                    const maxTop = H - pipeGap - 60;
+                    const top = minTop + Math.random() * (Math.max(0, maxTop - minTop));
+                    pipes.push({ x: W + 10, topHeight: Math.floor(top), passed: false });
+                }
+
+                // Collision helpers
+                function rectCircleColliding(cx, cy, r, rx, ry, rw, rh){
+                    const closestX = Math.max(rx, Math.min(cx, rx + rw));
+                    const closestY = Math.max(ry, Math.min(cy, ry + rh));
+                    const dx = cx - closestX;
+                    const dy = cy - closestY;
+                    return (dx*dx + dy*dy) <= (r*r);
+                }
+
+                // Restart
+                function restart(){
+                    bird = { x:100, y:H/2, r:14, vel:0 };
+                    pipes = [];
+                    score = 0;
+                    gameOver = false;
+                    lastSpawn = performance.now();
+                    lastTime = null;
+                    running = true;
+                    // start with a couple of pipes
+                    spawnPipe();
+                }
+
+                // Draw functions
+                function drawBackground(){
+                    ctx.fillStyle='rgba(255,255,255,0.6)';
+                    for(let i=0;i<6;i++){
+                        const cx = (i*140 + (Date.now()/40 % 140));
+                        const cy = 60 + (i%3)*30;
+                        ctx.beginPath();
+                        ctx.ellipse(cx%W, cy, 32,18,0,0,Math.PI*2);
+                        ctx.fill();
+                    }
+                    // ground
+                    ctx.fillStyle='#ded895';
+                    ctx.fillRect(0,H-60,W,60);
+                    ctx.fillStyle='#cfc072';
+                    ctx.fillRect(0,H-60,W,8);
+                }
+
+                function drawBird(){
+                    ctx.save();
+                    ctx.translate(bird.x, bird.y);
+                    const tilt = Math.max(-0.6, Math.min(0.6, bird.vel/10));
+                    ctx.rotate(tilt);
+                    ctx.fillStyle='#ffdd57';
+                    ctx.beginPath();
+                    ctx.arc(0,0,bird.r,0,Math.PI*2);
+                    ctx.fill();
+                    // eye
+                    ctx.fillStyle='#222';
+                    ctx.beginPath();
+                    ctx.arc(bird.r/3, -bird.r/4, bird.r/5,0,Math.PI*2);
+                    ctx.fill();
+                    // wing
+                    ctx.fillStyle='#f2c94c';
+                    ctx.beginPath();
+                    ctx.ellipse(-4,4,10,6,0,0,Math.PI*2);
+                    ctx.fill();
+                    ctx.restore();
+                }
+
+                function drawPipes(){
+                    ctx.fillStyle='#2ecc71';
+                    pipes.forEach(pipe => {
+                        // top pipe
+                        ctx.fillRect(pipe.x, 0, pipeWidth, pipe.topHeight);
+                        // bottom pipe
+                        const bottomY = pipe.topHeight + pipeGap;
+                        ctx.fillRect(pipe.x, bottomY, pipeWidth, H - bottomY - 60);
+                        // cap for style
+                        ctx.fillStyle='#27ae60';
+                        ctx.fillRect(pipe.x, pipe.topHeight - 12, pipeWidth, 12);
+                        ctx.fillRect(pipe.x, bottomY, pipeWidth, 12);
+                        ctx.fillStyle='#2ecc71';
+                    });
+                }
+
+                function drawScore(){
+                    ctx.fillStyle='rgba(0,0,0,0.6)';
+                    ctx.font='42px system-ui';
+                    ctx.textAlign='center';
+                    ctx.fillText(score, W/2, 80);
+                }
+
+                function drawGameOver(){
+                    ctx.fillStyle='rgba(0,0,0,0.6)';
+                    ctx.fillRect(W/2 - 160, H/2 - 70, 320, 140);
+                    ctx.fillStyle='#fff';
+                    ctx.font='24px system-ui';
+                    ctx.textAlign='center';
+                    ctx.fillText('Game Over', W/2, H/2 - 20);
+                    ctx.font='18px system-ui';
+                    ctx.fillText('Score: ' + score + '  •  High: ' + highScore, W/2, H/2 + 10);
+                    ctx.fillText('Press Space / Click to play again', W/2, H/2 + 44);
+                }
+
+                // Main loop
+                function loop(ts){
+                    if(!lastTime) lastTime = ts;
+                    const dt = ts - lastTime;
+                    lastTime = ts;
+
+                    // spawn pipes periodically
+                    if(ts - lastSpawn > pipeSpawnInterval){ spawnPipe(); lastSpawn = ts; }
+
+                    // update
+                    if(!gameOver){
+                        bird.vel += gravity;
+                        bird.y += bird.vel;
+
+                        // move pipes
+                        for(let i=pipes.length-1;i>=0;i--){
+                            const p = pipes[i];
+                            p.x -= 2.6; // pipe speed
+
+                            // check if bird passed pipe for scoring
+                            if(!p.passed && p.x + pipeWidth < bird.x - bird.r){ p.passed = true; score++; if(score > highScore) highScore = score; }
+
+                            // remove offscreen
+                            if(p.x + pipeWidth < -50){ pipes.splice(i,1); }
+                        }
+
+                        // collisions: with ground/ceiling
+                        if(bird.y - bird.r < 0){ bird.y = bird.r; bird.vel = 0; }
+                        if(bird.y + bird.r > H - 60){ gameOver = true; }
+
+                        // collisions with pipes
+                        for(const p of pipes){
+                            // top rect
+                            if(rectCircleColliding(bird.x, bird.y, bird.r, p.x, 0, pipeWidth, p.topHeight)) { gameOver = true; break; }
+                            // bottom rect
+                            const bottomY = p.topHeight + pipeGap;
+                            if(rectCircleColliding(bird.x, bird.y, bird.r, p.x, bottomY, pipeWidth, H - bottomY - 60)) { gameOver = true; break; }
+                        }
+                    }
+
+                    // draw
+                    ctx.clearRect(0,0,W,H);
+                    drawBackground();
+                    drawPipes();
+                    drawBird();
+                    drawScore();
+
+                    if(gameOver){ drawGameOver(); }
+
+                    if(running) requestAnimationFrame(loop);
+                }
+
+                // Attach event listeners
+                document.addEventListener('keydown', handleKeyDown);
+                canvas.addEventListener('mousedown', handleCanvasClick);
+                canvas.addEventListener('touchstart', handleCanvasTouch, {passive:false});
+
+                // Start the game
+                restart();
+                requestAnimationFrame(loop);
+
+                // Pause on visibility change
+                document.addEventListener('visibilitychange', ()=>{ running = !document.hidden; if(running && !gameOver) lastTime = null; });
+
+                // Optional: persist high score in localStorage
+                try{ const saved = localStorage.getItem('flappy_mini_high'); if(saved) highScore = parseInt(saved,10) || 0; window.addEventListener('beforeunload', ()=> localStorage.setItem('flappy_mini_high', String(highScore))); }catch(e){}
             }
         });
     </script>

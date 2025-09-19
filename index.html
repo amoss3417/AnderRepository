@@ -1,1 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Projects</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>My Games Portfolio</h1>
+            <p>Click on a project to view details!</p>
+        </header>
 
+        <section id="main-view" class="project-list">
+            <div class="project-card" data-project-id="1">
+                <h2>Dizzy Wheel</h2>
+                <p>Luke Buonocore</p>
+                <button class="view-btn">View Project</button>
+            </div>
+
+            <div class="project-card" data-project-id="2">
+                <h2>Stacker</h2>
+                <p>Ahhhhhhhh</p>
+                <button class="view-btn">View Project</button>
+            </div>
+
+            <div class="project-card" data-project-id="3">
+                <h2>What The Hex</h2>
+                <p>Finally Working</p>
+                <button class="view-btn">View Project</button>
+            </div>
+        </section>
+
+        <!-- New section for the individual project view -->
+        <section id="project-view" class="project-details hidden">
+            <button id="back-btn" class="back-btn">← Back to Portfolio</button>
+            <div id="project-content">
+                <!-- Project content will be inserted here -->
+            </div>
+        </section>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

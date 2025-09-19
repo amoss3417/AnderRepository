@@ -1,0 +1,324 @@
+/* A dark brown theme for the website */
+body {
+    background-color: #2F241E;
+    color: #E0D9C8;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Container for the main content */
+.container {
+    max-width: 900px;
+    width: 100%;
+    text-align: center;
+}
+
+/* Header styling */
+header h1 {
+    font-size: 2.5rem;
+    color: #F0EADF;
+    margin-bottom: 0.5rem;
+}
+
+header p {
+    font-size: 1.1rem;
+    color: #B5A898;
+    margin-bottom: 2rem;
+}
+
+/* Project cards section */
+.project-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.project-card {
+    background-color: #4A3A2F;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease-in-out;
+}
+
+.project-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
+}
+
+.project-card h2 {
+    color: #F0EADF;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.project-card p {
+    color: #D6CBB8;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Button styling */
+.view-btn {
+    background-color: #8C5645;
+    color: #FFFFFF;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.view-btn:hover {
+    background-color: #B0745F;
+}
+
+/* Back button for project view */
+.back-btn {
+    background: none;
+    border: none;
+    color: #B5A898;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    text-align: left;
+    display: block;
+}
+
+.back-btn:hover {
+    color: #F0EADF;
+}
+
+/* Game and project details container */
+.project-details {
+    padding: 2rem;
+    background-color: #4A3A2F;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Common game styles */
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #2d3748;
+    border-radius: 1.5rem;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+    padding: 2rem;
+    width: 90%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.game-over-screen {
+    text-align: center;
+    transition: opacity 0.5s ease;
+}
+
+.button {
+    background-image: linear-gradient(to right, #4c51bf, #6b46c1);
+    color: white;
+    padding: 0.75rem 2rem;
+    border-radius: 9999px;
+    font-weight: bold;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.button:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* Dizzy Wheel specific styles */
+canvas {
+    border-radius: 9999px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+}
+
+/* Stacker game specific styles */
+#stacker-game-container {
+    width: 90vw;
+    height: 80vh;
+    max-width: 400px;
+    max-height: 700px;
+    background-color: #222;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#game-title {
+    text-align: center;
+    font-size: 2em;
+    font-weight: bold;
+    letter-spacing: 5px;
+    color: #8ac6d1;
+    text-shadow: 0 0 10px #8ac6d1, 0 0 20px #8ac6d1;
+    margin-bottom: 10px;
+}
+#game-grid {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    grid-template-rows: repeat(20, 1fr);
+    grid-template-columns: repeat(15, 1fr);
+    border: 2px solid #555;
+    background-color: #111;
+}
+.grid-cell {
+    border: 1px solid #333;
+}
+.block-cell {
+    background-color: #8ac6d1;
+    box-shadow: 0 0 10px #8ac6d1, inset 0 0 5px #8ac6d1;
+}
+#score-display {
+    padding: 10px;
+    font-size: 2em;
+    font-weight: bold;
+    color: #8ac6d1;
+    text-align: center;
+}
+/* WHAT THE HEX? game styles */
+.hex-game-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    min-height: 80vh;
+    margin: 0;
+    background-color: #FFFFFF;
+    color: #333333;
+    text-align: center;
+    padding-top: 20px;
+}
+
+.hex-header-text {
+    font-size: 0.8em;
+    color: #888888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#hex-code {
+    font-size: 3em;
+    font-weight: 700;
+    margin-top: 20px;
+    margin-bottom: 50px;
+    letter-spacing: 2px;
+    transition: color 0.5s ease-in-out;
+}
+
+.color-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    max-width: 800px;
+    margin-bottom: 30px;
+}
+
+.color-option {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out, opacity 0.3s ease-in-out;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.color-option:hover:not(.guessed-incorrectly) {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.color-option:active:not(.guessed-incorrectly) {
+    transform: scale(0.95);
+}
+    
+.color-option.guessed-incorrectly {
+    opacity: 0;
+    pointer-events: none;
+    transform: none;
+    box-shadow: none;
+}
+    
+.color-option.winner-state {
+    pointer-events: none;
+    cursor: default;
+    transform: none;
+    box-shadow: none;
+}
+
+#message {
+    font-size: 1.5em;
+    font-weight: 700;
+    margin-top: 20px;
+    min-height: 1.5em;
+}
+
+.new-game-button {
+    display: none;
+    margin-top: 20px;
+    padding: 10px 25px;
+    font-size: 1em;
+    font-weight: 400;
+    letter-spacing: 1px;
+    border: 1px solid #333;
+    background-color: transparent;
+    color: #333;
+    cursor: pointer;
+    text-transform: uppercase;
+    border-radius: 0;
+    transition: background-color 0.2s, color 0.2s;
+}
+    
+.new-game-button:hover {
+    background-color: #333;
+    color: #fff;
+}
+
+.difficulty-section {
+    margin-top: 40px;
+    font-size: 0.9em;
+    color: #666666;
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.difficulty-section span {
+    margin: 0;
+    cursor: pointer;
+}
+
+.difficulty-section span.active,
+.difficulty-section span:hover {
+    font-weight: bold;
+    color: #333333;
+}
+.difficulty-section span.active {
+    text-decoration: underline;
+}

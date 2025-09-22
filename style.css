@@ -448,3 +448,92 @@ header p {
     transform: translateY(-2px);
     background-color: #7b7165;
 }
+
+/* Minesweeper game styles */
+.minesweeper-container {
+    background-color: #c0c0c0; /* Classic gray */
+    padding: 10px;
+    border-top: 2px solid #ffffff;
+    border-left: 2px solid #ffffff;
+    border-right: 2px solid #808080;
+    border-bottom: 2px solid #808080;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.minesweeper-canvas {
+    background-color: #c0c0c0;
+    border-top: 2px solid #808080;
+    border-left: 2px solid #808080;
+    border-right: 2px solid #ffffff;
+    border-bottom: 2px solid #ffffff;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+.minesweeper-status-panel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+    background-color: #c0c0c0;
+    border-top: 2px solid #808080;
+    border-left: 2px solid #808080;
+    border-right: 2px solid #ffffff;
+    border-bottom: 2px solid #ffffff;
+    padding: 5px;
+}
+.minesweeper-status-text {
+    color: #000000;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    font-size: 24px;
+    background-color: #000000;
+    color: #ff0000;
+    padding: 2px 8px;
+    border: 2px inset #ffffff;
+}
+.minesweeper-restart-btn {
+    background-color: #c0c0c0;
+    border: 2px outset #ffffff;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    font-size: 20px;
+    padding: 4px 8px;
+}
+.minesweeper-restart-btn:active {
+    border: 2px inset #808080;
+}
+.minesweeper-message-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #c0c0c0;
+    padding: 20px;
+    border: 2px solid #000000;
+    box-shadow: 4px 4px 0px #000000;
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+    display: none;
+    z-index: 100;
+}
+.minesweeper-message-box p {
+    font-size: 18px;
+    font-weight: bold;
+    color: #000000;
+    margin-bottom: 10px;
+}
+.minesweeper-message-box button {
+    background-color: #c0c0c0;
+    border: 2px outset #ffffff;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 4px 8px;
+}
+.minesweeper-message-box button:active {
+    border: 2px inset #808080;
+}

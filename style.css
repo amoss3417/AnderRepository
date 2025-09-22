@@ -108,8 +108,8 @@ header p {
     display: none !important;
 }
 
-/* Common game styles */
-.game-container {
+/* Dizzy Wheel game styles */
+.dizzy-wheel-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -122,11 +122,18 @@ header p {
     margin: 0 auto;
 }
 
-.game-over-screen {
+.dizzy-wheel-canvas {
+    border-radius: 9999px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+}
+
+.dizzy-wheel-game-over-screen {
     text-align: center;
     transition: opacity 0.5s ease;
 }
 
+/* All other games will use these buttons */
 .button {
     background-image: linear-gradient(to right, #4c51bf, #6b46c1);
     color: white;
@@ -144,13 +151,6 @@ header p {
 .button:active {
     transform: translateY(0);
     box-shadow: none;
-}
-
-/* Dizzy Wheel specific styles */
-canvas {
-    border-radius: 9999px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
-    cursor: pointer;
 }
 
 /* Stacker game specific styles */
@@ -447,11 +447,4 @@ canvas {
 .action-btn-2048:hover, .new-game-btn-2048:hover {
     transform: translateY(-2px);
     background-color: #7b7165;
-}
-
-.canvas-2048 {
-    display: block;
-    border-radius: 6px;
-    background-color: #bbada0;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) inset;
 }

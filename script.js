@@ -7,16 +7,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // This function contains the HTML for the Dizzy Wheel game.
     function getDizzyWheelHTML() {
         return `
-            <div class="game-container">
+            <div class="dizzy-wheel-container">
                 <h1 class="text-3xl font-bold mb-4">Dizzy Wheel</h1>
                 <p class="text-gray-400 mb-6" id="instructions">Press space to start</p>
                 <div id="gameScreen">
                     <div class="text-center mb-4">
                         Score: <span id="scoreDisplay" class="font-bold text-4xl">0</span>
                     </div>
-                    <canvas id="gameCanvas" width="300" height="300"></canvas>
+                    <canvas id="gameCanvas" width="300" height="300" class="dizzy-wheel-canvas"></canvas>
                 </div>
-                <div id="gameOverScreen" class="game-over-screen hidden">
+                <div id="gameOverScreen" class="dizzy-wheel-game-over-screen hidden">
                     <h2 class="text-2xl font-semibold mb-4">Game Over!</h2>
                     <p class="mb-6">Your final score is <span id="finalScoreDisplay" class="font-bold text-xl text-yellow-300">0</span>.</p>
                     <button id="restartButton" class="button">Play Again</button>
@@ -44,8 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
         let targetColorIndex = 0;
         let previousSectionIndex = -1;
         const sectionAngle = (2 * Math.PI) / colors.length;
-        const handOffsetAngle = Math.PI / 2;
-        const angleEpsilon = 0.001;
 
         function init() {
             score = 0;
@@ -74,11 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function drawInitialState() {
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
-            const outerRadius = 120;
-            const innerRadius = 80;
-
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             drawWheel();
             drawHand();
@@ -93,7 +86,9 @@ document.addEventListener('DOMContentLoaded', () => {
             for (let i = 0; i < colors.length; i++) {
                 ctx.beginPath();
                 ctx.moveTo(centerX, centerY);
-                ctx.arc(centerX, centerY, outerRadius, i * sectionAngle, (i + 1) * sectionAngle);
+                const startAngle = i * sectionAngle;
+                const endAngle = (i + 1) * sectionAngle;
+                ctx.arc(centerX, centerY, outerRadius, startAngle, endAngle);
                 ctx.fillStyle = colors[i];
                 ctx.fill();
                 ctx.closePath();
@@ -111,10 +106,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const centerY = canvas.height / 2;
             const radius = 120;
             
-            const handAngle = wheelAngle - handOffsetAngle;
-
-            const endX = centerX + radius * Math.cos(handAngle);
-            const endY = centerY + radius * Math.sin(handAngle);
+            // The hand's position is simply the current wheel angle
+            const endX = centerX + radius * Math.cos(wheelAngle - Math.PI / 2);
+            const endY = centerY + radius * Math.sin(wheelAngle - Math.PI / 2);
 
             ctx.beginPath();
             ctx.moveTo(centerX, centerY);
@@ -126,15 +120,24 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.closePath();
         }
 
+        function getCurrentSectionIndex() {
+            let normalizedAngle = (wheelAngle - Math.PI / 2) % (2 * Math.PI);
+            if (normalizedAngle < 0) {
+                normalizedAngle += 2 * Math.PI;
+            }
+            let index = Math.floor(normalizedAngle / sectionAngle);
+            return (index + colors.length) % colors.length;
+        }
+
         function update() {
             if (!isGameActive) return;
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             wheelAngle += wheelSpeed;
 
-            const normalizedAngle = (wheelAngle - handOffsetAngle + 2 * Math.PI) % (2 * Math.PI);
-            const currentSectionIndex = Math.floor((normalizedAngle + angleEpsilon) / sectionAngle);
+            const currentSectionIndex = getCurrentSectionIndex();
 
+            // Only check for passing if the hand is moving in the correct direction
             if (previousSectionIndex !== -1 && currentSectionIndex !== targetColorIndex && previousSectionIndex === targetColorIndex) {
                 endGame();
                 return;
@@ -151,8 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
         function handleTap() {
             if (!isGameActive) return;
 
-            const normalizedAngle = (wheelAngle - handOffsetAngle + 2 * Math.PI) % (2 * Math.PI);
-            const currentSectionIndex = Math.floor((normalizedAngle + angleEpsilon) / sectionAngle);
+            const currentSectionIndex = getCurrentSectionIndex();
             
             if (currentSectionIndex === targetColorIndex) {
                 score++;
@@ -170,6 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        // Event listeners
         if (restartButton) restartButton.addEventListener('click', init);
         if (canvas) canvas.addEventListener('click', handleTap);
 

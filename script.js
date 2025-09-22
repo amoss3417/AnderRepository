@@ -1158,6 +1158,353 @@ document.addEventListener('DOMContentLoaded', () => {
         // Initial setup on function call
         setup();
     }
+
+    // Function to get the HTML for the Minesweeper game
+    function getMinesweeperHTML() {
+        return `
+            <div class="minesweeper-container">
+                <div class="minesweeper-status-panel">
+                    <span id="flag-count" class="minesweeper-status-text">040</span>
+                    <button id="restart-btn" class="minesweeper-restart-btn">Restart</button>
+                </div>
+                <canvas id="game-canvas" class="minesweeper-canvas"></canvas>
+            </div>
+            <div id="message-box" class="minesweeper-message-box">
+                <p id="message-text"></p>
+                <button id="message-restart-btn">Play Again</button>
+            </div>
+        `;
+    }
+
+    // Function to initialize the Minesweeper game logic
+    function initializeMinesweeper() {
+        // Game Constants
+        const ROWS = 16;
+        const COLS = 16;
+        const BOMBS = 40;
+        const CELL_SIZE = 30; // Pixel size of each cell
+        const FONT_SIZE = 18;
+
+        // DOM elements
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+        const restartBtn = document.getElementById('restart-btn');
+        const flagCountElement = document.getElementById('flag-count');
+        const messageBox = document.getElementById('message-box');
+        const messageText = document.getElementById('message-text');
+        const messageRestartBtn = document.getElementById('message-restart-btn');
+
+        // Game State Variables
+        let board = [];
+        let revealed = [];
+        let flags = [];
+        let isGameOver = false;
+        let firstClick = true;
+        let revealedCount = 0;
+        let flagCounter = BOMBS;
+
+        // Colors for bomb counts
+        const NUMBER_COLORS = [
+            'transparent', '#0000ff', '#008000', '#ff0000', '#800080', '#800000', '#40e0d0', '#000000', '#808080'
+        ];
+        
+        // Function to initialize or reset the game
+        function initGame() {
+            isGameOver = false;
+            firstClick = true;
+            revealedCount = 0;
+            flagCounter = BOMBS;
+            
+            // Set canvas dimensions
+            canvas.width = COLS * CELL_SIZE;
+            canvas.height = ROWS * CELL_SIZE;
+
+            // Hide message box
+            messageBox.style.display = 'none';
+
+            // Initialize 2D arrays
+            board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+            revealed = Array.from({ length: ROWS }, () => Array(COLS).fill(false));
+            flags = Array.from({ length: ROWS }, () => Array(COLS).fill(false));
+
+            updateFlagCount();
+            drawBoard();
+        }
+
+        // Places bombs on the board, avoiding the first clicked cell and its neighbors
+        function placeBombs(firstClickRow, firstClickCol) {
+            let bombsPlaced = 0;
+            while (bombsPlaced < BOMBS) {
+                const row = Math.floor(Math.random() * ROWS);
+                const col = Math.floor(Math.random() * COLS);
+                
+                // Check if the cell is in the 3x3 area around the first click
+                const isSafeZone = (Math.abs(row - firstClickRow) <= 1 && Math.abs(col - firstClickCol) <= 1);
+
+                if (!isSafeZone && board[row][col] !== 'B') {
+                    board[row][col] = 'B';
+                    bombsPlaced++;
+                }
+            }
+        }
+
+        // Calculates the number of adjacent bombs for each cell
+        function calculateBombCounts() {
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < COLS; c++) {
+                    if (board[r][c] === 'B') continue;
+
+                    let count = 0;
+                    for (let dr = -1; dr <= 1; dr++) {
+                        for (let dc = -1; dc <= 1; dc++) {
+                            const newR = r + dr;
+                            const newC = c + dc;
+                            if (newR >= 0 && newR < ROWS && newC >= 0 && newC < COLS && board[newR][newC] === 'B') {
+                                count++;
+                            }
+                        }
+                    }
+                    board[r][c] = count;
+                }
+            }
+        }
+
+        // Draws the entire board on the canvas
+        function drawBoard() {
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < COLS; c++) {
+                    drawCell(r, c);
+                }
+            }
+        }
+
+        // Draws a single cell based on its state
+        function drawCell(row, col) {
+            const x = col * CELL_SIZE;
+            const y = row * CELL_SIZE;
+
+            if (revealed[row][col]) {
+                // Draw revealed cell with inset effect
+                ctx.fillStyle = '#c0c0c0';
+                ctx.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+                ctx.strokeStyle = '#808080';
+                ctx.strokeRect(x, y, CELL_SIZE, CELL_SIZE);
+
+                if (board[row][col] === 'B') {
+                    // Draw a more classic-looking bomb
+                    ctx.fillStyle = '#000000';
+                    ctx.beginPath();
+                    ctx.arc(x + CELL_SIZE / 2, y + CELL_SIZE / 2, CELL_SIZE * 0.3, 0, 2 * Math.PI);
+                    ctx.fill();
+                    
+                } else if (board[row][col] > 0) {
+                    // Draw number
+                    ctx.fillStyle = NUMBER_COLORS[board[row][col]];
+                    ctx.font = `bold ${FONT_SIZE}px 'Courier New', Courier, monospace`;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(board[row][col], x + CELL_SIZE / 2, y + CELL_SIZE / 2);
+                }
+            } else {
+                // Draw unrevealed cell with outset effect
+                ctx.fillStyle = '#c0c0c0';
+                ctx.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+
+                // Outset 3D border
+                ctx.beginPath();
+                ctx.moveTo(x, y + CELL_SIZE);
+                ctx.lineTo(x, y);
+                ctx.lineTo(x + CELL_SIZE, y);
+                ctx.strokeStyle = '#ffffff';
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(x + CELL_SIZE, y);
+                ctx.lineTo(x + CELL_SIZE, y + CELL_SIZE);
+                ctx.lineTo(x, y + CELL_SIZE);
+                ctx.strokeStyle = '#808080';
+                ctx.stroke();
+
+                if (flags[row][col]) {
+                    // Draw classic flag
+                    ctx.fillStyle = '#000000';
+                    ctx.font = `bold ${FONT_SIZE}px 'Courier New', Courier, monospace`;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('🚩', x + CELL_SIZE / 2, y + CELL_SIZE / 2);
+                }
+            }
+        }
+
+        // Handles a mouse down event for the visual press effect
+        function handleMouseDown(event) {
+            if (isGameOver || event.button !== 0) return; // Only for left clicks
+
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            const col = Math.floor(x / CELL_SIZE);
+            const row = Math.floor(y / CELL_SIZE);
+
+            if (!revealed[row][col] && !flags[row][col]) {
+                // Draw the cell with an "inset" border to show it's pressed
+                const cellX = col * CELL_SIZE;
+                const cellY = row * CELL_SIZE;
+
+                ctx.fillStyle = '#c0c0c0';
+                ctx.fillRect(cellX, cellY, CELL_SIZE, CELL_SIZE);
+                
+                // Inset 3D border
+                ctx.beginPath();
+                ctx.moveTo(cellX, cellY);
+                ctx.lineTo(cellX + CELL_SIZE, cellY);
+                ctx.lineTo(cellX + CELL_SIZE, cellY + CELL_SIZE);
+                ctx.strokeStyle = '#808080';
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(cellX + CELL_SIZE, cellY + CELL_SIZE);
+                ctx.lineTo(cellX, cellY + CELL_SIZE);
+                ctx.lineTo(cellX, cellY);
+                ctx.strokeStyle = '#ffffff';
+                ctx.stroke();
+            }
+        }
+        
+        // Handles a mouse up event to run game logic and reset visuals
+        function handleMouseUp(event) {
+            if (isGameOver) return;
+
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            const col = Math.floor(x / CELL_SIZE);
+            const row = Math.floor(y / CELL_SIZE);
+            
+            if (firstClick) {
+                placeBombs(row, col);
+                calculateBombCounts();
+                firstClick = false;
+            }
+            
+            revealCell(row, col);
+            drawBoard(); // Crucial to redraw all cells and fix the borders
+        }
+
+
+        // Handles a right-click on the canvas
+        function handleRightClick(event) {
+            event.preventDefault();
+            if (isGameOver) return;
+
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            const col = Math.floor(x / CELL_SIZE);
+            const row = Math.floor(y / CELL_SIZE);
+
+            toggleFlag(row, col);
+        }
+
+        // Reveals a cell and its neighbors if it's a zero
+        function revealCell(row, col) {
+            if (row < 0 || row >= ROWS || col < 0 || col >= COLS || revealed[row][col] || flags[row][col]) {
+                return;
+            }
+
+            revealed[row][col] = true;
+
+            if (board[row][col] === 'B') {
+                // Game over
+                isGameOver = true;
+                showBombs();
+                showMessage('Game Over! You hit a mine!');
+                return;
+            }
+
+            revealedCount++;
+            drawCell(row, col);
+            checkWin();
+
+            if (board[row][col] === 0) {
+                // Recursively reveal adjacent cells if this cell is a zero
+                for (let dr = -1; dr <= 1; dr++) {
+                    for (let dc = -1; dc <= 1; dc++) {
+                        if (dr === 0 && dc === 0) continue;
+                        revealCell(row + dr, col + dc);
+                    }
+                }
+            }
+        }
+        
+        // Toggles a flag on a cell
+        function toggleFlag(row, col) {
+            if (revealed[row][col]) {
+                return;
+            }
+
+            flags[row][col] = !flags[row][col];
+            if (flags[row][col]) {
+                flagCounter--;
+            } else {
+                flagCounter++;
+            }
+
+            updateFlagCount();
+            drawCell(row, col);
+        }
+        
+        // Updates the flag counter display
+        function updateFlagCount() {
+            // The classic counter is 2 digits, but we can do 3
+            const displayCount = flagCounter.toString().padStart(3, '0');
+            flagCountElement.textContent = displayCount;
+        }
+
+        // Reveals all bombs at the end of the game
+        function showBombs() {
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < COLS; c++) {
+                    if (board[r][c] === 'B') {
+                        revealed[r][c] = true;
+                        drawCell(r, c);
+                    }
+                }
+            }
+        }
+
+        // Checks for a win condition
+        function checkWin() {
+            if (revealedCount === (ROWS * COLS) - BOMBS) {
+                isGameOver = true;
+                showMessage('Congratulations! You found all the mines!');
+            }
+        }
+
+        // Displays a custom message box
+        function showMessage(message) {
+            messageText.textContent = message;
+            messageBox.style.display = 'block';
+        }
+
+        // Restarts the game (accessible via button click)
+        function restartGame() {
+            initGame();
+        }
+
+        // Event Listeners
+        canvas.addEventListener('mousedown', handleMouseDown);
+        canvas.addEventListener('mouseup', handleMouseUp);
+        canvas.addEventListener('contextmenu', handleRightClick);
+        if (restartBtn) restartBtn.addEventListener('click', restartGame);
+        if (messageRestartBtn) messageRestartBtn.addEventListener('click', restartGame);
+        
+        // Initial call to set up the game
+        initGame();
+    }
     
     const projectContent = {
         1: {
@@ -1189,6 +1536,11 @@ document.addEventListener('DOMContentLoaded', () => {
             title: '2048 Game',
             content: get2048GameHTML(),
             init: initialize2048Game
+        },
+        7: {
+            title: 'Minesweeper',
+            content: getMinesweeperHTML(),
+            init: initializeMinesweeper
         }
     };
 

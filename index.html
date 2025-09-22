@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Projects</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
@@ -31,14 +35,30 @@
                 <p>Finally Working</p>
                 <button class="view-btn">View Project</button>
             </div>
+
+            <div class="project-card" data-project-id="4">
+                <h2>Binary Odometer</h2>
+                <p>A binary-to-decimal converter</p>
+                <button class="view-btn">View Project</button>
+            </div>
+            
+            <div class="project-card" data-project-id="5">
+                <h2>Tic-Tac-Toe</h2>
+                <p>A classic game against a friend!</p>
+                <button class="view-btn">View Project</button>
+            </div>
+            
+            <div class="project-card" data-project-id="6">
+                <h2>2048 Game</h2>
+                <p>The classic sliding tile puzzle!</p>
+                <button class="view-btn">View Project</button>
+            </div>
         </section>
 
-        <!-- New section for the individual project view -->
         <section id="project-view" class="project-details hidden">
             <button id="back-btn" class="back-btn">← Back to Portfolio</button>
             <div id="project-content">
-                <!-- Project content will be inserted here -->
-            </div>
+                </div>
         </section>
     </div>
     <script src="script.js"></script>

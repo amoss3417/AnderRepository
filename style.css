@@ -322,3 +322,136 @@ canvas {
 .difficulty-section span.active {
     text-decoration: underline;
 }
+
+/* Binary Odometer specific styles */
+.odometer-digit {
+    transition: all 0.3s ease-in-out;
+    transform: translateY(0);
+}
+
+/* Tic-Tac-Toe game styles */
+.tictactoe-board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    gap: 5px;
+    margin: 20px auto;
+    background-color: #2F241E;
+    border: 5px solid #E0D9C8;
+}
+
+.tictactoe-cell {
+    width: 100px;
+    height: 100px;
+    background-color: #4A3A2F;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.tictactoe-cell:hover {
+    background-color: #5C4F4A;
+}
+
+.tictactoe-cell.X {
+    color: #F0EADF;
+}
+
+.tictactoe-cell.O {
+    color: #8C5645;
+}
+
+/* 2048 Game styles */
+.game-container-2048 {
+    background-color: #bbada0;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.header-2048 {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.h1-2048 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #776e65;
+    margin-bottom: 0;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.score-box-2048 {
+    background-color: #8c8172;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1.25rem;
+    text-align: center;
+    min-width: 100px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.score-label-2048 {
+    font-size: 0.8rem;
+    font-weight: 400;
+    opacity: 0.8;
+}
+
+.message-box-2048 {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(238, 228, 218, 0.8);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: none;
+    z-index: 100;
+}
+
+.button-group-2048 {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.action-btn-2048, .new-game-btn-2048 {
+    background-color: #8c8172;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.action-btn-2048:hover, .new-game-btn-2048:hover {
+    transform: translateY(-2px);
+    background-color: #7b7165;
+}
+
+.canvas-2048 {
+    display: block;
+    border-radius: 6px;
+    background-color: #bbada0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) inset;
+}

@@ -1558,7 +1558,7 @@ document.addEventListener('DOMContentLoaded', () => {
         function beep(freq, time, type='sine', gain=0.07){ if(!audio.enabled) return; const ctxA = audio.ctx; const o = ctxA.createOscillator(); const g = ctxA.createGain(); o.type = type; o.frequency.value = freq; g.gain.value = gain; o.connect(g); g.connect(ctxA.destination); o.start(); g.gain.exponentialRampToValueAtTime(0.0001, ctxA.currentTime + time); o.stop(ctxA.currentTime + time + 0.02); }
 
         // Constants (tweakable)
-        const BASE_GRAV = 0.48; // increased gravity slightly
+        const BASE_GRAV = 0.6; // increased gravity slightly
         const FLAP_V = -9.2;
         const BASE_pipeSpeed = 2.4;
         const PIPE_WIDTH = 72;
@@ -1676,7 +1676,7 @@ document.addEventListener('DOMContentLoaded', () => {
         function update(dt){
             // difficulty scale
             const speed = BASE_pipeSpeed + Math.min(2.2, score*0.08);
-            const gravity = BASE_GRAV + Math.min(0.25, score*0.006);
+            const gravity = BASE_GRAV;
 
             if(holdFlap){ if(performance.now()%120 < 60) doFlap(); }
 

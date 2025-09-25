@@ -266,22 +266,37 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function startGame() {
-            // Clear the grid visually
-            gridCells.forEach(cell => {
-                cell.classList.remove('block-cell');
-            });
-            
-            gameActive = true;
-            score = 0;
-            stack = [];
-            direction = 1;
-            intervalTime = 150;
-            scoreDisplay.textContent = score;
-            gameOverScreen.style.display = 'none';
-            createBlock();
-            startAnimation();
-        }
+    // Clear the grid visually
+    gridCells.forEach(cell => {
+        cell.classList.remove('block-cell');
+    });
+    
+    gameActive = true;
+    score = 0;
+    stack = [];
+    
+    // 💡 NEW CODE: Add the initial stationary base block 🧱
+    stack.push({
+        x: 5,
+        y: 0,
+        width: 5,
+        perfect: false
+    });
+    score = 1; // Set initial score to 1 for the pre-placed block
 
+    direction = 1;
+    intervalTime = 150;
+    scoreDisplay.textContent = score;
+    gameOverScreen.style.display = 'none';
+    
+    // The visual drawing of the base block happens inside drawGame()
+    createBlock(); 
+    startAnimation();
+
+    // Re-add event listeners for control (assuming they were removed in endGame)
+    gameAreaContainer.addEventListener('click', placeBlock);
+    document.addEventListener('keydown', handleKeyDown);
+}
         function createBlock() {
             let initialWidth = stack.length > 0 ? stack[stack.length - 1].width : BLOCK_WIDTH;
             let initialX = Math.floor((GRID_WIDTH - initialWidth) / 2);

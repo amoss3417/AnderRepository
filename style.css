@@ -16,6 +16,22 @@ body {
 /* ... (Your existing CSS remains the same above this) ... */
 
 /* Header styling */
+header {
+    /* Apply the same grid structure as main-content-wrap to the header */
+    display: grid;
+    /* The 220px column now acts as a placeholder for the fixed ad, maintaining alignment */
+    grid-template-columns: 220px 1fr; 
+    grid-gap: 2rem;
+    width: 100%; 
+    text-align: center;
+}
+
+/* MODIFIED STYLES FOR HEADER TEXT */
+header h1, header p {
+    /* Make both header h1 and p span the second column (the project column) */
+    grid-column: 2;
+    margin-left: 0;
+}
 header h1 {
     font-size: 2.5rem;
     color: #F0EADF;
@@ -29,10 +45,10 @@ header p {
     margin-bottom: 2rem; 
 }
 
-/* 🚀 MODIFIED STYLES FOR STICKY LAYOUT 🚀 */
+/* MODIFIED STYLES FOR LAYOUT */
 .main-content-wrap {
     display: grid;
-    /* Defines two columns: Ad (220px) and Projects (1fr) */
+    /* Defines two columns: Ad Placeholder (220px) and Projects (1fr) */
     grid-template-columns: 220px 1fr; 
     grid-gap: 2rem; 
 }
@@ -42,22 +58,26 @@ header p {
 */
 
 #ad-container {
-    /* 🔑 KEY CHANGE: Switch to sticky position 🔑 */
-    position: sticky; 
+    /* 💥 KEY CHANGE: Fixed position relative to the viewport 💥 */
+    position: fixed; 
     
-    /* 🔑 KEY CHANGE: Define the "stop" point 🔑 */
-    /* This makes the element scroll until its top edge is 20px from the viewport top. */
-    top: 20px; 
+    /* 💥 NEW: Pin the ad to the vertical center of the viewport 💥 */
+    top: 50%; 
+    /* 💥 NEW: Offset the element up by half of its own height to truly center it 💥 */
+    transform: translateY(-50%);
     
-    /* Ensure it aligns in its grid column */
-    grid-column: 1;
+    /* Use the same horizontal calculation for column alignment */
+    left: calc(50% - 370px); 
+    
+    /* Force the width to ensure the left position is reliable */
+    width: 220px;
+
+    /* Remove other grid properties as fixed elements ignore them */
+    grid-column: unset;
+    
     text-align: center;
     padding-top: 0; 
     z-index: 10; 
-    
-    /* IMPORTANT: To make sticky work, the container it's in (the body, or a parent div) 
-       must have vertical space to scroll through. Since your entire page scrolls, 
-       this should work within the `.container`'s flow. */
 }
 
 #ad-container img {

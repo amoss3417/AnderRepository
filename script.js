@@ -1621,7 +1621,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if(e.code==='Space'){ 
                 e.preventDefault(); 
                 doFlap(); 
-                holdFlap=true;
+                // holdFlap=true;
             } 
             if(e.code==='KeyM'){ 
                 toggleMute();

@@ -63,7 +63,7 @@ header p {
 #ad-container img {
     /* Ensures the image respects the 200px width from your HTML */
     display: block;
-    width: 300px;
+    width: 350px;
     height: auto;
     margin: 0 auto;
 }

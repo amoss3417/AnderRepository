@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let intervalTime = 150;
         
         const GRID_WIDTH = 15;
-        const GRID_HEIGHT = 20;
+        const GRID_HEIGHT = 25;
         const BLOCK_WIDTH = 5;
 
         // Initialize grid cells

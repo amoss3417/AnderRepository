@@ -7,21 +7,409 @@ document.addEventListener('DOMContentLoaded', () => {
     // This function contains the HTML for the Dizzy Wheel game.
     function getDizzyWheelHTML() {
         return `
-            <div class="dizzy-wheel-container">
-                <h1 class="text-3xl font-bold mb-4">Dizzy Wheel</h1>
-                <p class="text-gray-400 mb-6" id="instructions">Press space to start</p>
-                <div id="gameScreen">
-                    <div class="text-center mb-4">
-                        Score: <span id="scoreDisplay" class="font-bold text-4xl">0</span>
-                    </div>
-                    <canvas id="gameCanvas" width="300" height="300" class="dizzy-wheel-canvas"></canvas>
-                </div>
-                <div id="gameOverScreen" class="dizzy-wheel-game-over-screen hidden">
-                    <h2 class="text-2xl font-semibold mb-4">Game Over!</h2>
-                    <p class="mb-6">Your final score is <span id="finalScoreDisplay" class="font-bold text-xl text-yellow-300">0</span>.</p>
-                    <button id="restartButton" class="button">Play Again</button>
-                </div>
+             <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Showcase Portfolio</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font import for Inter */
+        html { font-family: 'Inter', sans-serif; }
+        
+        /* Custom styling for the code block look */
+        pre {
+            background-color: #1e293b; /* Slate 800 */
+            color: #e2e8f0; /* Slate 200 */
+            padding: 1rem;
+            border-radius: 0.75rem;
+            overflow-x: auto;
+            font-family: monospace;
+            font-size: 0.875rem;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#4f46e5',
+                        'secondary': '#6366f1',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 min-h-screen p-8">
+
+    <!-- Header -->
+    <header class="max-w-7xl mx-auto mb-10 text-center">
+        <h1 class="text-4xl font-extrabold text-gray-900 mb-2">
+            My Arduino Project: IR Remote to 7-Segment Display
+        </h1>
+        <p class="text-lg text-gray-600">
+            A look into the concept, design, and source code.
+        </p>
+    </header>
+
+    <!-- Main Content Grid -->
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+        <!-- Column 1: Project Image -->
+        <div class="bg-white rounded-xl shadow-xl p-6 flex flex-col items-center">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2 w-full text-center">
+                Project Image
+            </h2>
+            <img 
+                src="IMG_0378.JPG" ƒcon
+                alt="A visual placeholder for the project."
+                class="rounded-lg shadow-md w-full h-auto object-cover max-h-80"
+                onerror="this.onerror=null; this.src='https://placehold.co/400x300/4f46e5/ffffff?text=Image+Not+Loaded'"
+            >
+            
+        </div>
+
+        <!-- Column 2: Project Description -->
+        <div class="bg-white rounded-xl shadow-xl p-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">
+                Project Description
+            </h2>
+            <div class="text-gray-700 space-y-4">
+                <p>
+                    This project uses an arduino, an IR reciever and remote, as well as a 4 digit 7-segment display. 
+                    It uses all of these components so that when a number is pressed on the IR remote, it will transfer it onto the 7-segment display.
+                    When the EQ button is pressed, it solidifies the numbers onto the display, so they cannot be replaced when new numbers are pressed. 
+                </p>
+                <p>
+                    This project helped me gain an understanding of how to use an IR reciever and remote with an arduino, as well as how to use a 4 digit 7-segment display.
+                    These are concepts I did not know how to do previousl, and I learned how to implemetn each component through youtube videos and AI explanations.
+                </p>
             </div>
+        </div>
+
+        <!-- Column 3: Project Code -->
+        <div class="bg-white rounded-xl shadow-xl p-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">
+                Project Code Snippet
+            </h2>
+            <pre><code>
+#include <IRremote.hpp> // Use .hpp for modern IRremote library
+
+// --- 7-SEGMENT PIN CONFIGURATION (Common Anode assumed for your logic) ---
+// Segment Pins: Define as OUTPUT
+int pinA = 13; int pinB = 7; int pinC = 4; int pinD = 3;
+int pinE = A2; int pinF = 10; int pinG = 5;
+
+// Digit Pins (Control the Common Pin - LOW to activate, HIGH to deactivate)
+int D1 = 12; int D2 = 9; int D3 = 8; int D4 = 6;
+const int MULTIPLEX_DELAY_MS = 3; // Reduced for smoother display
+
+// --- IR RECEIVER & DATA LOGIC ---
+#define IR_RECEIVE_PIN 11
+
+// WARNING: You must confirm the correct data type for your codes.
+// Using uint64_t for the large raw codes you provided.
+typedef uint64_t IR_CODE_TYPE; 
+
+// Replace with the codes you found (Ensure these are correct!)
+#define CODE_0 (IR_CODE_TYPE)0xE916FF00
+#define CODE_1 (IR_CODE_TYPE)0xF30CFF00
+#define CODE_2 (IR_CODE_TYPE)0xE718FF00
+#define CODE_3 (IR_CODE_TYPE)0xA15EFF00
+#define CODE_4 (IR_CODE_TYPE)0xF708FF00
+#define CODE_5 (IR_CODE_TYPE)0xE31CFF00
+#define CODE_6 (IR_CODE_TYPE)0xA55AFF00
+#define CODE_7 (IR_CODE_TYPE)0xBD42FF00
+#define CODE_8 (IR_CODE_TYPE)0xAD52FF00
+#define CODE_9 (IR_CODE_TYPE)0xB54AFF00
+#define CODE_EQ (IR_CODE_TYPE)0xE619FF00
+
+long receivedNumber = 0; // Stores the number being entered (Max 9999)
+int digitCount = 0;      // Tracks how many digits have been entered (max 4)
+const int MAX_DIGITS = 4;
+bool entryComplete = false; // Flag to stop accepting new digits after 4
+
+// Variables for display
+int d_thousands = 0;    
+int d_hundreds = 0;     
+int d_tens = 0;         
+int d_ones = 0;         
+
+void setup() {
+  Serial.begin(9600);
+  
+  // Start the IR receiver
+  IrReceiver.begin(IR_RECEIVE_PIN, DISABLE_LED_FEEDBACK);
+  
+  // Initialize all pins as OUTPUT
+  pinMode(pinA, OUTPUT); pinMode(pinB, OUTPUT); pinMode(pinC, OUTPUT); pinMode(pinD, OUTPUT);
+  pinMode(pinE, OUTPUT); pinMode(pinF, OUTPUT); pinMode(pinG, OUTPUT);
+  pinMode(D1, OUTPUT); pinMode(D2, OUTPUT); pinMode(D3, OUTPUT); pinMode(D4, OUTPUT);
+
+  // Deactivate all digits initially (Assuming Common Anode setup: HIGH = OFF)
+  all4Digits(); 
+  turnOffAllSegments();
+  Serial.println("System Ready. Enter 4 digits, then press EQ.");
+}
+
+void loop() {
+  // --- IR RECEIVE AND INPUT LOGIC ---
+  if (IrReceiver.decode()) {
+    
+    IR_CODE_TYPE command = IrReceiver.decodedIRData.decodedRawData;
+    Serial.print("Code: 0x");
+    Serial.println((long)command, HEX); // Print as long for better visibility on Serial
+
+    int number = -1; // -1 means it's not a number button
+
+    // 1. Check for Number Buttons (0-9)
+    switch (command) {
+      case CODE_0: number = 0; break; case CODE_1: number = 1; break;
+      case CODE_2: number = 2; break; case CODE_3: number = 3; break;
+      case CODE_4: number = 4; break; case CODE_5: number = 5; break;
+      case CODE_6: number = 6; break; case CODE_7: number = 7; break;
+      case CODE_8: number = 8; break; case CODE_9: number = 9; break;
+      default: break;
+    }
+
+    if (number != -1) {
+      // A number button was pressed
+      if (digitCount < MAX_DIGITS) {
+        // Shift existing number left and add new digit
+        receivedNumber = (receivedNumber * 10) + number;
+        digitCount++;
+        Serial.print("Entered: "); Serial.println(receivedNumber);
+        // Map and display the current number as it's being entered
+        mapCountToDigits(receivedNumber);
+      } else {
+        Serial.println("Max 4 digits entered. Press EQ or Clear.");
+      }
+    } 
+    
+    // 2. Check for EQ Button
+    else if (command == CODE_EQ) {
+      if (digitCount > 0) {
+        Serial.print("EQ Pressed. Final Number: ");
+        Serial.println(receivedNumber);
+        // The number is already in receivedNumber and mapped.
+        // Ready to reset for next entry.
+        receivedNumber = 0;
+        digitCount = 0;
+      } else {
+        Serial.println("Press numbers first.");
+      }
+    } else {
+      Serial.println("Other key pressed (ignored).");
+    }
+
+    // Prepare the receiver for the next signal
+    IrReceiver.resume(); 
+  }
+
+  
+  // 1. Display Thousands Digit (D1)
+  turnOffAllSegments();
+  displayNumber(d_thousands); 
+  digit1(); // Turn on D1
+  delay(MULTIPLEX_DELAY_MS);
+  
+  // 2. Display Hundreds Digit (D2)
+  turnOffAllSegments();
+  displayNumber(d_hundreds);
+  digit2(); // Turn on D2
+  delay(MULTIPLEX_DELAY_MS);
+  
+  // 3. Display Tens Digit (D3)
+  turnOffAllSegments();
+  displayNumber(d_tens);
+  digit3(); // Turn on D3
+  delay(MULTIPLEX_DELAY_MS);
+  
+  // 4. Display Ones Digit (D4)
+  turnOffAllSegments();
+  displayNumber(d_ones);
+  digit4(); // Turn on D4
+  delay(MULTIPLEX_DELAY_MS);
+}
+
+void mapCountToDigits(long number) {
+  d_thousands = number / 1000;         
+  d_hundreds = (number % 1000) / 100;  
+  d_tens = (number % 100) / 10;        
+  d_ones = number % 10;                
+}
+
+void displayNumber(int num) {
+  turnOffAllSegments(); 
+  switch(num) {
+    case 0: zero(); break; case 1: one(); break; case 2: two(); break; 
+    case 3: three(); break; case 4: four(); break; case 5: five(); break; 
+    case 6: six(); break; case 7: seven(); break; case 8: eight(); break; 
+    case 9: nine(); break;
+  }
+}
+
+
+
+void turnOffAllSegments(){
+  digitalWrite(pinA, HIGH);
+  digitalWrite(pinB, HIGH);
+  digitalWrite(pinC, HIGH);
+  digitalWrite(pinD, HIGH);
+  digitalWrite(pinE, HIGH);
+  digitalWrite(pinF, HIGH);
+  digitalWrite(pinG, HIGH);
+}
+
+void zero(){
+  digitalWrite(pinA, HIGH);
+  digitalWrite(pinB, HIGH);
+  digitalWrite(pinC, HIGH);
+  digitalWrite(pinD, HIGH);
+  digitalWrite(pinE, HIGH);
+  digitalWrite(pinF, HIGH);
+  digitalWrite(pinG, LOW); // Segment G is OFF
+}
+// ... (Your other number functions one() through nine() are assumed correct) ...
+
+// --- Digit Selection Functions (D1-D4 control the COMMON pin) ---
+void all4Digits(){
+  digitalWrite(D1, HIGH); digitalWrite(D2, HIGH); digitalWrite(D3, HIGH); digitalWrite(D4, HIGH);
+}
+      
+void digit1(){
+  all4Digits(); 
+  digitalWrite(D1, LOW); // Activate D1
+}
+      
+void digit2(){
+  all4Digits(); 
+  digitalWrite(D2, LOW); // Activate D2
+}
+      
+void digit3(){
+  all4Digits();
+  digitalWrite(D3, LOW); // Activate D3
+}
+      
+void digit4(){
+  all4Digits();
+  digitalWrite(D4, LOW); // Activate D4
+}
+// (Your existing number functions one() through nine() go here)
+// I am omitting them for brevity, but they are necessary for the code to compile. 
+// Just ensure you paste them back into your sketch.
+
+void one(){
+digitalWrite(pinA, LOW);
+digitalWrite(pinB, HIGH);
+digitalWrite(pinC, HIGH);
+digitalWrite(pinD, LOW);
+digitalWrite(pinE, LOW);
+digitalWrite(pinF, LOW);
+digitalWrite(pinG, LOW);
+}
+
+void two(){
+  digitalWrite(pinA, HIGH);
+digitalWrite(pinB, HIGH);
+digitalWrite(pinC, LOW);
+digitalWrite(pinD, HIGH);
+digitalWrite(pinE, HIGH);
+digitalWrite(pinF, LOW);
+digitalWrite(pinG, HIGH);
+  }
+  
+  void three(){
+    digitalWrite(pinA, HIGH);
+digitalWrite(pinB, HIGH);
+digitalWrite(pinC, HIGH);
+digitalWrite(pinD, HIGH);
+digitalWrite(pinE, LOW);
+digitalWrite(pinF, LOW);
+digitalWrite(pinG, HIGH);
+    }
+    
+  void four(){
+    digitalWrite(pinA, LOW);
+digitalWrite(pinB, HIGH);
+digitalWrite(pinC, HIGH);
+digitalWrite(pinD, LOW);
+digitalWrite(pinE, LOW);
+digitalWrite(pinF, HIGH);
+digitalWrite(pinG, HIGH);
+    }
+    
+  void five(){
+    digitalWrite(pinA, HIGH);
+digitalWrite(pinB, LOW);
+digitalWrite(pinC, HIGH);
+digitalWrite(pinD, HIGH);
+digitalWrite(pinE, LOW);
+digitalWrite(pinF, HIGH);
+digitalWrite(pinG, HIGH);
+    }
+    
+  void six(){
+    digitalWrite(pinA, HIGH);
+digitalWrite(pinB, LOW);
+digitalWrite(pinC, HIGH);
+digitalWrite(pinD, HIGH);
+digitalWrite(pinE, HIGH);
+digitalWrite(pinF, HIGH);
+digitalWrite(pinG, HIGH);
+    }
+    
+  void seven(){
+    digitalWrite(pinA, HIGH);
+digitalWrite(pinB, HIGH);
+digitalWrite(pinC, HIGH);
+digitalWrite(pinD, LOW);
+digitalWrite(pinE, LOW);
+digitalWrite(pinF, LOW);
+digitalWrite(pinG, LOW);
+    }
+    
+  void eight(){
+    digitalWrite(pinA, HIGH);
+digitalWrite(pinB, HIGH);
+digitalWrite(pinC, HIGH);
+digitalWrite(pinD, HIGH);
+digitalWrite(pinE, HIGH);
+digitalWrite(pinF, HIGH);
+digitalWrite(pinG, HIGH);
+    }
+    
+  void nine(){
+    digitalWrite(pinA, HIGH);
+digitalWrite(pinB, HIGH);
+digitalWrite(pinC, HIGH);
+digitalWrite(pinD, LOW);
+digitalWrite(pinE, LOW);
+digitalWrite(pinF, HIGH);
+digitalWrite(pinG, HIGH);
+    }
+
+    void allNumbers(int num){
+one();delay(num);
+two();delay(num);
+three();delay(num);
+four();delay(num);
+five();delay(num);
+six();delay(num);
+seven();delay(num);
+eight();delay(num);
+nine();delay(num);
+      }
+            </code></pre>
+        </div>
+
+    </div>
+</body>
+</html>
         `;
     }
 

@@ -1,0 +1,211 @@
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap");
+
+:root {
+    --bg: #f2efe8;
+    --surface: #fbf9f4;
+    --surface-2: #ffffff;
+    --ink: #1f1a14;
+    --muted: #6e6659;
+    --brand: #c5522f;
+    --brand-dark: #973720;
+    --line: #d7cebf;
+    --header-bg: rgba(246, 241, 231, 0.78);
+    --bg-grad-a: #d9f0ff;
+    --bg-grad-b: #ffe1be;
+    --ticker-bg-a: rgba(248, 245, 238, 0.94);
+    --ticker-bg-b: rgba(242, 238, 230, 0.94);
+    --ticker-line: rgba(185, 175, 159, 0.26);
+    --ticker-text: #cec5b7;
+    --ticker-glow: rgba(255, 255, 255, 0.2);
+    --shadow: 0 16px 36px rgba(32, 26, 18, 0.13);
+}
+
+body.theme-dark {
+    --bg: #14181f;
+    --surface: #1f252e;
+    --surface-2: #252d37;
+    --ink: #ecf1f7;
+    --muted: #b0bac7;
+    --brand: #e26f48;
+    --brand-dark: #ff9268;
+    --line: #33404f;
+    --header-bg: rgba(20, 24, 31, 0.78);
+    --bg-grad-a: #1f3b52;
+    --bg-grad-b: #3b2c38;
+    --ticker-bg-a: rgba(19, 24, 31, 0.9);
+    --ticker-bg-b: rgba(24, 30, 38, 0.9);
+    --ticker-line: rgba(54, 67, 82, 0.4);
+    --ticker-text: #3b4655;
+    --ticker-glow: rgba(0, 0, 0, 0.18);
+    --shadow: 0 20px 44px rgba(0, 0, 0, 0.38);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Sora", "Segoe UI", sans-serif;
+    color: var(--ink);
+    background:
+        radial-gradient(circle at 8% 8%, var(--bg-grad-a) 0, transparent 32%),
+        radial-gradient(circle at 92% 86%, var(--bg-grad-b) 0, transparent 36%),
+        linear-gradient(140deg, var(--bg), #ece7dc 45%, var(--bg));
+    min-height: 100vh;
+    line-height: 1.6;
+    transition: background-color 220ms ease, color 220ms ease;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.16) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+    background-size: 46px 46px, 46px 46px;
+    opacity: 0.26;
+    z-index: -1;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    border-bottom: 1px solid var(--line);
+    backdrop-filter: blur(14px);
+    background: var(--header-bg);
+}
+
+.nav-shell {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 0.95rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.9rem;
+}
+
+.brand {
+    font-size: 1.06rem;
+    font-weight: 800;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+}
+
+.site-nav {
+    display: flex;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.site-nav a {
+    padding: 0.44rem 0.82rem;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    font-weight: 700;
+    font-size: 0.93rem;
+    color: var(--muted);
+    transition: all 160ms ease;
+}
+
+.site-nav a:hover,
+.site-nav a.active {
+    color: var(--ink);
+    border-color: var(--line);
+    background: var(--surface-2);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28);
+}
+
+.theme-toggle {
+    border: 1px solid var(--line);
+    background: var(--surface-2);
+    color: var(--ink);
+    border-radius: 999px;
+    width: 2.35rem;
+    height: 2.35rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    font: 700 1.12rem "Space Mono", monospace;
+    line-height: 1;
+    cursor: pointer;
+    transition: transform 150ms ease, border-color 150ms ease;
+}
+
+.theme-toggle:hover {
+    border-color: var(--brand);
+    transform: translateY(-1px) scale(1.03);
+}
+
+.page-wrap {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 2.4rem 1rem 4.4rem;
+}
+
+.section-title {
+    margin: 0 0 1rem;
+    font-size: clamp(1.55rem, 2.2vw, 2.3rem);
+    line-height: 1.14;
+}
+
+.card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    padding: 1.35rem;
+    box-shadow: var(--shadow);
+}
+
+.btn {
+    display: inline-block;
+    background: linear-gradient(132deg, var(--brand), var(--brand-dark));
+    color: #fff;
+    padding: 0.68rem 1.1rem;
+    border-radius: 12px;
+    border: 0;
+    font: 700 0.92rem "Sora", sans-serif;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(158, 63, 35, 0.28);
+}
+
+.site-footer {
+    border-top: 1px solid var(--line);
+    padding: 1.25rem 1rem;
+    color: var(--muted);
+    text-align: center;
+    font-size: 0.95rem;
+}
+
+@media (max-width: 780px) {
+    .nav-shell {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

@@ -1,0 +1,1733 @@
+    function getStackerHTML() {
+        return `
+            <div id="stacker-game-container">
+                <div id="game-title">STACKER</div>
+                <div id="game-grid"></div>
+                <div id="score-display">0</div>
+                <div id="game-over-screen" style="display:none;">
+                    <h1 id="end-message"></h1>
+                    <p style="font-size: 1.5em;">Score: <span id="final-score"></span></p>
+                    <button id="playAgainButton" class="button">Play Again</button>
+                </div>
+            </div>
+        `;
+    }
+
+    // This function contains the core logic for the Stacker game.
+    function initializeStacker() {
+        const gameGrid = document.getElementById('game-grid');
+        const scoreDisplay = document.getElementById('score-display');
+        const gameOverScreen = document.getElementById('game-over-screen');
+        const finalScoreDisplay = document.getElementById('final-score');
+        const gameAreaContainer = document.getElementById('stacker-game-container');
+        const endMessage = document.getElementById('end-message');
+        const playAgainButton = document.getElementById('playAgainButton');
+        
+        let gridCells = [];
+        let currentBlock = null;
+        let stack = [];
+        let score = 0;
+        let gameActive = false;
+        let direction = 1;
+        let animationInterval;
+        let intervalTime = 150;
+        
+        const GRID_WIDTH = 15;
+        const GRID_HEIGHT = 25;
+        const BLOCK_WIDTH = 5;
+
+        // Initialize grid cells
+        for (let i = 0; i < GRID_WIDTH * GRID_HEIGHT; i++) {
+            const cell = document.createElement('div');
+            cell.classList.add('grid-cell');
+            gameGrid.appendChild(cell);
+            gridCells.push(cell);
+        }
+
+        function getCellIndex(x, y) {
+            return (GRID_HEIGHT - 1 - y) * GRID_WIDTH + x;
+        }
+
+        function drawGame() {
+            gridCells.forEach(cell => {
+                cell.classList.remove('block-cell');
+            });
+            
+            stack.forEach(block => {
+                for (let i = 0; i < block.width; i++) {
+                    const index = getCellIndex(block.x + i, block.y);
+                    if (index >= 0 && index < gridCells.length) {
+                        gridCells[index].classList.add('block-cell');
+                    }
+                }
+            });
+
+            if (currentBlock) {
+                for (let i = 0; i < currentBlock.width; i++) {
+                    const index = getCellIndex(currentBlock.x + i, currentBlock.y);
+                    if (index >= 0 && index < gridCells.length) {
+                        gridCells[index].classList.add('block-cell');
+                    }
+                }
+            }
+        }
+
+        function startGame() {
+    // Clear the grid visually
+    gridCells.forEach(cell => {
+        cell.classList.remove('block-cell');
+    });
+    
+    gameActive = true;
+    score = 0;
+    stack = [];
+    
+    // 💡 NEW CODE: Add the initial stationary base block 🧱
+    stack.push({
+        x: 5,
+        y: 0,
+        width: 5,
+        perfect: false
+    });
+    score = 1; // Set initial score to 1 for the pre-placed block
+
+    direction = 1;
+    intervalTime = 150;
+    scoreDisplay.textContent = score;
+    gameOverScreen.style.display = 'none';
+    
+    // The visual drawing of the base block happens inside drawGame()
+    createBlock(); 
+    startAnimation();
+
+    // Re-add event listeners for control (assuming they were removed in endGame)
+    gameAreaContainer.addEventListener('click', placeBlock);
+    document.addEventListener('keydown', handleKeyDown);
+}
+        function createBlock() {
+            let initialWidth = stack.length > 0 ? stack[stack.length - 1].width : BLOCK_WIDTH;
+            let initialX = Math.floor((GRID_WIDTH - initialWidth) / 2);
+            let initialY = stack.length;
+            
+            currentBlock = {
+                x: initialX,
+                y: initialY,
+                width: initialWidth,
+                perfect: false
+            };
+        }
+        
+        function startAnimation() {
+            animationInterval = setInterval(() => {
+                const nextX = currentBlock.x + direction;
+                const nextWidth = currentBlock.width;
+
+                if (nextX + nextWidth > GRID_WIDTH || nextX < 0) {
+                    direction *= -1;
+                } else {
+                    currentBlock.x = nextX;
+                }
+                drawGame();
+            }, intervalTime);
+        }
+
+        function placeBlock() {
+            if (!gameActive) {
+                return;
+            }
+            clearInterval(animationInterval);
+            
+            let lastBlock = stack.length > 0 ? stack[stack.length - 1] : null;
+
+            if (lastBlock) {
+                const overlapStart = Math.max(currentBlock.x, lastBlock.x);
+                const overlapEnd = Math.min(currentBlock.x + currentBlock.width, lastBlock.x + lastBlock.width);
+                const overlap = overlapEnd - overlapStart;
+
+                if (overlap <= 0) {
+                    endGame(false);
+                    return;
+                }
+
+                currentBlock.x = overlapStart;
+                currentBlock.width = overlap;
+                
+                score += 1;
+            } else {
+                currentBlock.y = 0;
+                score += 1;
+            }
+
+            scoreDisplay.textContent = score;
+            stack.push(currentBlock);
+            
+            if (stack.length >= GRID_HEIGHT) {
+                endGame(true);
+            } else {
+                intervalTime *= 0.90;
+                createBlock();
+                startAnimation();
+            }
+        }
+
+        function handleKeyDown(event) {
+            if (event.code === 'Space') {
+                event.preventDefault();
+                if (gameActive) {
+                    placeBlock();
+                }
+            }
+        }
+        
+        function endGame(won = false) {
+            gameActive = false;
+            clearInterval(animationInterval);
+            finalScoreDisplay.textContent = score;
+
+            if (won) {
+                endMessage.textContent = "You Win!";
+            } else {
+                endMessage.textContent = "Game Over";
+            }
+
+            gameOverScreen.style.display = 'flex';
+        }
+        
+        // Add event listeners for starting the game.
+        gameAreaContainer.addEventListener('click', placeBlock);
+        document.addEventListener('keydown', handleKeyDown);
+        if (playAgainButton) playAgainButton.addEventListener('click', startGame);
+
+        startGame();
+    }
+    
+    // This function returns the HTML and scripts for the Hex Guessing Game.
+    function getHexGuessingGameHTML() {
+        return `
+            <div class="hex-game-container">
+                <div class="hex-header-text">WHAT THE HEX?</div>
+                <div id="hex-code">#B08992</div>
+                <div class="color-grid" id="color-grid">
+                </div>
+                <div id="message">GUESS THE COLOR</div>
+                <button id="new-game-button" class="new-game-button">NEW GAME</button>
+
+                <div class="difficulty-section">
+                    DIFFICULTY: 
+                    <span data-difficulty="2">2</span> 
+                    <span data-difficulty="3">3</span> 
+                    <span data-difficulty="4">4</span> 
+                    <span data-difficulty="5">5</span> 
+                    <span data-difficulty="6">6</span> 
+                    <span data-difficulty="7">7</span> 
+                    <span data-difficulty="8">8</span> 
+                    <span data-difficulty="9">9</span> 
+                    <span data-difficulty="10">10</span> 
+                    <span data-difficulty="48">48</span> 
+                    <span data-difficulty="100">100</span> 
+                </div>
+            </div>
+        `;
+    }
+
+    // New function to initialize the Hex Guessing Game's logic
+    function initializeHexGuessingGame() {
+        const hexCodeElement = document.getElementById('hex-code');
+        const colorGrid = document.getElementById('color-grid');
+        const messageElement = document.getElementById('message');
+        const newGameButton = document.getElementById('new-game-button');
+        const difficultySpans = document.querySelectorAll('.difficulty-section span');
+
+        let correctAnswerHex;
+        let numberOfOptions = 5;
+
+        function generateRandomHex() {
+            const hexCharacters = '0123456789ABCDEF';
+            let hex = '#';
+            for (let i = 0; i < 6; i++) {
+                hex += hexCharacters[Math.floor(Math.random() * 16)];
+            }
+            return hex;
+        }
+
+        function rgbToHex(rgb) {
+            const rgbValues = rgb.match(/\d+/g);
+            if (!rgbValues || rgbValues.length < 3) return "";
+
+            let hex = "#";
+            for (let i = 0; i < 3; i++) {
+                let hexComponent = parseInt(rgbValues[i]).toString(16);
+                hex += (hexComponent.length === 1) ? "0" + hexComponent : hexComponent;
+            }
+            return hex.toUpperCase();
+        }
+
+        function newRound() {
+            correctAnswerHex = generateRandomHex();
+            hexCodeElement.textContent = correctAnswerHex;
+            hexCodeElement.style.color = '#333333';
+            messageElement.textContent = 'GUESS THE COLOR';
+            messageElement.style.color = '#333333';
+            newGameButton.style.display = 'none';
+
+            const optionsSet = new Set();
+            optionsSet.add(correctAnswerHex);
+            while (optionsSet.size < numberOfOptions) {
+                optionsSet.add(generateRandomHex());
+            }
+
+            const allOptions = Array.from(optionsSet);
+            allOptions.sort(() => Math.random() - 0.5);
+
+            colorGrid.innerHTML = ''; 
+            allOptions.forEach(color => {
+                const button = document.createElement('button');
+                button.classList.add('color-option');
+                button.style.backgroundColor = color;
+                button.addEventListener('click', handleGuess);
+                colorGrid.appendChild(button);
+            });
+        }
+
+        function handleGuess(event) {
+            const userGuessButton = event.target;
+            const userGuessRgb = userGuessButton.style.backgroundColor;
+            const userGuessHex = rgbToHex(userGuessRgb);
+
+            if (userGuessHex === correctAnswerHex) {
+                messageElement.textContent = 'CORRECT!';
+                messageElement.style.color = '#333333';
+                hexCodeElement.style.color = correctAnswerHex;
+                
+                colorGrid.querySelectorAll('.color-option').forEach(button => {
+                    if (button === userGuessButton) {
+                        button.classList.add('winner-state');
+                    } else {
+                        button.classList.add('guessed-incorrectly');
+                    }
+                });
+                
+                newGameButton.style.display = 'block';
+                
+            } else {
+                messageElement.innerHTML = `Wrong, that color was: <span style="color: ${userGuessHex};">${userGuessHex}</span>`;
+                messageElement.style.color = '#333333';
+                userGuessButton.classList.add('guessed-incorrectly');
+            }
+        }
+        
+        function init() {
+            newGameButton.addEventListener('click', newRound);
+            
+            difficultySpans.forEach(span => {
+                span.addEventListener('click', () => {
+                    difficultySpans.forEach(s => s.classList.remove('active'));
+                    span.classList.add('active');
+                    
+                    numberOfOptions = parseInt(span.dataset.difficulty);
+                    
+                    newRound();
+                });
+            });
+            
+            // Set the initial active difficulty and start the first round
+            let initialDifficultySpan = document.querySelector(`[data-difficulty="5"]`);
+            if (initialDifficultySpan) {
+                initialDifficultySpan.classList.add('active');
+            }
+            
+            newRound();
+        }
+
+        init();
+    }
+
+    // Function for the new Binary Odometer project's HTML
+    function getBinaryOdometerHTML() {
+        return `
+            <div class="w-full max-w-xl mx-auto p-8 bg-gray-800 rounded-2xl shadow-2xl space-y-8 border border-gray-700">
+                <h1 class="text-4xl sm:text-5xl font-bold text-center text-orange-400">Binary Odometer</h1>
+                <p class="text-center text-gray-400 max-w-md mx-auto">Enter a binary number (up to 10 digits) to see its decimal conversion on the digital odometer display below.</p>
+                <div id="odometer-display" class="flex justify-center items-center h-28 sm:h-32 bg-gray-900 rounded-xl p-4 sm:p-6 shadow-inner border border-gray-700">
+                    <div id="odometer-d4" class="odometer-digit text-7xl sm:text-8xl font-mono text-lime-400 px-1 sm:px-2 rounded-lg bg-gray-900 shadow-md">0</div>
+                    <div id="odometer-d3" class="odometer-digit text-7xl sm:text-8xl font-mono text-lime-400 px-1 sm:px-2 rounded-lg bg-gray-900 shadow-md">0</div>
+                    <div id="odometer-d2" class="odometer-digit text-7xl sm:text-8xl font-mono text-lime-400 px-1 sm:px-2 rounded-lg bg-gray-900 shadow-md">0</div>
+                    <div id="odometer-d1" class="odometer-digit text-7xl sm:text-8xl font-mono text-lime-400 px-1 sm:px-2 rounded-lg bg-gray-900 shadow-md">0</div>
+                </div>
+                <div class="flex flex-col items-center space-y-4">
+                    <label for="binary-input" class="text-lg font-semibold text-gray-300">Enter Binary Number:</label>
+                    <input type="text" id="binary-input" class="w-full sm:w-80 px-4 py-3 text-lg text-center bg-gray-900 text-lime-400 rounded-lg border-2 border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-500 transition duration-300" placeholder="e.g., 10110" maxlength="10">
+                </div>
+                <div id="message" class="text-center h-6 text-orange-300 font-semibold"></div>
+            </div>
+        `;
+    }
+
+    // Function for the new Binary Odometer project's JavaScript logic
+    function initializeBinaryOdometer() {
+        const binaryInput = document.getElementById('binary-input');
+        const messageDiv = document.getElementById('message');
+        const odometerDigits = [
+            document.getElementById('odometer-d4'),
+            document.getElementById('odometer-d3'),
+            document.getElementById('odometer-d2'),
+            document.getElementById('odometer-d1')
+        ];
+
+        function updateOdometer(decimalValue) {
+            let decimalString = String(decimalValue).padStart(4, '0');
+            
+            for (let i = 0; i < odometerDigits.length; i++) {
+                const digitElement = odometerDigits[i];
+                const newDigit = decimalString.charAt(i);
+                
+                digitElement.style.transform = 'translateY(-100%)';
+                digitElement.style.opacity = '0';
+
+                setTimeout(() => {
+                    digitElement.textContent = newDigit;
+                    digitElement.style.transform = 'translateY(0)';
+                    digitElement.style.opacity = '1';
+                }, 200);
+            }
+        }
+
+        binaryInput.addEventListener('input', (event) => {
+            let binaryString = event.target.value.trim();
+            messageDiv.textContent = '';
+
+            if (binaryString === '') {
+                updateOdometer(0);
+                return;
+            }
+
+            const binaryRegex = /^[01]+$/;
+
+            if (!binaryRegex.test(binaryString)) {
+                messageDiv.textContent = 'Invalid input. Please enter only 0s and 1s.';
+                updateOdometer(0);
+                return;
+            }
+
+            const decimalValue = parseInt(binaryString, 2);
+
+            if (isNaN(decimalValue)) {
+                messageDiv.textContent = 'Conversion error. Please try again.';
+                updateOdometer(0);
+                return;
+            }
+
+            updateOdometer(decimalValue);
+        });
+    }
+    
+    // Function to get the HTML for the Tic-Tac-Toe game
+    function getTicTacToeHTML() {
+        return `
+            <div class="game-container">
+                <h1>Tic-Tac-Toe</h1>
+                <div class="tictactoe-board" id="tictactoe-board">
+                    <div class="tictactoe-cell" data-cell-index="0"></div>
+                    <div class="tictactoe-cell" data-cell-index="1"></div>
+                    <div class="tictactoe-cell" data-cell-index="2"></div>
+                    <div class="tictactoe-cell" data-cell-index="3"></div>
+                    <div class="tictactoe-cell" data-cell-index="4"></div>
+                    <div class="tictactoe-cell" data-cell-index="5"></div>
+                    <div class="tictactoe-cell" data-cell-index="6"></div>
+                    <div class="tictactoe-cell" data-cell-index="7"></div>
+                    <div class="tictactoe-cell" data-cell-index="8"></div>
+                </div>
+                <div id="game-status">Player X's turn</div>
+                <button id="restart-tictactoe-btn" class="button">Restart Game</button>
+            </div>
+        `;
+    }
+
+    // Function to initialize the Tic-Tac-Toe game logic
+    function initializeTicTacToe() {
+        const statusDisplay = document.getElementById('game-status');
+        const restartButton = document.getElementById('restart-tictactoe-btn');
+        const cells = document.querySelectorAll('.tictactoe-cell');
+
+        let currentPlayer = 'X';
+        let gameState = ['', '', '', '', '', '', '', '', ''];
+        let gameActive = true;
+
+        const winningConditions = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]
+        ];
+
+        function handleCellPlayed(cell, clickedCellIndex) {
+            gameState[clickedCellIndex] = currentPlayer;
+            cell.textContent = currentPlayer;
+            cell.classList.add(currentPlayer);
+        }
+
+        function handlePlayerChange() {
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            statusDisplay.textContent = `Player ${currentPlayer}'s turn`;
+        }
+
+        function handleResultValidation() {
+            let roundWon = false;
+            for (let i = 0; i < winningConditions.length; i++) {
+                const winCondition = winningConditions[i];
+                let a = gameState[winCondition[0]];
+                let b = gameState[winCondition[1]];
+                let c = gameState[winCondition[2]];
+                if (a === '' || b === '' || c === '') {
+                    continue;
+                }
+                if (a === b && b === c) {
+                    roundWon = true;
+                    break;
+                }
+            }
+
+            if (roundWon) {
+                statusDisplay.textContent = `Player ${currentPlayer} has won!`;
+                gameActive = false;
+                return;
+            }
+
+            let roundDraw = !gameState.includes('');
+            if (roundDraw) {
+                statusDisplay.textContent = `Game ended in a draw!`;
+                gameActive = false;
+                return;
+            }
+
+            handlePlayerChange();
+        }
+
+        function handleCellClick(event) {
+            const clickedCell = event.target;
+            const clickedCellIndex = parseInt(clickedCell.getAttribute('data-cell-index'));
+
+            if (gameState[clickedCellIndex] !== '' || !gameActive) {
+                return;
+            }
+
+            handleCellPlayed(clickedCell, clickedCellIndex);
+            handleResultValidation();
+        }
+
+        function handleRestartGame() {
+            gameActive = true;
+            currentPlayer = 'X';
+            gameState = ['', '', '', '', '', '', '', '', ''];
+            statusDisplay.textContent = `Player ${currentPlayer}'s turn`;
+            cells.forEach(cell => {
+                cell.textContent = '';
+                cell.classList.remove('X', 'O');
+            });
+        }
+
+        cells.forEach(cell => cell.addEventListener('click', handleCellClick));
+        restartButton.addEventListener('click', handleRestartGame);
+    }
+    
+    function get2048GameHTML() {
+        return `
+            <div id="game-container-2048" class="game-container-2048">
+                <div id="header-2048" class="header-2048">
+                    <h1 class="h1-2048">2048</h1>
+                    <div class="score-box-2048" id="score-container">
+                        <span class="score-label-2048">Score</span>
+                        <span id="score">0</span>
+                    </div>
+                    <div class="score-box-2048" id="high-score-container">
+                        <span class="score-label-2048">High Score</span>
+                        <span id="high-score">0</span>
+                    </div>
+                </div>
+                <canvas id="gameCanvas-2048" class="canvas-2048"></canvas>
+                <button id="new-game-btn-2048" class="new-game-btn-2048">New Game</button>
+            </div>
+            <div id="message-box-2048" class="message-box-2048">
+                <p id="message-text-2048">Game Over!</p>
+                <div class="button-group-2048">
+                    <button class="action-btn-2048" id="message-ok-2048">OK</button>
+                    <button class="action-btn-2048" id="message-restart-2048">Restart</button>
+                </div>
+            </div>
+        `;
+    }
+    
+    function initialize2048Game() {
+        const canvas = document.getElementById('gameCanvas-2048');
+        const ctx = canvas.getContext('2d');
+        const scoreElement = document.getElementById('score');
+        const highScoreElement = document.getElementById('high-score');
+        const newGameBtn = document.getElementById('new-game-btn-2048');
+        const messageBox = document.getElementById('message-box-2048');
+        const messageText = document.getElementById('message-text-2048');
+        const messageOkBtn = document.getElementById('message-ok-2048');
+        const messageRestartBtn = document.getElementById('message-restart-2048');
+        
+        // Grid and Tile properties
+        const gridSize = 4;
+        const tileSize = 100;
+        const tilePadding = 10;
+        const canvasSize = gridSize * tileSize + (gridSize + 1) * tilePadding;
+        canvas.width = canvasSize;
+        canvas.height = canvasSize;
+
+        // Animation properties
+        const animationDuration = 100; // in milliseconds
+        let animationStartTime = 0;
+        let animatedTiles = [];
+        let isAnimating = false;
+        let board = [];
+        let nextBoardState = [];
+        let score = 0;
+        let highScore = 0;
+        let isGameOver = false;
+
+        // Tile color map
+        const tileColors = {
+            0: '#cdc1b4',
+            2: '#eee4da',
+            4: '#ede0c8',
+            8: '#f2b179',
+            16: '#f59563',
+            32: '#f67c5f',
+            64: '#f65e3b',
+            128: '#edcf72',
+            256: '#edcc61',
+            512: '#edc850',
+            1024: '#edc53f',
+            2048: '#edc22e',
+        };
+
+        const textColors = {
+            2: '#776e65',
+            4: '#776e65',
+            8: '#f9f6f2',
+            16: '#f9f6f2',
+            32: '#f9f6f2',
+            64: '#f9f6f2',
+            128: '#f9f6f2',
+            256: '#f9f6f2',
+            512: '#f9f6f2',
+            1024: '#f9f6f2',
+            2048: '#f9f6f2',
+        };
+
+        // Font sizes
+        const fontSizes = {
+            2: '50px',
+            4: '50px',
+            8: '50px',
+            16: '45px',
+            32: '45px',
+            64: '45px',
+            128: '40px',
+            256: '40px',
+            512: '40px',
+            1024: '35px',
+            2048: '35px',
+        };
+
+        // Function to show a message box
+        function showMessageBox(message) {
+            messageText.textContent = message;
+            messageBox.style.display = 'block';
+        }
+
+        // Function to hide the message box
+        function hideMessageBox() {
+            messageBox.style.display = 'none';
+        }
+
+        // Initializes the game board
+        function setup() {
+            board = Array.from({ length: gridSize }, () => Array(gridSize).fill(0));
+            score = 0;
+            isGameOver = false;
+            animatedTiles = [];
+            spawnNewTile();
+            spawnNewTile();
+            drawBoard();
+            updateScore();
+            
+            // Load high score from local storage
+            const savedHighScore = localStorage.getItem('highScore2048');
+            highScore = savedHighScore ? parseInt(savedHighScore) : 0;
+            updateHighScore();
+            
+            hideMessageBox();
+        }
+        
+        // Draw a single tile with a rounded rectangle
+        function drawTile(x, y, value) {
+            const color = tileColors[value] || '#cdc1b4';
+            const textColor = textColors[value] || '#776e65';
+            const fontSize = fontSizes[value] || '50px';
+
+            ctx.beginPath();
+            ctx.roundRect(x, y, tileSize, tileSize, 6);
+            ctx.fillStyle = color;
+            ctx.fill();
+
+            if (value !== 0) {
+                ctx.fillStyle = textColor;
+                ctx.font = `bold ${fontSize} Inter`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(value, x + tileSize / 2, y + tileSize / 2);
+            }
+        }
+
+        // Draw the entire board
+        function drawBoard() {
+            ctx.clearRect(0, 0, canvasSize, canvasSize);
+            drawBackground();
+            drawStaticTiles();
+            drawMovingTiles();
+        }
+        
+        // Draw the empty background grid
+        function drawBackground() {
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    const x = tilePadding + j * (tileSize + tilePadding);
+                    const y = tilePadding + i * (tileSize + tilePadding);
+                    drawTile(x, y, 0); // Draw empty tile background
+                }
+            }
+        }
+        
+        // Draw tiles directly from the board array, excluding animated ones
+        function drawStaticTiles() {
+            const animatedFrom = new Set(animatedTiles.map(t => `${t.from.i}-${t.from.j}`));
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    if (board[i][j] !== 0 && !animatedFrom.has(`${i}-${j}`)) {
+                        const x = tilePadding + j * (tileSize + tilePadding);
+                        const y = tilePadding + i * (tileSize + tilePadding);
+                        drawTile(x, y, board[i][j]);
+                    }
+                }
+            }
+        }
+
+        // Draw the moving tiles during animation
+        function drawMovingTiles() {
+            animatedTiles.forEach(tile => {
+                const fromX = tilePadding + tile.from.j * (tileSize + tilePadding);
+                const fromY = tilePadding + tile.from.i * (tileSize + tilePadding);
+                const toX = tilePadding + tile.to.j * (tileSize + tilePadding);
+                const toY = tilePadding + tile.to.i * (tileSize + tilePadding);
+
+                const progress = performance.now() - animationStartTime;
+                const t = Math.min(progress / animationDuration, 1);
+                
+                const currentX = fromX + (toX - fromX) * t;
+                const currentY = fromY + (toY - fromY) * t;
+                
+                drawTile(currentX, currentY, tile.value);
+            });
+        }
+
+        // Main animation loop
+        function animate(timestamp) {
+            if (animationStartTime === 0) {
+                animationStartTime = timestamp;
+            }
+            const progress = timestamp - animationStartTime;
+            
+            drawBoard();
+
+            if (progress < animationDuration) {
+                requestAnimationFrame(animate);
+            } else {
+                // Animation complete, reset state and update board
+                isAnimating = false;
+                animationStartTime = 0;
+                animatedTiles = [];
+                board = nextBoardState;
+                
+                if (checkGameOver()) {
+                    isGameOver = true;
+                    showMessageBox("Game Over!");
+                } else {
+                    spawnNewTile();
+                    drawBoard();
+                }
+            }
+        }
+        
+        // Spawn a new tile (2 or 4) on an empty spot
+        function spawnNewTile() {
+            let emptyCells = [];
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    if (board[i][j] === 0) {
+                        emptyCells.push({ i, j });
+                    }
+                }
+            }
+            if (emptyCells.length > 0) {
+                const { i, j } = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+                board[i][j] = Math.random() < 0.9 ? 2 : 4;
+            }
+        }
+
+        // Check if the board is full
+        function isBoardFull() {
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    if (board[i][j] === 0) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        // Check for game over
+        function checkGameOver() {
+            if (!isBoardFull()) {
+                return false;
+            }
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    const value = board[i][j];
+                    if (j < gridSize - 1 && board[i][j+1] === value) return false;
+                    if (i < gridSize - 1 && board[i+1][j] === value) return false;
+                }
+            }
+            return true;
+        }
+
+        // Update the score display
+        function updateScore() {
+            scoreElement.textContent = score;
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('highScore2048', highScore);
+                updateHighScore();
+            }
+        }
+
+        // Update the high score display
+        function updateHighScore() {
+            highScoreElement.textContent = highScore;
+        }
+
+        // Core game logic: slide and merge
+        function move(direction) {
+            if (isGameOver || isAnimating) return;
+            
+            let moved = false;
+            let prevBoard = JSON.parse(JSON.stringify(board));
+            nextBoardState = Array.from({ length: gridSize }, () => Array(gridSize).fill(0));
+            animatedTiles = [];
+            
+            let boardToProcess = JSON.parse(JSON.stringify(board));
+            let tilesToMerge = new Set();
+
+            if (direction === 'up' || direction === 'down') {
+                boardToProcess = transpose(boardToProcess);
+            }
+            if (direction === 'right' || direction === 'down') {
+                boardToProcess = boardToProcess.map(row => row.reverse());
+            }
+
+            // Main sliding and merging logic
+            for (let i = 0; i < gridSize; i++) {
+                let row = boardToProcess[i].filter(val => val !== 0);
+                let mergedRow = [];
+                let j = 0;
+                while (j < row.length) {
+                    let value = row[j];
+                    if (j + 1 < row.length && row[j] === row[j + 1]) {
+                        mergedRow.push(value * 2);
+                        score += value * 2;
+                        j += 2;
+                    } else {
+                        mergedRow.push(value);
+                        j++;
+                    }
+                }
+                
+                let oldRow = boardToProcess[i];
+                let oldRowIndex = 0;
+                let newRowIndex = 0;
+                
+                // Generate animated tile data
+                for (let k = 0; k < gridSize; k++) {
+                    if (oldRow[k] !== 0) {
+                        let value = oldRow[k];
+                        let destinationValue = mergedRow[newRowIndex];
+                        
+                        // Handle merges
+                        if (value * 2 === destinationValue) {
+                            let mergedFrom = oldRow.indexOf(value, k + 1);
+                            if (mergedFrom !== -1) {
+                                animatedTiles.push({
+                                    value: value,
+                                    from: { i: i, j: k },
+                                    to: { i: i, j: newRowIndex },
+                                    isMerge: true
+                                });
+                                animatedTiles.push({
+                                    value: value,
+                                    from: { i: i, j: mergedFrom },
+                                    to: { i: i, j: newRowIndex },
+                                    isMerge: true
+                                });
+                                k = mergedFrom;
+                                newRowIndex++;
+                            }
+                        } else {
+                            // Simple slide
+                            animatedTiles.push({
+                                value: value,
+                                from: { i: i, j: k },
+                                to: { i: i, j: newRowIndex },
+                                isMerge: false
+                            });
+                            newRowIndex++;
+                        }
+                    }
+                }
+                
+                while (mergedRow.length < gridSize) {
+                    mergedRow.push(0);
+                }
+
+                if (JSON.stringify(boardToProcess[i]) !== JSON.stringify(mergedRow)) {
+                    moved = true;
+                }
+                
+                boardToProcess[i] = mergedRow;
+            }
+
+            if (direction === 'right' || direction === 'down') {
+                boardToProcess = boardToProcess.map(row => row.reverse());
+            }
+            if (direction === 'up' || direction === 'down') {
+                boardToProcess = transpose(boardToProcess);
+            }
+
+            nextBoardState = boardToProcess;
+
+            // Adjust animation coordinates based on transpose/reverse operations
+            for (let tile of animatedTiles) {
+                if (direction === 'right' || direction === 'down') {
+                    tile.from.j = gridSize - 1 - tile.from.j;
+                    tile.to.j = gridSize - 1 - tile.to.j;
+                }
+                if (direction === 'up' || direction === 'down') {
+                    let temp = tile.from.i;
+                    tile.from.i = tile.from.j;
+                    tile.from.j = temp;
+
+                    temp = tile.to.i;
+                    tile.to.i = tile.to.j;
+                    tile.to.j = temp;
+                }
+            }
+
+            if (moved) {
+                isAnimating = true;
+                updateScore();
+                requestAnimationFrame(animate);
+            }
+        }
+
+        // Helper function to transpose the matrix
+        function transpose(matrix) {
+            return matrix[0].map((_, colIndex) => matrix.map(row => row[colIndex]));
+        }
+        
+        // Event listeners
+        document.addEventListener('keydown', (e) => {
+            if (!isAnimating) {
+                switch (e.key) {
+                    case 'ArrowUp':
+                        e.preventDefault();
+                        move('up');
+                        break;
+                    case 'ArrowDown':
+                        e.preventDefault();
+                        move('down');
+                        break;
+                    case 'ArrowLeft':
+                        e.preventDefault();
+                        move('left');
+                        break;
+                    case 'ArrowRight':
+                        e.preventDefault();
+                        move('right');
+                        break;
+                }
+            }
+        });
+
+        newGameBtn.addEventListener('click', () => {
+            setup();
+        });
+
+        messageOkBtn.addEventListener('click', hideMessageBox);
+        messageRestartBtn.addEventListener('click', setup);
+        
+        // Initial setup on function call
+        setup();
+    }
+
+    // Function to get the HTML for the Minesweeper game
+    function getMinesweeperHTML() {
+        return `
+            <div class="minesweeper-container">
+                <div class="minesweeper-status-panel">
+                    <span id="flag-count" class="minesweeper-status-text">040</span>
+                    <button id="restart-btn" class="minesweeper-restart-btn">Restart</button>
+                </div>
+                <canvas id="game-canvas" class="minesweeper-canvas"></canvas>
+            </div>
+            <div id="message-box" class="minesweeper-message-box">
+                <p id="message-text"></p>
+                <button id="message-restart-btn">Play Again</button>
+            </div>
+        `;
+    }
+
+    // Function to initialize the Minesweeper game logic
+    function initializeMinesweeper() {
+        // Game Constants
+        const ROWS = 16;
+        const COLS = 16;
+        const BOMBS = 40;
+        const CELL_SIZE = 30; // Pixel size of each cell
+        const FONT_SIZE = 18;
+
+        // DOM elements
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+        const restartBtn = document.getElementById('restart-btn');
+        const flagCountElement = document.getElementById('flag-count');
+        const messageBox = document.getElementById('message-box');
+        const messageText = document.getElementById('message-text');
+        const messageRestartBtn = document.getElementById('message-restart-btn');
+
+        // Game State Variables
+        let board = [];
+        let revealed = [];
+        let flags = [];
+        let isGameOver = false;
+        let firstClick = true;
+        let revealedCount = 0;
+        let flagCounter = BOMBS;
+
+        // Colors for bomb counts
+        const NUMBER_COLORS = [
+            'transparent', '#0000ff', '#008000', '#ff0000', '#800080', '#800000', '#40e0d0', '#000000', '#808080'
+        ];
+        
+        // Function to initialize or reset the game
+        function initGame() {
+            isGameOver = false;
+            firstClick = true;
+            revealedCount = 0;
+            flagCounter = BOMBS;
+            
+            // Set canvas dimensions
+            canvas.width = COLS * CELL_SIZE;
+            canvas.height = ROWS * CELL_SIZE;
+
+            // Hide message box
+            messageBox.style.display = 'none';
+
+            // Initialize 2D arrays
+            board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+            revealed = Array.from({ length: ROWS }, () => Array(COLS).fill(false));
+            flags = Array.from({ length: ROWS }, () => Array(COLS).fill(false));
+
+            updateFlagCount();
+            drawBoard();
+        }
+
+        // Places bombs on the board, avoiding the first clicked cell and its neighbors
+        function placeBombs(firstClickRow, firstClickCol) {
+            let bombsPlaced = 0;
+            while (bombsPlaced < BOMBS) {
+                const row = Math.floor(Math.random() * ROWS);
+                const col = Math.floor(Math.random() * COLS);
+                
+                // Check if the cell is in the 3x3 area around the first click
+                const isSafeZone = (Math.abs(row - firstClickRow) <= 1 && Math.abs(col - firstClickCol) <= 1);
+
+                if (!isSafeZone && board[row][col] !== 'B') {
+                    board[row][col] = 'B';
+                    bombsPlaced++;
+                }
+            }
+        }
+
+        // Calculates the number of adjacent bombs for each cell
+        function calculateBombCounts() {
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < COLS; c++) {
+                    if (board[r][c] === 'B') continue;
+
+                    let count = 0;
+                    for (let dr = -1; dr <= 1; dr++) {
+                        for (let dc = -1; dc <= 1; dc++) {
+                            const newR = r + dr;
+                            const newC = c + dc;
+                            if (newR >= 0 && newR < ROWS && newC >= 0 && newC < COLS && board[newR][newC] === 'B') {
+                                count++;
+                            }
+                        }
+                    }
+                    board[r][c] = count;
+                }
+            }
+        }
+
+        // Draws the entire board on the canvas
+        function drawBoard() {
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < COLS; c++) {
+                    drawCell(r, c);
+                }
+            }
+        }
+
+        // Draws a single cell based on its state
+        function drawCell(row, col) {
+            const x = col * CELL_SIZE;
+            const y = row * CELL_SIZE;
+
+            if (revealed[row][col]) {
+                // Draw revealed cell with inset effect
+                ctx.fillStyle = '#c0c0c0';
+                ctx.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+                ctx.strokeStyle = '#808080';
+                ctx.strokeRect(x, y, CELL_SIZE, CELL_SIZE);
+
+                if (board[row][col] === 'B') {
+                    // Draw a more classic-looking bomb
+                    ctx.fillStyle = '#000000';
+                    ctx.beginPath();
+                    ctx.arc(x + CELL_SIZE / 2, y + CELL_SIZE / 2, CELL_SIZE * 0.3, 0, 2 * Math.PI);
+                    ctx.fill();
+                    
+                } else if (board[row][col] > 0) {
+                    // Draw number
+                    ctx.fillStyle = NUMBER_COLORS[board[row][col]];
+                    ctx.font = `bold ${FONT_SIZE}px 'Courier New', Courier, monospace`;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(board[row][col], x + CELL_SIZE / 2, y + CELL_SIZE / 2);
+                }
+            } else {
+                // Draw unrevealed cell with outset effect
+                ctx.fillStyle = '#c0c0c0';
+                ctx.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+
+                // Outset 3D border
+                ctx.beginPath();
+                ctx.moveTo(x, y + CELL_SIZE);
+                ctx.lineTo(x, y);
+                ctx.lineTo(x + CELL_SIZE, y);
+                ctx.strokeStyle = '#ffffff';
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(x + CELL_SIZE, y);
+                ctx.lineTo(x + CELL_SIZE, y + CELL_SIZE);
+                ctx.lineTo(x, y + CELL_SIZE);
+                ctx.strokeStyle = '#808080';
+                ctx.stroke();
+
+                if (flags[row][col]) {
+                    // Draw classic flag
+                    ctx.fillStyle = '#000000';
+                    ctx.font = `bold ${FONT_SIZE}px 'Courier New', Courier, monospace`;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('🚩', x + CELL_SIZE / 2, y + CELL_SIZE / 2);
+                }
+            }
+        }
+
+        // Handles a mouse down event for the visual press effect
+        function handleMouseDown(event) {
+            if (isGameOver || event.button !== 0) return; // Only for left clicks
+
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            const col = Math.floor(x / CELL_SIZE);
+            const row = Math.floor(y / CELL_SIZE);
+
+            if (!revealed[row][col] && !flags[row][col]) {
+                // Draw the cell with an "inset" border to show it's pressed
+                const cellX = col * CELL_SIZE;
+                const cellY = row * CELL_SIZE;
+
+                ctx.fillStyle = '#c0c0c0';
+                ctx.fillRect(cellX, cellY, CELL_SIZE, CELL_SIZE);
+                
+                // Inset 3D border
+                ctx.beginPath();
+                ctx.moveTo(cellX, cellY);
+                ctx.lineTo(cellX + CELL_SIZE, cellY);
+                ctx.lineTo(cellX + CELL_SIZE, cellY + CELL_SIZE);
+                ctx.strokeStyle = '#808080';
+                ctx.stroke();
+
+                ctx.beginPath();
+                ctx.moveTo(cellX + CELL_SIZE, cellY + CELL_SIZE);
+                ctx.lineTo(cellX, cellY + CELL_SIZE);
+                ctx.lineTo(cellX, cellY);
+                ctx.strokeStyle = '#ffffff';
+                ctx.stroke();
+            }
+        }
+        
+        // Handles a mouse up event to run game logic and reset visuals
+        function handleMouseUp(event) {
+            if (isGameOver) return;
+
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            const col = Math.floor(x / CELL_SIZE);
+            const row = Math.floor(y / CELL_SIZE);
+            
+            if (firstClick) {
+                placeBombs(row, col);
+                calculateBombCounts();
+                firstClick = false;
+            }
+
+            if (revealed[row][col]) {
+                chordReveal(row, col);
+            } else {
+                revealCell(row, col);
+            }
+            drawBoard(); // Crucial to redraw all cells and fix the borders
+        }
+
+
+        // Handles a right-click on the canvas
+        function handleRightClick(event) {
+            event.preventDefault();
+            if (isGameOver) return;
+
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            const col = Math.floor(x / CELL_SIZE);
+            const row = Math.floor(y / CELL_SIZE);
+
+            toggleFlag(row, col);
+        }
+
+        // Reveals a cell and its neighbors if it's a zero
+        function revealCell(row, col) {
+            if (row < 0 || row >= ROWS || col < 0 || col >= COLS || revealed[row][col] || flags[row][col]) {
+                return;
+            }
+
+            revealed[row][col] = true;
+
+            if (board[row][col] === 'B') {
+                // Game over
+                isGameOver = true;
+                showBombs();
+                showMessage('Game Over! You hit a mine!');
+                return;
+            }
+
+            revealedCount++;
+            drawCell(row, col);
+            checkWin();
+
+            if (board[row][col] === 0) {
+                // Recursively reveal adjacent cells if this cell is a zero
+                for (let dr = -1; dr <= 1; dr++) {
+                    for (let dc = -1; dc <= 1; dc++) {
+                        if (dr === 0 && dc === 0) continue;
+                        revealCell(row + dr, col + dc);
+                    }
+                }
+            }
+        }
+
+        // Classic Minesweeper chording: if adjacent flag count matches the number,
+        // reveal all surrounding non-flagged cells.
+        function chordReveal(row, col) {
+            const cellValue = board[row][col];
+            if (typeof cellValue !== 'number' || cellValue <= 0) {
+                return;
+            }
+
+            let adjacentFlags = 0;
+            for (let dr = -1; dr <= 1; dr++) {
+                for (let dc = -1; dc <= 1; dc++) {
+                    if (dr === 0 && dc === 0) continue;
+                    const newR = row + dr;
+                    const newC = col + dc;
+                    if (newR < 0 || newR >= ROWS || newC < 0 || newC >= COLS) continue;
+                    if (flags[newR][newC]) {
+                        adjacentFlags++;
+                    }
+                }
+            }
+
+            if (adjacentFlags !== cellValue) {
+                return;
+            }
+
+            for (let dr = -1; dr <= 1; dr++) {
+                for (let dc = -1; dc <= 1; dc++) {
+                    if (dr === 0 && dc === 0) continue;
+                    const newR = row + dr;
+                    const newC = col + dc;
+                    if (newR < 0 || newR >= ROWS || newC < 0 || newC >= COLS) continue;
+                    if (!flags[newR][newC]) {
+                        revealCell(newR, newC);
+                    }
+                }
+            }
+        }
+        
+        // Toggles a flag on a cell
+        function toggleFlag(row, col) {
+            if (revealed[row][col]) {
+                return;
+            }
+
+            flags[row][col] = !flags[row][col];
+            if (flags[row][col]) {
+                flagCounter--;
+            } else {
+                flagCounter++;
+            }
+
+            updateFlagCount();
+            drawCell(row, col);
+        }
+        
+        // Updates the flag counter display
+        function updateFlagCount() {
+            // The classic counter is 2 digits, but we can do 3
+            const displayCount = flagCounter.toString().padStart(3, '0');
+            flagCountElement.textContent = displayCount;
+        }
+
+        // Reveals all bombs at the end of the game
+        function showBombs() {
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < COLS; c++) {
+                    if (board[r][c] === 'B') {
+                        revealed[r][c] = true;
+                        drawCell(r, c);
+                    }
+                }
+            }
+        }
+
+        // Checks for a win condition
+        function checkWin() {
+            if (revealedCount === (ROWS * COLS) - BOMBS) {
+                isGameOver = true;
+                showMessage('Congratulations! You found all the mines!');
+            }
+        }
+
+        // Displays a custom message box
+        function showMessage(message) {
+            messageText.textContent = message;
+            messageBox.style.display = 'block';
+        }
+
+        // Restarts the game (accessible via button click)
+        function restartGame() {
+            initGame();
+        }
+
+        // Event Listeners
+        canvas.addEventListener('mousedown', handleMouseDown);
+        canvas.addEventListener('mouseup', handleMouseUp);
+        canvas.addEventListener('contextmenu', handleRightClick);
+        if (restartBtn) restartBtn.addEventListener('click', restartGame);
+        if (messageRestartBtn) messageRestartBtn.addEventListener('click', restartGame);
+        
+        // Initial call to set up the game
+        initGame();
+    }
+    
+    // Function to get the HTML for the Flappy game
+    function getFlappyHTML() {
+        return `
+            <div class="flappy-wrap">
+                <canvas id="flappy-canvas" width="480" height="640" role="img" aria-label="Flappy-style game canvas"></canvas>
+                <div class="flappy-ui">
+                    <div class="flappy-left">
+                        <div class="flappy-score" id="flappy-score">0</div>
+                        <div class="flappy-small">High: <span id="flappy-high">0</span></div>
+                    </div>
+                    <div class="flappy-right">
+                        <button class="flappy-btn" id="flappy-mute" type="button">Mute</button>
+                        <button class="flappy-ghost" id="flappy-restart" type="button">Restart</button>
+                        <div class="flappy-touch-hint">Space / Click / Tap to flap</div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    // Function to initialize the Flappy game logic
+    function initializeFlappy() {
+        const canvas = document.getElementById('flappy-canvas');
+        const ctx = canvas.getContext('2d');
+        const scoreEl = document.getElementById('flappy-score');
+        const highEl = document.getElementById('flappy-high');
+        const muteBtn = document.getElementById('flappy-mute');
+        const restartBtn = document.getElementById('flappy-restart');
+
+        const DEFAULT_WIDTH = 480;
+        const DEFAULT_HEIGHT = 640;
+        const SKY_HEIGHT = 528;
+        const GROUND_HEIGHT = 112;
+        const PIPE_WIDTH = 52;
+        const PIPE_SPEED_BASE = 2.4;
+        const PIPE_GAP = 150;
+        const GRAVITY = 0.55;
+        const FLAP_VELOCITY = -8.8;
+        const SPRITE_PATH = '../../assets/sprites/flappy/sprites/';
+
+        let W = DEFAULT_WIDTH;
+        let H = DEFAULT_HEIGHT;
+        let lastFrame = performance.now();
+        let lastSpawn = 0;
+        let groundOffset = 0;
+        let score = 0;
+        let highScore = Number(localStorage.getItem('fb_high') || 0);
+        let running = false;
+        let started = false;
+        let muted = false;
+        let bird;
+        let pipes = [];
+        let particles = [];
+
+        const sprites = {};
+        let spritesLoaded = false;
+
+        const spriteFiles = {
+            background: 'background-day.png',
+            base: 'base.png',
+            pipe: 'pipe-green.png',
+            birdUp: 'yellowbird-upflap.png',
+            birdMid: 'yellowbird-midflap.png',
+            birdDown: 'yellowbird-downflap.png',
+            message: 'message.png',
+            gameover: 'gameover.png'
+        };
+
+        function updateMuteButton() {
+            muteBtn.textContent = muted ? 'Unmute' : 'Mute';
+        }
+
+        function resizeCanvas() {
+            const ratio = Math.max(1, Math.min(window.devicePixelRatio || 1, 2));
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = Math.round(rect.width * ratio);
+            canvas.height = Math.round(rect.height * ratio);
+            ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+            W = rect.width;
+            H = rect.height;
+        }
+
+        canvas.style.width = '100%';
+        canvas.style.maxWidth = '480px';
+        canvas.style.height = '640px';
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const audio = { enabled: true };
+        try {
+            window.AudioContext = window.AudioContext || window.webkitAudioContext;
+            audio.ctx = new AudioContext();
+        } catch (e) {
+            audio.enabled = false;
+        }
+
+        function beep(freq, time, type, gain) {
+            if (!audio.enabled || !audio.ctx) return;
+            const osc = audio.ctx.createOscillator();
+            const vol = audio.ctx.createGain();
+            osc.type = type || 'sine';
+            osc.frequency.value = freq;
+            vol.gain.value = gain || 0.06;
+            osc.connect(vol);
+            vol.connect(audio.ctx.destination);
+            osc.start();
+            vol.gain.exponentialRampToValueAtTime(0.0001, audio.ctx.currentTime + time);
+            osc.stop(audio.ctx.currentTime + time + 0.02);
+        }
+
+        function loadSprite(fileName) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => resolve(img);
+                img.onerror = () => resolve(null);
+                img.src = `${SPRITE_PATH}${fileName}`;
+            });
+        }
+
+        function loadSprites() {
+            return Promise.all(Object.entries(spriteFiles).map(async ([key, file]) => {
+                sprites[key] = await loadSprite(file);
+            })).then(() => {
+                spritesLoaded = true;
+            });
+        }
+
+        function resetGame() {
+            bird = { x: 112, y: H * 0.45, vy: 0, rot: 0, r: 12 };
+            pipes = [];
+            particles = [];
+            score = 0;
+            running = true;
+            started = false;
+            lastSpawn = performance.now() - 250;
+            groundOffset = 0;
+            scoreEl.textContent = '0';
+            highEl.textContent = String(highScore);
+        }
+
+        function flap() {
+            if (!running) {
+                resetGame();
+            }
+            started = true;
+            bird.vy = FLAP_VELOCITY;
+            bird.rot = -0.55;
+            if (!muted) beep(940, 0.05, 'square', 0.04);
+        }
+
+        function spawnPipe() {
+            const minTop = 70;
+            const maxTop = H - GROUND_HEIGHT - PIPE_GAP - 70;
+            const top = minTop + Math.random() * Math.max(10, maxTop - minTop);
+            pipes.push({ x: W + 20, top, bottom: top + PIPE_GAP, passed: false });
+        }
+
+        function rectCircleColliding(cx, cy, r, rx, ry, rw, rh) {
+            const closestX = Math.max(rx, Math.min(cx, rx + rw));
+            const closestY = Math.max(ry, Math.min(cy, ry + rh));
+            const dx = cx - closestX;
+            const dy = cy - closestY;
+            return dx * dx + dy * dy < r * r;
+        }
+
+        function onCrash() {
+            if (!running) return;
+            running = false;
+            if (!muted) beep(180, 0.16, 'triangle', 0.06);
+        }
+
+        function update(dt) {
+            const speed = PIPE_SPEED_BASE + Math.min(2.2, score * 0.08);
+            bird.vy += GRAVITY;
+            bird.y += bird.vy * (dt / 16);
+            bird.rot += ((bird.vy / 10) - bird.rot) * 0.08;
+            groundOffset = (groundOffset + speed * (dt / 16)) % 336;
+
+            if (performance.now() - lastSpawn > 1350 - Math.min(350, score * 8)) {
+                spawnPipe();
+                lastSpawn = performance.now();
+            }
+
+            for (let i = pipes.length - 1; i >= 0; i--) {
+                const p = pipes[i];
+                p.x -= speed * (dt / 16);
+
+                if (!p.passed && p.x + PIPE_WIDTH < bird.x - bird.r) {
+                    p.passed = true;
+                    score += 1;
+                    scoreEl.textContent = String(score);
+                    if (score > highScore) {
+                        highScore = score;
+                        localStorage.setItem('fb_high', String(highScore));
+                        highEl.textContent = String(highScore);
+                    }
+                    if (!muted) beep(620, 0.03, 'sine', 0.04);
+                }
+
+                const hitTop = rectCircleColliding(bird.x, bird.y, bird.r, p.x, 0, PIPE_WIDTH, p.top);
+                const hitBottom = rectCircleColliding(bird.x, bird.y, bird.r, p.x, p.bottom, PIPE_WIDTH, H - GROUND_HEIGHT - p.bottom);
+                if (hitTop || hitBottom) onCrash();
+
+                if (p.x + PIPE_WIDTH < -80) pipes.splice(i, 1);
+            }
+
+            if (bird.y + bird.r >= H - GROUND_HEIGHT) {
+                bird.y = H - GROUND_HEIGHT - bird.r;
+                onCrash();
+            }
+            if (bird.y - bird.r <= 0) {
+                bird.y = bird.r;
+                bird.vy = 0;
+            }
+        }
+
+        function drawBackground() {
+            if (spritesLoaded && sprites.background) {
+                ctx.drawImage(sprites.background, 0, 0, W, SKY_HEIGHT);
+                return;
+            }
+            ctx.fillStyle = '#70c5ce';
+            ctx.fillRect(0, 0, W, SKY_HEIGHT);
+        }
+
+        function drawPipe(x, top, bottom) {
+            if (spritesLoaded && sprites.pipe) {
+                ctx.save();
+                ctx.translate(x + PIPE_WIDTH / 2, top / 2);
+                ctx.rotate(Math.PI);
+                ctx.drawImage(sprites.pipe, -PIPE_WIDTH / 2, -top / 2, PIPE_WIDTH, top);
+                ctx.restore();
+
+                ctx.drawImage(sprites.pipe, x, bottom, PIPE_WIDTH, H - GROUND_HEIGHT - bottom);
+                return;
+            }
+
+            ctx.fillStyle = '#6bcf33';
+            ctx.fillRect(x, 0, PIPE_WIDTH, top);
+            ctx.fillRect(x, bottom, PIPE_WIDTH, H - GROUND_HEIGHT - bottom);
+        }
+
+        function drawGround() {
+            if (spritesLoaded && sprites.base) {
+                const tileW = 336;
+                for (let x = -tileW; x < W + tileW; x += tileW) {
+                    ctx.drawImage(sprites.base, x - groundOffset, H - GROUND_HEIGHT, tileW, GROUND_HEIGHT);
+                }
+                return;
+            }
+
+            ctx.fillStyle = '#ded895';
+            ctx.fillRect(0, H - GROUND_HEIGHT, W, GROUND_HEIGHT);
+        }
+
+        function drawBird() {
+            ctx.save();
+            ctx.translate(bird.x, bird.y);
+            ctx.rotate(bird.rot);
+
+            if (spritesLoaded && sprites.birdUp && sprites.birdMid && sprites.birdDown) {
+                const t = Math.floor(performance.now() / 100) % 3;
+                const frame = t === 0 ? sprites.birdUp : t === 1 ? sprites.birdMid : sprites.birdDown;
+                ctx.drawImage(frame, -17, -12, 34, 24);
+            } else {
+                ctx.fillStyle = '#f7e26f';
+                ctx.beginPath();
+                ctx.ellipse(0, 0, 13, 10, 0, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            ctx.restore();
+        }
+
+        function drawOverlay() {
+            if (!started && running) {
+                if (spritesLoaded && sprites.message) {
+                    const mw = 184;
+                    const mh = 267;
+                    ctx.drawImage(sprites.message, (W - mw) / 2, 86, mw, mh);
+                }
+                return;
+            }
+
+            if (!running) {
+                ctx.fillStyle = 'rgba(0,0,0,0.25)';
+                ctx.fillRect(0, 0, W, H);
+                if (spritesLoaded && sprites.gameover) {
+                    const gw = 192;
+                    const gh = 42;
+                    ctx.drawImage(sprites.gameover, (W - gw) / 2, 150, gw, gh);
+                } else {
+                    ctx.fillStyle = '#fff';
+                    ctx.textAlign = 'center';
+                    ctx.font = '700 32px Space Mono';
+                    ctx.fillText('Game Over', W / 2, 190);
+                }
+                ctx.fillStyle = '#fff';
+                ctx.textAlign = 'center';
+                ctx.font = '700 16px Space Mono';
+                ctx.fillText('Press Space or Click to restart', W / 2, 225);
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, W, H);
+            drawBackground();
+
+            for (const pipe of pipes) {
+                drawPipe(pipe.x, pipe.top, pipe.bottom);
+            }
+
+            drawGround();
+            drawBird();
+            drawOverlay();
+        }
+
+        function loop(now) {
+            const dt = now - lastFrame;
+            lastFrame = now;
+            if (started && running) update(dt);
+            draw();
+            requestAnimationFrame(loop);
+        }
+
+        function toggleMute() {
+            muted = !muted;
+            audio.enabled = !muted;
+            updateMuteButton();
+            if (!audio.ctx) return;
+            if (muted) {
+                try { audio.ctx.suspend(); } catch (e) { }
+            } else {
+                try { audio.ctx.resume(); } catch (e) { }
+            }
+        }
+
+        function onKeyDown(e) {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                flap();
+            }
+            if (e.code === 'KeyM') toggleMute();
+        }
+
+        canvas.addEventListener('pointerdown', flap);
+        document.addEventListener('keydown', onKeyDown);
+        restartBtn.addEventListener('click', resetGame);
+        muteBtn.addEventListener('click', toggleMute);
+
+        updateMuteButton();
+        resetGame();
+        loadSprites();
+        requestAnimationFrame(loop);
+        canvas.setAttribute('tabindex', '0');
+    }
+    

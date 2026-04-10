@@ -1,0 +1,158 @@
+.binary-hero {
+    margin-top: 1rem;
+    border-radius: 22px;
+    border: 1px solid #d8cfbd;
+    background:
+        radial-gradient(circle at 8% 12%, rgba(188, 231, 255, 0.75), transparent 32%),
+        radial-gradient(circle at 92% 80%, rgba(255, 214, 170, 0.65), transparent 38%),
+        linear-gradient(140deg, #fffaf0, #f7f2e6 55%, #f2ebdd);
+    padding: 1.25rem;
+    box-shadow: 0 14px 30px rgba(37, 33, 25, 0.14);
+    color: var(--ink);
+}
+
+.binary-hero h2 {
+    margin: 0 0 0.5rem;
+    font-size: clamp(1.3rem, 2vw, 1.9rem);
+    letter-spacing: 0.02em;
+    color: var(--ink);
+}
+
+.binary-sub {
+    margin: 0 0 1rem;
+    color: var(--muted);
+}
+
+.binary-controls {
+    display: grid;
+    gap: 0.8rem;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+}
+
+.binary-field label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+}
+
+.binary-field input {
+    width: 100%;
+    border: 1px solid #c9bda7;
+    border-radius: 12px;
+    padding: 0.7rem 0.8rem;
+    font: 600 1rem "Trebuchet MS", "Segoe UI", sans-serif;
+    background: #fffefb;
+    color: var(--ink);
+}
+
+.binary-field select {
+    width: 100%;
+    border: 1px solid #c9bda7;
+    border-radius: 12px;
+    padding: 0.7rem 0.8rem;
+    font: 600 1rem "Trebuchet MS", "Segoe UI", sans-serif;
+    background: #fffefb;
+    color: var(--ink);
+}
+
+.binary-btn {
+    border: 0;
+    border-radius: 12px;
+    padding: 0.72rem 1rem;
+    background: linear-gradient(135deg, #bc4d2f, #8f351e);
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.binary-odometer {
+    margin-top: 1rem;
+    background: #1f2328;
+    border-radius: 16px;
+    padding: 1rem;
+    border: 1px solid #3a4149;
+}
+
+.binary-label {
+    margin: 0 0 0.65rem;
+    color: #a9b2bc;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.binary-strip {
+    display: grid;
+    grid-template-columns: repeat(16, minmax(0, 1fr));
+    gap: 0.35rem;
+}
+
+.binary-digit {
+    background: #0e1114;
+    color: #7ef6ad;
+    font-family: "Courier New", Courier, monospace;
+    font-weight: 700;
+    text-align: center;
+    border-radius: 8px;
+    padding: 0.55rem 0;
+    border: 1px solid #2f353d;
+    transition: transform 120ms ease, background-color 120ms ease;
+}
+
+.binary-digit.active {
+    background: #163225;
+    transform: translateY(-1px);
+}
+
+.binary-readout {
+    margin-top: 0.9rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    color: #d9e0e8;
+    font-family: "Courier New", Courier, monospace;
+}
+
+.binary-chip {
+    background: #27303a;
+    border: 1px solid #3a434d;
+    border-radius: 10px;
+    padding: 0.35rem 0.55rem;
+}
+
+.binary-error {
+    margin-top: 0.7rem;
+    color: #8f351e;
+    font-weight: 700;
+    min-height: 1.2em;
+}
+
+body.theme-dark .binary-hero {
+    border-color: #3a4553;
+    background:
+        radial-gradient(circle at 8% 12%, rgba(83, 126, 158, 0.28), transparent 35%),
+        radial-gradient(circle at 92% 80%, rgba(112, 86, 124, 0.24), transparent 36%),
+        linear-gradient(140deg, #202833, #1a2029 55%, #171c24);
+}
+
+body.theme-dark .binary-field input,
+body.theme-dark .binary-field select {
+    border-color: #3f4a59;
+    background: #141a21;
+}
+
+body.theme-dark .binary-chip {
+    background: #1c2430;
+    border-color: #354051;
+}
+
+@media (max-width: 760px) {
+    .binary-controls {
+        grid-template-columns: 1fr;
+    }
+
+    .binary-strip {
+        grid-template-columns: repeat(8, minmax(0, 1fr));
+    }
+}

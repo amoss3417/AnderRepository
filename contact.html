@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | Anderson Moss</title>
+    <link rel="stylesheet" href="../assets/css/base.css">
+    <link rel="stylesheet" href="../assets/css/pages.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="nav-shell">
+            <a class="brand" href="../index.html">Anderson Moss</a>
+            <nav class="site-nav">
+                <a href="../index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="projects.html">Projects</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-wrap">
+        <section class="page-intro">
+            <h1 class="section-title">Contact</h1>
+            <p>If you want to collaborate or ask about a project, send a message below.</p>
+        </section>
+
+        <section class="card">
+            <form id="contact-form" class="contact-form">
+                <label for="name">Name</label>
+                <input id="name" name="name" type="text" required>
+
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" required>
+
+                <label for="message">Message</label>
+                <textarea id="message" name="message" rows="5" required></textarea>
+
+                <button class="btn" type="submit">Send</button>
+            </form>
+            <p id="contact-output" class="contact-note"></p>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>Built by Anderson Moss.</p>
+    </footer>
+
+    <script src="../assets/js/nav.js"></script>
+    <script src="../assets/js/contact.js"></script>
+</body>
+</html>

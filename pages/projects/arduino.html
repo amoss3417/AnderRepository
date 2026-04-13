@@ -25,6 +25,94 @@
             <h1>Arduino Project</h1>
             <p>An IR remote controls number input and displays output on a 4-digit 7-segment display. This project helped me understand components, pin control, and signal decoding.</p>
             <div class="detail-media"><img src="../../IMG_0378.JPG" alt="Arduino project image"></div>
+            <section class="arduino-sim card" aria-labelledby="arduino-sim-title">
+                <h2 id="arduino-sim-title">Virtual Arduino Demo</h2>
+                <p class="sim-subtitle">This simulator mirrors your sketch behavior: enter up to four digits with the remote, then use the equals button to clear.</p>
+
+                <div class="seven-segment-wrap">
+                    <div class="segment-status" id="sim-scan-indicator">Scanning digit D1</div>
+                    <div class="seven-segment-display" id="sim-display" aria-label="4-digit seven segment display">
+                        <div class="digit" data-digit="0">
+                            <span class="seg seg-a"></span>
+                            <span class="seg seg-b"></span>
+                            <span class="seg seg-c"></span>
+                            <span class="seg seg-d"></span>
+                            <span class="seg seg-e"></span>
+                            <span class="seg seg-f"></span>
+                            <span class="seg seg-g"></span>
+                        </div>
+                        <div class="digit" data-digit="1">
+                            <span class="seg seg-a"></span>
+                            <span class="seg seg-b"></span>
+                            <span class="seg seg-c"></span>
+                            <span class="seg seg-d"></span>
+                            <span class="seg seg-e"></span>
+                            <span class="seg seg-f"></span>
+                            <span class="seg seg-g"></span>
+                        </div>
+                        <div class="digit" data-digit="2">
+                            <span class="seg seg-a"></span>
+                            <span class="seg seg-b"></span>
+                            <span class="seg seg-c"></span>
+                            <span class="seg seg-d"></span>
+                            <span class="seg seg-e"></span>
+                            <span class="seg seg-f"></span>
+                            <span class="seg seg-g"></span>
+                        </div>
+                        <div class="digit" data-digit="3">
+                            <span class="seg seg-a"></span>
+                            <span class="seg seg-b"></span>
+                            <span class="seg seg-c"></span>
+                            <span class="seg seg-d"></span>
+                            <span class="seg seg-e"></span>
+                            <span class="seg seg-f"></span>
+                            <span class="seg seg-g"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ir-remote" aria-label="Virtual IR remote">
+                    <div class="remote-shell">
+                        <div class="remote-row remote-row-3">
+                            <button type="button" class="ir-btn power">⏻</button>
+                            <button type="button" class="ir-btn dark">VOL+</button>
+                            <button type="button" class="ir-btn dark long-label">FUNC/<br>STOP</button>
+                        </div>
+                        <div class="remote-row remote-row-3">
+                            <button type="button" class="ir-btn dark">⏮</button>
+                            <button type="button" class="ir-btn dark">⏯</button>
+                            <button type="button" class="ir-btn dark">⏭</button>
+                        </div>
+                        <div class="remote-row remote-row-3">
+                            <button type="button" class="ir-btn dark">▼</button>
+                            <button type="button" class="ir-btn dark">VOL-</button>
+                            <button type="button" class="ir-btn dark">▲</button>
+                        </div>
+                        <div class="remote-row remote-row-3">
+                            <button type="button" class="ir-btn num" data-ir-digit="0">0</button>
+                            <button type="button" class="ir-btn dark" data-ir-clear="1">EQ</button>
+                            <button type="button" class="ir-btn dark long-label">ST/<br>REPT</button>
+                        </div>
+                        <div class="remote-row remote-row-3">
+                            <button type="button" class="ir-btn num" data-ir-digit="1">1</button>
+                            <button type="button" class="ir-btn num" data-ir-digit="2">2</button>
+                            <button type="button" class="ir-btn num" data-ir-digit="3">3</button>
+                        </div>
+                        <div class="remote-row remote-row-3">
+                            <button type="button" class="ir-btn num" data-ir-digit="4">4</button>
+                            <button type="button" class="ir-btn num" data-ir-digit="5">5</button>
+                            <button type="button" class="ir-btn num" data-ir-digit="6">6</button>
+                        </div>
+                        <div class="remote-row remote-row-3">
+                            <button type="button" class="ir-btn num" data-ir-digit="7">7</button>
+                            <button type="button" class="ir-btn num" data-ir-digit="8">8</button>
+                            <button type="button" class="ir-btn num" data-ir-digit="9">9</button>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="sim-state" id="sim-state-text">receivedNumber: 0 | digitCount: 0</p>
+            </section>
                         <h2>Arduino Code</h2>
                         <div class="project-code">
                                 <pre><code>#include &lt;IRremote.hpp&gt;
@@ -191,5 +279,6 @@ void digit4() { all4Digits(); digitalWrite(D4, LOW); }</code></pre>
     </main>
     <footer class="site-footer"><p>Built by Anderson Moss.</p></footer>
     <script src="../../assets/js/nav.js"></script>
+    <script src="../../assets/js/arduino-sim.js"></script>
 </body>
 </html>

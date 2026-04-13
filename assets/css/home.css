@@ -35,7 +35,7 @@
 }
 
 .binary-track + .binary-track {
-    margin-left: -2px;
+    margin-left: 0px;
 }
 
 .binary-track span {

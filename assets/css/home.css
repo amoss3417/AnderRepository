@@ -17,20 +17,30 @@
     border-bottom: 0;
 }
 
-.binary-track {
+.binary-loop {
     display: flex;
     width: max-content;
-    animation: binary-scroll 20s linear infinite;
+    animation: binary-scroll 78s linear infinite;
+    will-change: transform;
 }
 
-.binary-lane.reverse .binary-track {
+.binary-lane.reverse .binary-loop {
     animation-direction: reverse;
-    animation-duration: 24s;
+    animation-duration: 78s;
+}
+
+.binary-track {
+    display: flex;
+    flex-shrink: 0;
+}
+
+.binary-track + .binary-track {
+    margin-left: -3px;
 }
 
 .binary-track span {
     display: inline-block;
-    padding: 0.54rem 1.2rem;
+    padding: 0.54rem 0;
     font: 700 0.84rem "Space Mono", monospace;
     letter-spacing: 0.08em;
     color: var(--ticker-text);
@@ -38,9 +48,13 @@
     white-space: nowrap;
 }
 
+.binary-track span + span {
+    margin-left: 1.2rem;
+}
+
 @keyframes binary-scroll {
     from { transform: translateX(0); }
-    to { transform: translateX(-25%); }
+    to { transform: translateX(-50%); }
 }
 
 .hero {

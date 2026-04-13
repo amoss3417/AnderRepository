@@ -144,9 +144,196 @@ body.theme-dark .project-code pre {
     font-weight: 700;
 }
 
+.arduino-sim {
+    margin: 1.25rem 0 1.5rem;
+    padding: 1.1rem;
+    background: linear-gradient(145deg, var(--surface), var(--surface-2));
+    border-radius: 18px;
+}
+
+.sim-subtitle {
+    margin-top: 0;
+    margin-bottom: 0.9rem;
+}
+
+.seven-segment-wrap {
+    background: #171d23;
+    border-radius: 14px;
+    border: 1px solid #273140;
+    padding: 0.9rem;
+    margin-bottom: 1rem;
+    overflow-x: auto;
+}
+
+.segment-status {
+    color: #a4bbd4;
+    font: 700 0.82rem "Space Mono", monospace;
+    margin-bottom: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.seven-segment-display {
+    display: flex;
+    justify-content: center;
+    gap: 0.55rem;
+    min-width: 292px;
+}
+
+.digit {
+    flex: 0 0 68px;
+    width: 68px;
+    position: relative;
+    height: 96px;
+    border-radius: 10px;
+    background: #0f141a;
+    border: 1px solid #2b3745;
+}
+
+.digit.is-active-digit {
+    box-shadow: 0 0 0 1px #ffb341, inset 0 0 0 1px rgba(255, 179, 65, 0.35);
+}
+
+.seg {
+    position: absolute;
+    background: #2f3742;
+    transition: background-color 120ms ease, box-shadow 120ms ease;
+}
+
+.seg.is-on {
+    background: #ff4e3a;
+    box-shadow: 0 0 10px rgba(255, 78, 58, 0.7);
+}
+
+.seg-a,
+.seg-d,
+.seg-g {
+    width: 30px;
+    height: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 5px;
+}
+
+.seg-a { top: 8px; }
+.seg-g { top: calc(50% - 3px); }
+.seg-d { bottom: 8px; }
+
+.seg-b,
+.seg-c,
+.seg-e,
+.seg-f {
+    width: 6px;
+    height: 28px;
+    border-radius: 5px;
+}
+
+.seg-b { top: 14px; right: 8px; }
+.seg-c { bottom: 14px; right: 8px; }
+.seg-e { bottom: 14px; left: 8px; }
+.seg-f { top: 14px; left: 8px; }
+
+.ir-remote {
+    display: flex;
+    justify-content: center;
+}
+
+.ir-btn {
+    width: 54px;
+    height: 54px;
+    border: 2px solid #b8bfc8;
+    background: #2a2f36;
+    color: #ecf2f7;
+    border-radius: 50%;
+    padding: 0;
+    font: 700 1.05rem "Space Mono", monospace;
+    cursor: pointer;
+    transition: transform 120ms ease, border-color 120ms ease, filter 120ms ease;
+}
+
+.ir-btn:hover {
+    transform: translateY(-1px) scale(1.02);
+    filter: brightness(1.06);
+}
+
+.remote-shell {
+    width: 242px;
+    border-radius: 26px;
+    background: linear-gradient(180deg, #2d3138, #22262b);
+    border: 3px solid #14181c;
+    padding: 0.9rem 0.85rem 1rem;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05), 0 14px 30px rgba(0, 0, 0, 0.3);
+}
+
+.remote-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-items: center;
+    gap: 0.45rem;
+    margin-bottom: 0.45rem;
+}
+
+.remote-row:last-child {
+    margin-bottom: 0;
+}
+
+.ir-btn.dark {
+    background: #2a2f36;
+    color: #e4ebf3;
+}
+
+.ir-btn.long-label {
+    font-size: 0.74rem;
+    line-height: 1.02;
+    text-align: center;
+}
+
+.ir-btn.num {
+    background: #f2f5f8;
+    color: #1f242a;
+    border-color: #dfe4ea;
+}
+
+.ir-btn.power {
+    background: #ff2b1c;
+    border-color: #cc2b1d;
+    color: #fff;
+}
+
+.sim-state {
+    margin-bottom: 0;
+    margin-top: 0.85rem;
+    font: 700 0.86rem "Space Mono", monospace;
+    color: var(--muted);
+}
+
 @media (max-width: 900px) {
     .grid.two,
     .grid.three {
         grid-template-columns: 1fr;
+    }
+
+    .digit {
+        height: 84px;
+        flex-basis: 60px;
+        width: 60px;
+    }
+
+    .seg-a,
+    .seg-d,
+    .seg-g {
+        width: 25px;
+    }
+
+    .seg-b,
+    .seg-c,
+    .seg-e,
+    .seg-f {
+        height: 23px;
+    }
+
+    .remote-shell {
+        transform: scale(0.94);
+        transform-origin: top center;
     }
 }

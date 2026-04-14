@@ -6,6 +6,7 @@
     overflow: hidden;
     border: 1px solid var(--line);
     background: linear-gradient(165deg, #0e4f2b, #106236);
+    animation: solitaire-shell-enter 380ms ease-out both;
 }
 
 .solitaire-toolbar {
@@ -123,7 +124,8 @@
     box-sizing: border-box;
     user-select: none;
     cursor: grab;
-    transition: transform 120ms ease, box-shadow 120ms ease;
+    transition: transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease, filter 120ms ease;
+    will-change: transform;
 }
 
 .solitaire-board .card-art {
@@ -214,8 +216,74 @@
 }
 
 .solitaire-board .card.drag-placeholder {
-    opacity: 0.25;
-    filter: saturate(0.75) brightness(0.82);
+    opacity: 0.48;
+    filter: saturate(0.82) brightness(0.9);
+}
+
+.solitaire-board .card.is-dragging {
+    transform: translateX(-50%) translateY(-6px) scale(1.02);
+    box-shadow: 0 14px 22px rgba(4, 13, 20, 0.38);
+}
+
+.solitaire-board .card.is-dropping {
+    animation: solitaire-card-drop 180ms cubic-bezier(0.21, 0.78, 0.35, 1);
+}
+
+.solitaire-board .card.is-flipping .card-art {
+    transform-origin: 50% 50%;
+    animation: solitaire-card-flip 220ms ease-out;
+    backface-visibility: hidden;
+}
+
+.solitaire-board .card.is-dragging .card-art {
+    transform-origin: 50% 50%;
+    animation: solitaire-card-carry-flip 420ms linear infinite;
+    backface-visibility: hidden;
+}
+
+.solitaire-board .card.drag-placeholder .card-art {
+    animation: none !important;
+    transform: none !important;
+}
+
+@keyframes solitaire-card-drop {
+    0% {
+        transform: translateX(-50%) translateY(-10px) scale(1.01);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+@keyframes solitaire-card-flip {
+    0% {
+        transform: rotateY(88deg) scale(0.98);
+        filter: brightness(0.92);
+    }
+    100% {
+        transform: rotateY(0deg) scale(1);
+        filter: brightness(1);
+    }
+}
+
+@keyframes solitaire-card-carry-flip {
+    0% {
+        transform: rotateY(0deg);
+    }
+    100% {
+        transform: rotateY(360deg);
+    }
+}
+
+@keyframes solitaire-shell-enter {
+    0% {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .pile.stock.empty::after,
@@ -263,5 +331,25 @@ body.theme-dark .sol-btn {
     .solitaire-top-row,
     .tableau-row {
         width: 850px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .solitaire-shell {
+        animation: none;
+    }
+
+    .solitaire-board .card,
+    .solitaire-board .card.is-dropping {
+        transition: none;
+        animation: none;
+    }
+
+    .solitaire-board .card.is-flipping .card-art {
+        animation: none;
+    }
+
+    .solitaire-board .card.is-dragging .card-art {
+        animation: none;
     }
 }

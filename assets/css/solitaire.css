@@ -213,6 +213,11 @@
     color: #1f2630;
 }
 
+.solitaire-board .card.drag-placeholder {
+    opacity: 0.25;
+    filter: saturate(0.75) brightness(0.82);
+}
+
 .pile.stock.empty::after,
 .pile.waste.empty::after,
 .pile.foundation.empty::after {

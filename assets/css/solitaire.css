@@ -359,7 +359,19 @@ body.theme-dark .sol-btn {
         animation: none;
     }
 
-    .solitaire-board .card.is-dragging .card-art {
-        animation: none;
+    /* Keep drag stack feedback readable even when decorative motion is reduced. */
+    .solitaire-board .card.is-dragging {
+        transform: translateX(-50%) translateY(-6px) scale(1.02) !important;
+        box-shadow: 0 14px 22px rgba(4, 13, 20, 0.38) !important;
+    }
+
+    .solitaire-board .card.drag-placeholder-run {
+        opacity: 0.9 !important;
+        filter: none !important;
+    }
+
+    .solitaire-board .card.drag-placeholder {
+        opacity: 0.58 !important;
+        filter: saturate(0.86) brightness(0.92) !important;
     }
 }

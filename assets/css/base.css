@@ -213,17 +213,6 @@ img {
     box-shadow: 0 10px 20px rgba(158, 63, 35, 0.28);
 }
 
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-    }
-}
-
 .site-footer {
     border-top: 1px solid var(--line);
     padding: 1.25rem 1rem;

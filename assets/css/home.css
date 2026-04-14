@@ -10,6 +10,9 @@
 .binary-lane {
     position: relative;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    padding: 0.68rem 0;
     border-bottom: 1px solid var(--ticker-line);
 }
 
@@ -19,6 +22,7 @@
 
 .binary-loop {
     display: flex;
+    align-items: center;
     width: max-content;
     animation: binary-scroll 78s linear infinite;
     will-change: transform;
@@ -31,25 +35,25 @@
 
 .binary-track {
     display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    padding-right: 1.2rem;
     flex-shrink: 0;
 }
 
 .binary-track + .binary-track {
-    margin-left: 0px;
+    margin-left: 0;
 }
 
 .binary-track span {
-    display: inline-block;
-    padding: 0.54rem 0;
+    display: block;
+    padding: 0;
     font: 700 0.84rem "Space Mono", monospace;
+    line-height: 1.05;
     letter-spacing: 0.08em;
     color: var(--ticker-text);
-    text-shadow: 0 0 8px var(--ticker-glow);
+    text-shadow: 0 0 3px var(--ticker-glow);
     white-space: nowrap;
-}
-
-.binary-track span + span {
-    margin-left: 1.2rem;
 }
 
 @keyframes binary-scroll {

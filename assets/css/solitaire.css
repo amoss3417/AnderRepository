@@ -1,0 +1,262 @@
+.solitaire-shell {
+    width: 100%;
+    max-width: 1100px;
+    margin: 1rem auto 0;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: linear-gradient(165deg, #0e4f2b, #106236);
+}
+
+.solitaire-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    padding: 0.9rem;
+    background: rgba(7, 22, 12, 0.36);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.solitaire-controls {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.sol-btn {
+    border: 1px solid rgba(255, 255, 255, 0.26);
+    background: rgba(255, 255, 255, 0.14);
+    color: #f4f7f2;
+    border-radius: 10px;
+    padding: 0.45rem 0.75rem;
+    font: 700 0.85rem "Sora", sans-serif;
+    cursor: pointer;
+}
+
+.sol-btn.ghost {
+    background: rgba(0, 0, 0, 0.22);
+}
+
+.sol-btn:hover {
+    filter: brightness(1.08);
+}
+
+.solitaire-stats {
+    color: #e8f3e9;
+    display: flex;
+    gap: 0.9rem;
+    flex-wrap: wrap;
+    font: 700 0.82rem "Space Mono", monospace;
+}
+
+.solitaire-board {
+    --pile-w: 112px;
+    --pile-h: 157px;
+    --tableau-h: 500px;
+    padding: 1rem;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.08), transparent 40%),
+        radial-gradient(circle at 82% 85%, rgba(255, 255, 255, 0.06), transparent 38%),
+        linear-gradient(160deg, #0d5b30, #0b4725 60%, #0a3f20);
+    overflow-x: auto;
+}
+
+.solitaire-board.alt-felt {
+    background:
+        radial-gradient(circle at 18% 15%, rgba(255, 255, 255, 0.08), transparent 40%),
+        radial-gradient(circle at 84% 80%, rgba(255, 255, 255, 0.06), transparent 42%),
+        linear-gradient(160deg, #1d4d7b, #152f53 60%, #102640);
+}
+
+.solitaire-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.9rem;
+    width: 850px;
+    margin: 0 auto;
+}
+
+.stock-waste-group,
+.foundation-group {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.tableau-row {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.75rem;
+    width: 850px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.pile {
+    width: var(--pile-w);
+    min-width: var(--pile-w);
+    height: var(--pile-h);
+    border-radius: 6px;
+    border: 2px dashed rgba(255, 255, 255, 0.25);
+    position: relative;
+    box-sizing: border-box;
+}
+
+.pile.tableau {
+    height: var(--tableau-h);
+}
+
+.pile.drop-ok {
+    border-color: rgba(255, 255, 255, 0.75);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.22) inset;
+}
+
+.solitaire-board .card {
+    width: var(--pile-w);
+    height: var(--pile-h);
+    border-radius: 6px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    box-sizing: border-box;
+    user-select: none;
+    cursor: grab;
+    transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.solitaire-board .card-art {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    border-radius: 6px;
+    pointer-events: none;
+    user-select: none;
+    object-fit: contain;
+}
+
+.solitaire-board .card:active {
+    cursor: grabbing;
+}
+
+.solitaire-board .card.face-down {
+    border: 1px solid #d2dbe3;
+    background:
+        repeating-linear-gradient(45deg, #153f77, #153f77 7px, #2f66a8 7px, #2f66a8 14px),
+        linear-gradient(135deg, #234f8b, #173d6f);
+    box-shadow: 0 5px 12px rgba(8, 15, 24, 0.32);
+}
+
+.solitaire-board .card.face-up {
+    border: 1px solid #cfd6dd;
+    background: linear-gradient(160deg, #fefefe, #f3f5f7);
+    color: #161b21;
+    box-shadow: 0 7px 14px rgba(12, 22, 28, 0.3);
+}
+
+.solitaire-board .card.with-art.face-up,
+.solitaire-board .card.with-art.face-down {
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    overflow: visible;
+}
+
+.solitaire-board .card.with-art .card-art {
+    border-radius: 0;
+}
+
+.solitaire-board .card.face-down .card-art {
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.solitaire-board .card.face-up .corner {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    font: 700 0.85rem "Space Mono", monospace;
+    line-height: 1;
+    gap: 2px;
+}
+
+.solitaire-board .card.face-up .corner.top {
+    top: 8px;
+    left: 8px;
+}
+
+.solitaire-board .card.face-up .corner.bottom {
+    right: 8px;
+    bottom: 8px;
+    transform: rotate(180deg);
+}
+
+.solitaire-board .card.face-up .suit-center {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: 2.05rem;
+    opacity: 0.92;
+}
+
+.solitaire-board .card.red {
+    color: #be1622;
+}
+
+.solitaire-board .card.black {
+    color: #1f2630;
+}
+
+.pile.stock.empty::after,
+.pile.waste.empty::after,
+.pile.foundation.empty::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 10px;
+}
+
+.pile.stock.empty::before {
+    content: "↺";
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font: 700 1.55rem "Space Mono", monospace;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.pile.foundation.empty::before {
+    content: attr(data-suit);
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font: 700 1.08rem "Space Mono", monospace;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+body.theme-dark .solitaire-shell {
+    border-color: #3a4b61;
+}
+
+body.theme-dark .sol-btn {
+    color: #eef2f7;
+}
+
+@media (max-width: 1200px) {
+    .solitaire-shell {
+        max-width: 100%;
+    }
+
+    .solitaire-top-row,
+    .tableau-row {
+        width: 850px;
+    }
+}

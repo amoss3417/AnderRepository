@@ -316,13 +316,28 @@
 }
 
 .pile.foundation.empty::before {
-    content: attr(data-suit);
     position: absolute;
     inset: 0;
     display: grid;
     place-items: center;
-    font: 700 1.08rem "Space Mono", monospace;
-    color: rgba(255, 255, 255, 0.5);
+    font: 700 1.22rem "Sora", "Segoe UI Symbol", sans-serif;
+    color: rgba(255, 255, 255, 0.78);
+}
+
+.pile.foundation.empty[data-suit="S"]::before {
+    content: "♠";
+}
+
+.pile.foundation.empty[data-suit="H"]::before {
+    content: "♥";
+}
+
+.pile.foundation.empty[data-suit="D"]::before {
+    content: "♦";
+}
+
+.pile.foundation.empty[data-suit="C"]::before {
+    content: "♣";
 }
 
 body.theme-dark .solitaire-shell {

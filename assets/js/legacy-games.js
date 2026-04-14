@@ -990,8 +990,20 @@
         return `
             <div class="minesweeper-container">
                 <div class="minesweeper-status-panel">
-                    <span id="flag-count" class="minesweeper-status-text">040</span>
-                    <button id="restart-btn" class="minesweeper-restart-btn">Restart</button>
+                    <div class="minesweeper-display">
+                        <span id="flag-count" class="minesweeper-status-text">040</span>
+                    </div>
+                    <button id="restart-btn" class="minesweeper-restart-btn" type="button" aria-label="Restart game" data-face="smile">
+                        <span class="ms-mouth" aria-hidden="true"></span>
+                    </button>
+                    <div class="minesweeper-display">
+                        <span id="timer-count" class="minesweeper-status-text">000</span>
+                    </div>
+                </div>
+                <div class="minesweeper-mode-bar" role="group" aria-label="Minesweeper difficulty">
+                    <button type="button" class="minesweeper-mode-btn active" data-mines="10">10</button>
+                    <button type="button" class="minesweeper-mode-btn" data-mines="40">40</button>
+                    <button type="button" class="minesweeper-mode-btn" data-mines="80">80</button>
                 </div>
                 <canvas id="game-canvas" class="minesweeper-canvas"></canvas>
             </div>
@@ -1005,17 +1017,27 @@
     // Function to initialize the Minesweeper game logic
     function initializeMinesweeper() {
         // Game Constants
-        const ROWS = 16;
-        const COLS = 16;
-        const BOMBS = 40;
-        const CELL_SIZE = 30; // Pixel size of each cell
-        const FONT_SIZE = 18;
+        const DIFFICULTY_CONFIG = {
+            10: { rows: 9, cols: 9, bombs: 10 },
+            40: { rows: 16, cols: 16, bombs: 40 },
+            80: { rows: 16, cols: 30, bombs: 80 }
+        };
+
+        let currentDifficulty = 10;
+        let ROWS = DIFFICULTY_CONFIG[currentDifficulty].rows;
+        let COLS = DIFFICULTY_CONFIG[currentDifficulty].cols;
+        let BOMBS = DIFFICULTY_CONFIG[currentDifficulty].bombs;
+        let CELL_SIZE = 30;
+        let FONT_SIZE = 18;
 
         // DOM elements
         const canvas = document.getElementById('game-canvas');
         const ctx = canvas.getContext('2d');
         const restartBtn = document.getElementById('restart-btn');
         const flagCountElement = document.getElementById('flag-count');
+        const timerCountElement = document.getElementById('timer-count');
+        const difficultyButtons = document.querySelectorAll('.minesweeper-mode-btn');
+        const rootElement = document.getElementById('legacy-game-root');
         const messageBox = document.getElementById('message-box');
         const messageText = document.getElementById('message-text');
         const messageRestartBtn = document.getElementById('message-restart-btn');
@@ -1028,11 +1050,40 @@
         let firstClick = true;
         let revealedCount = 0;
         let flagCounter = BOMBS;
+        let timerSeconds = 0;
+        let timerInterval = null;
 
         // Colors for bomb counts
         const NUMBER_COLORS = [
             'transparent', '#0000ff', '#008000', '#ff0000', '#800080', '#800000', '#40e0d0', '#000000', '#808080'
         ];
+
+        function getResponsiveCellSize() {
+            const rootWidth = rootElement ? rootElement.clientWidth : window.innerWidth;
+            const panelPadding = 40;
+            const available = Math.max(260, rootWidth - panelPadding);
+            return Math.max(10, Math.min(30, Math.floor(available / COLS)));
+        }
+
+        function applyDifficulty(mines) {
+            const key = String(mines);
+            if (!Object.prototype.hasOwnProperty.call(DIFFICULTY_CONFIG, key)) {
+                return;
+            }
+
+            currentDifficulty = Number(mines);
+            ROWS = DIFFICULTY_CONFIG[key].rows;
+            COLS = DIFFICULTY_CONFIG[key].cols;
+            BOMBS = DIFFICULTY_CONFIG[key].bombs;
+            CELL_SIZE = getResponsiveCellSize();
+            FONT_SIZE = Math.max(10, Math.floor(CELL_SIZE * 0.62));
+
+            difficultyButtons.forEach((btn) => {
+                btn.classList.toggle('active', Number(btn.dataset.mines) === currentDifficulty);
+            });
+
+            initGame();
+        }
         
         // Function to initialize or reset the game
         function initGame() {
@@ -1040,6 +1091,11 @@
             firstClick = true;
             revealedCount = 0;
             flagCounter = BOMBS;
+            timerSeconds = 0;
+
+            stopTimer();
+            updateTimerCount();
+            updateFace('smile');
             
             // Set canvas dimensions
             canvas.width = COLS * CELL_SIZE;
@@ -1055,6 +1111,31 @@
 
             updateFlagCount();
             drawBoard();
+        }
+
+        function updateTimerCount() {
+            timerCountElement.textContent = timerSeconds.toString().padStart(3, '0');
+        }
+
+        function startTimer() {
+            if (timerInterval) return;
+            timerInterval = setInterval(() => {
+                if (isGameOver) return;
+                timerSeconds += 1;
+                updateTimerCount();
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function updateFace(state) {
+            if (!restartBtn) return;
+            restartBtn.setAttribute('data-face', state);
         }
 
         // Places bombs on the board, avoiding the first clicked cell and its neighbors
@@ -1174,6 +1255,7 @@
             const row = Math.floor(y / CELL_SIZE);
 
             if (!revealed[row][col] && !flags[row][col]) {
+                updateFace('wow');
                 // Draw the cell with an "inset" border to show it's pressed
                 const cellX = col * CELL_SIZE;
                 const cellY = row * CELL_SIZE;
@@ -1210,6 +1292,7 @@
             const row = Math.floor(y / CELL_SIZE);
             
             if (firstClick) {
+                startTimer();
                 placeBombs(row, col);
                 calculateBombCounts();
                 firstClick = false;
@@ -1221,6 +1304,9 @@
                 revealCell(row, col);
             }
             drawBoard(); // Crucial to redraw all cells and fix the borders
+            if (!isGameOver) {
+                updateFace('smile');
+            }
         }
 
 
@@ -1250,6 +1336,8 @@
             if (board[row][col] === 'B') {
                 // Game over
                 isGameOver = true;
+                stopTimer();
+                updateFace('lose');
                 showBombs();
                 showMessage('Game Over! You hit a mine!');
                 return;
@@ -1327,7 +1415,6 @@
         
         // Updates the flag counter display
         function updateFlagCount() {
-            // The classic counter is 2 digits, but we can do 3
             const displayCount = flagCounter.toString().padStart(3, '0');
             flagCountElement.textContent = displayCount;
         }
@@ -1348,6 +1435,8 @@
         function checkWin() {
             if (revealedCount === (ROWS * COLS) - BOMBS) {
                 isGameOver = true;
+                stopTimer();
+                updateFace('win');
                 showMessage('Congratulations! You found all the mines!');
             }
         }
@@ -1369,9 +1458,15 @@
         canvas.addEventListener('contextmenu', handleRightClick);
         if (restartBtn) restartBtn.addEventListener('click', restartGame);
         if (messageRestartBtn) messageRestartBtn.addEventListener('click', restartGame);
+        difficultyButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                const mines = Number(button.dataset.mines);
+                applyDifficulty(mines);
+            });
+        });
         
         // Initial call to set up the game
-        initGame();
+        applyDifficulty(currentDifficulty);
     }
     
     // Function to get the HTML for the Flappy game

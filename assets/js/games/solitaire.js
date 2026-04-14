@@ -29,6 +29,9 @@
     let history = [];
     let timerId = null;
     let dragPayload = null;
+    let dragGhostEl = null;
+    let dropAnimatedIds = new Set();
+    let flipAnimatedIds = new Set();
 
     function createDeck() {
         const deck = [];
@@ -135,6 +138,16 @@
         render();
     }
 
+    function markMovedCards(cards) {
+        dropAnimatedIds = new Set(cards.map((card) => card.id));
+    }
+
+    function markFlippedCards(cards) {
+        cards.forEach((card) => {
+            flipAnimatedIds.add(card.id);
+        });
+    }
+
     function cardFromCardId(cardId) {
         const all = [
             ...state.stock,
@@ -143,6 +156,59 @@
             ...state.tableau.flat()
         ];
         return all.find((c) => c.id === cardId) || null;
+    }
+
+    function clearDragGhost() {
+        if (dragGhostEl && dragGhostEl.parentNode) {
+            dragGhostEl.parentNode.removeChild(dragGhostEl);
+        }
+        dragGhostEl = null;
+    }
+
+    function createTableauDragGhost(pileIndex, startIndex) {
+        const sourcePile = tableauEls[pileIndex];
+        if (!sourcePile) return null;
+
+        const cards = Array.from(sourcePile.querySelectorAll('.card')).slice(startIndex);
+        if (!cards.length) return null;
+
+        const ghost = document.createElement('div');
+        ghost.className = 'solitaire-board';
+        ghost.style.position = 'fixed';
+        ghost.style.left = '-9999px';
+        ghost.style.top = '-9999px';
+        ghost.style.pointerEvents = 'none';
+        ghost.style.zIndex = '9999';
+        ghost.style.padding = '0';
+        ghost.style.background = 'transparent';
+        ghost.style.overflow = 'visible';
+
+        const boardStyles = getComputedStyle(board);
+        ghost.style.setProperty('--pile-w', boardStyles.getPropertyValue('--pile-w').trim() || '112px');
+        ghost.style.setProperty('--pile-h', boardStyles.getPropertyValue('--pile-h').trim() || '157px');
+
+        const firstCard = cards[0];
+        const lastCard = cards[cards.length - 1];
+        const ghostWidth = firstCard.offsetWidth;
+        const ghostHeight = (lastCard.offsetTop - firstCard.offsetTop) + firstCard.offsetHeight;
+
+        ghost.style.width = `${ghostWidth}px`;
+        ghost.style.height = `${ghostHeight}px`;
+
+        const baseTop = firstCard.offsetTop;
+        cards.forEach((cardEl) => {
+            const clone = cardEl.cloneNode(true);
+            clone.classList.remove('drag-placeholder', 'is-dragging', 'is-dropping', 'is-flipping');
+            clone.classList.add('is-dragging');
+            clone.style.top = `${cardEl.offsetTop - baseTop}px`;
+            clone.style.left = cardEl.style.left || '50%';
+            clone.style.zIndex = cardEl.style.zIndex;
+            ghost.appendChild(clone);
+        });
+
+        document.body.appendChild(ghost);
+        dragGhostEl = ghost;
+        return ghost;
     }
 
     function renderCard(card, pileType, pileIndex, cardIndex) {
@@ -154,6 +220,14 @@
         cardEl.style.top = pileType === 'tableau' ? `${cardIndex * (card.faceUp ? 28 : 14)}px` : '0px';
         cardEl.style.left = '50%';
         cardEl.style.zIndex = String(cardIndex + 1);
+
+        if (dropAnimatedIds.has(card.id)) {
+            cardEl.classList.add('is-dropping');
+        }
+
+        if (card.faceUp && flipAnimatedIds.has(card.id)) {
+            cardEl.classList.add('is-flipping');
+        }
 
         if (card.faceUp) {
             const img = document.createElement('img');
@@ -220,7 +294,33 @@
                 cardId: card.id
             };
 
+            // Fade source cards so dragging doesn't look like duplicate copies.
+            markDragPlaceholders(dragPayload);
+            if (!(pileType === 'tableau' && count > 1)) {
+                cardEl.classList.add('is-dragging');
+            }
             event.dataTransfer.effectAllowed = 'move';
+
+            if (pileType === 'tableau' && count > 1) {
+                const ghost = createTableauDragGhost(pileIndex, cardIndex);
+                if (ghost) {
+                    const rect = cardEl.getBoundingClientRect();
+                    const offsetX = Math.max(0, event.clientX - rect.left);
+                    const offsetY = Math.max(0, event.clientY - rect.top);
+                    event.dataTransfer.setDragImage(ghost, offsetX, offsetY);
+                }
+            }
+        });
+
+        cardEl.addEventListener('dragend', () => {
+            cardEl.classList.remove('is-dragging');
+            clearDragGhost();
+            // Let drop handlers run first; immediate cleanup can cancel valid drops in some browsers.
+            setTimeout(() => {
+                clearDragPlaceholders();
+                clearPileStates();
+                dragPayload = null;
+            }, 0);
         });
 
         cardEl.addEventListener('dblclick', () => {
@@ -237,11 +337,45 @@
         });
     }
 
+    function clearDragPlaceholders() {
+        board.querySelectorAll('.card.drag-placeholder, .card.drag-placeholder-run').forEach((card) => {
+            card.classList.remove('drag-placeholder', 'drag-placeholder-run');
+        });
+    }
+
+    function getSourcePileElement(source, index) {
+        if (source === 'stock') return stockEl;
+        if (source === 'waste') return wasteEl;
+        if (source === 'tableau') return tableauEls[index] || null;
+        if (source === 'foundation') return foundationEls.find((pile) => pile.dataset.suit === index) || null;
+        return null;
+    }
+
+    function markDragPlaceholders(payload) {
+        clearDragPlaceholders();
+
+        const sourcePile = getSourcePileElement(payload.source, payload.index);
+        if (!sourcePile) return;
+
+        const cards = Array.from(sourcePile.querySelectorAll('.card'));
+        if (!cards.length) return;
+
+        if (payload.source === 'tableau') {
+            for (let i = payload.start; i < cards.length; i++) {
+                cards[i].classList.add('drag-placeholder-run');
+            }
+            return;
+        }
+
+        cards[cards.length - 1].classList.add('drag-placeholder');
+    }
+
     function render() {
         scoreEl.textContent = String(state.score);
         movesEl.textContent = String(state.moves);
         timeEl.textContent = formatTime(state.seconds);
 
+        clearDragPlaceholders();
         clearPileStates();
 
         stockEl.innerHTML = '';
@@ -281,6 +415,8 @@
         });
 
         checkWin();
+        dropAnimatedIds.clear();
+        flipAnimatedIds.clear();
     }
 
     function canPlaceOnFoundation(card, suit) {
@@ -314,6 +450,7 @@
         pushHistory();
         state.waste.pop();
         state.foundations[suit].push(card);
+        markMovedCards([card]);
         commitMove(10);
         return true;
     }
@@ -324,6 +461,7 @@
         pushHistory();
         state.waste.pop();
         state.tableau[col].push(card);
+        markMovedCards([card]);
         commitMove(5);
         return true;
     }
@@ -342,8 +480,10 @@
         if (newTop && !newTop.faceUp) {
             newTop.faceUp = true;
             state.score += 5;
+            markFlippedCards([newTop]);
         }
 
+        markMovedCards(run);
         commitMove(3);
         return true;
     }
@@ -362,8 +502,10 @@
         if (newTop && !newTop.faceUp) {
             newTop.faceUp = true;
             state.score += 5;
+            markFlippedCards([newTop]);
         }
 
+        markMovedCards([card]);
         commitMove(10);
         return true;
     }
@@ -377,6 +519,7 @@
         pushHistory();
         foundation.pop();
         state.tableau[toCol].push(card);
+        markMovedCards([card]);
         commitMove(-15);
         return true;
     }
@@ -398,11 +541,15 @@
         }
 
         const take = Math.min(DRAW_COUNT, state.stock.length);
+        const drawnCards = [];
         for (let i = 0; i < take; i++) {
             const card = state.stock.pop();
             card.faceUp = true;
             state.waste.push(card);
+            drawnCards.push(card);
         }
+        markFlippedCards(drawnCards);
+        markMovedCards(drawnCards);
         commitMove(0);
     }
 
@@ -453,6 +600,7 @@
             }
         }
 
+        clearDragPlaceholders();
         clearPileStates();
         dragPayload = null;
 
@@ -486,6 +634,8 @@
     function undoMove() {
         if (!history.length) return;
         state = history.pop();
+        dropAnimatedIds.clear();
+        flipAnimatedIds.clear();
         render();
     }
 
@@ -543,6 +693,7 @@
                 count: 1,
                 cardId: cardEl.dataset.cardId
             };
+            markDragPlaceholders(dragPayload);
             event.dataTransfer.effectAllowed = 'move';
         });
     });

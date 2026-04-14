@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solitaire | Anderson Moss</title>
+    <link rel="stylesheet" href="../../assets/css/base.css">
+    <link rel="stylesheet" href="../../assets/css/pages.css">
+    <link rel="stylesheet" href="../../assets/css/solitaire.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="nav-shell">
+            <a class="brand" href="../../index.html">Anderson Moss</a>
+            <nav class="site-nav">
+                <a href="../../index.html">Home</a>
+                <a href="../about.html">About</a>
+                <a href="../projects.html">Projects</a>
+                <a href="../contact.html">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page-wrap project-detail">
+        <a class="back-link" href="../projects.html">Back to all projects</a>
+        <article class="card">
+            <h1>Solitaire (Klondike)</h1>
+            <p>A polished browser-based Klondike Solitaire implementation with single-draw stock, drag-and-drop interactions, scoring, and undo.</p>
+
+            <section class="solitaire-shell" aria-label="Solitaire game area">
+                <div class="solitaire-toolbar">
+                    <div class="solitaire-controls">
+                        <button id="sol-new-game" class="sol-btn" type="button">New Game</button>
+                        <button id="sol-undo" class="sol-btn ghost" type="button">Undo</button>
+                        <button id="sol-theme" class="sol-btn ghost" type="button">Toggle Felt</button>
+                    </div>
+                    <div class="solitaire-stats" aria-live="polite">
+                        <span>Score: <strong id="sol-score">0</strong></span>
+                        <span>Moves: <strong id="sol-moves">0</strong></span>
+                        <span>Time: <strong id="sol-time">00:00</strong></span>
+                        <span>Draw: <strong>1</strong></span>
+                    </div>
+                </div>
+
+                <div class="solitaire-board" id="solitaire-board">
+                    <div class="solitaire-top-row">
+                        <div class="stock-waste-group">
+                            <div class="pile stock" id="sol-stock" data-pile-type="stock" aria-label="Stock pile"></div>
+                            <div class="pile waste" id="sol-waste" data-pile-type="waste" aria-label="Waste pile"></div>
+                        </div>
+                        <div class="foundation-group">
+                            <div class="pile foundation" data-pile-type="foundation" data-suit="S" aria-label="Spades foundation"></div>
+                            <div class="pile foundation" data-pile-type="foundation" data-suit="H" aria-label="Hearts foundation"></div>
+                            <div class="pile foundation" data-pile-type="foundation" data-suit="D" aria-label="Diamonds foundation"></div>
+                            <div class="pile foundation" data-pile-type="foundation" data-suit="C" aria-label="Clubs foundation"></div>
+                        </div>
+                    </div>
+
+                    <div class="tableau-row" id="sol-tableau">
+                        <div class="pile tableau" data-pile-type="tableau" data-index="0" aria-label="Tableau pile 1"></div>
+                        <div class="pile tableau" data-pile-type="tableau" data-index="1" aria-label="Tableau pile 2"></div>
+                        <div class="pile tableau" data-pile-type="tableau" data-index="2" aria-label="Tableau pile 3"></div>
+                        <div class="pile tableau" data-pile-type="tableau" data-index="3" aria-label="Tableau pile 4"></div>
+                        <div class="pile tableau" data-pile-type="tableau" data-index="4" aria-label="Tableau pile 5"></div>
+                        <div class="pile tableau" data-pile-type="tableau" data-index="5" aria-label="Tableau pile 6"></div>
+                        <div class="pile tableau" data-pile-type="tableau" data-index="6" aria-label="Tableau pile 7"></div>
+                    </div>
+                </div>
+            </section>
+
+            <p class="meta">Tech: JavaScript, drag-and-drop, state management, game rules engine</p>
+        </article>
+    </main>
+
+    <footer class="site-footer"><p>Built by Anderson Moss.</p></footer>
+
+    <script src="../../assets/js/nav.js"></script>
+    <script src="../../assets/js/solitaire.js"></script>
+</body>
+</html>

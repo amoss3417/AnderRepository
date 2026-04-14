@@ -18,6 +18,19 @@
     --ticker-text: #cec5b7;
     --ticker-glow: rgba(255, 255, 255, 0.2);
     --shadow: 0 16px 36px rgba(32, 26, 18, 0.13);
+    --grid-line-a: rgba(126, 143, 161, 0.22);
+    --grid-line-b: rgba(126, 143, 161, 0.16);
+    --grid-opacity: 0.38;
+    --motion-fast: 140ms;
+    --motion-base: 220ms;
+    --motion-slow: 320ms;
+    --ease-standard: cubic-bezier(0.2, 0.7, 0.2, 1);
+    --ease-emphasized: cubic-bezier(0.17, 0.84, 0.44, 1);
+    --space-1: 0.4rem;
+    --space-2: 0.65rem;
+    --space-3: 1rem;
+    --space-4: 1.35rem;
+    --space-5: 2rem;
 }
 
 body.theme-dark {
@@ -38,6 +51,9 @@ body.theme-dark {
     --ticker-text: #3b4655;
     --ticker-glow: rgba(0, 0, 0, 0.18);
     --shadow: 0 20px 44px rgba(0, 0, 0, 0.38);
+    --grid-line-a: rgba(255, 255, 255, 0.16);
+    --grid-line-b: rgba(255, 255, 255, 0.12);
+    --grid-opacity: 0.26;
 }
 
 * {
@@ -58,8 +74,8 @@ body {
         radial-gradient(circle at 92% 86%, var(--bg-grad-b) 0, transparent 36%),
         linear-gradient(140deg, var(--bg), #ece7dc 45%, var(--bg));
     min-height: 100vh;
-    line-height: 1.6;
-    transition: background-color 220ms ease, color 220ms ease;
+    line-height: 1.65;
+    transition: background-color var(--motion-base) var(--ease-standard), color var(--motion-base) var(--ease-standard);
 }
 
 body::before {
@@ -67,10 +83,10 @@ body::before {
     position: fixed;
     inset: 0;
     pointer-events: none;
-    background-image: linear-gradient(rgba(255, 255, 255, 0.16) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+    background-image: linear-gradient(var(--grid-line-a) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line-b) 1px, transparent 1px);
     background-size: 46px 46px, 46px 46px;
-    opacity: 0.26;
+    opacity: var(--grid-opacity);
     z-index: -1;
 }
 
@@ -124,7 +140,7 @@ img {
     font-weight: 700;
     font-size: 0.93rem;
     color: var(--muted);
-    transition: all 160ms ease;
+    transition: all var(--motion-fast) var(--ease-standard);
 }
 
 .site-nav a:hover,
@@ -149,7 +165,7 @@ img {
     font: 700 1.12rem "Space Mono", monospace;
     line-height: 1;
     cursor: pointer;
-    transition: transform 150ms ease, border-color 150ms ease;
+    transition: transform var(--motion-fast) var(--ease-standard), border-color var(--motion-fast) var(--ease-standard);
 }
 
 .theme-toggle:hover {
@@ -160,21 +176,23 @@ img {
 .page-wrap {
     max-width: 1160px;
     margin: 0 auto;
-    padding: 2.4rem 1rem 4.4rem;
+    padding: clamp(2rem, 3.2vw, 2.6rem) 1rem clamp(3.5rem, 5vw, 4.6rem);
 }
 
 .section-title {
-    margin: 0 0 1rem;
+    margin: 0 0 var(--space-3);
     font-size: clamp(1.55rem, 2.2vw, 2.3rem);
-    line-height: 1.14;
+    line-height: 1.12;
+    letter-spacing: -0.01em;
 }
 
 .card {
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: 22px;
-    padding: 1.35rem;
+    padding: var(--space-4);
     box-shadow: var(--shadow);
+    transition: transform var(--motion-base) var(--ease-standard), box-shadow var(--motion-base) var(--ease-standard), border-color var(--motion-base) var(--ease-standard), background-color var(--motion-base) var(--ease-standard);
 }
 
 .btn {
@@ -187,12 +205,23 @@ img {
     font: 700 0.92rem "Sora", sans-serif;
     letter-spacing: 0.01em;
     cursor: pointer;
-    transition: transform 160ms ease, box-shadow 160ms ease;
+    transition: transform var(--motion-fast) var(--ease-standard), box-shadow var(--motion-fast) var(--ease-standard), filter var(--motion-fast) var(--ease-standard);
 }
 
 .btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 10px 20px rgba(158, 63, 35, 0.28);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 }
 
 .site-footer {
